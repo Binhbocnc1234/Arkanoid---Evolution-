@@ -10,7 +10,7 @@ public class GameObject {
     protected Image image;
 
     /**
-     * Creates a game object with position, size and image.
+     * Creates a game object with position, size and image. The pivot of GameObject is in the middle
      *
      * @param x         X coordinate
      * @param y         Y coordinate
@@ -19,7 +19,6 @@ public class GameObject {
      * @param imagePath relative path under {@code assets/img}, 
      *                  for example, if imagePath is "brick/gold.png" then when fetching the link it will be "assets/img/brick/gold.png"
      */
-    
     public static void create(float x, float y, float width, float height, String imagePath) {
         GameInfo.getInstance().getObjects().add(new GameObject(x, y, width, height, imagePath));
     }
@@ -28,7 +27,7 @@ public class GameObject {
         GameInfo.getInstance().getObjects().add(new GameObject(x, y, width, height, "white square.png"));
     }
 
-    GameObject(float x, float y, float width, float height, String imagePath) {
+    protected GameObject(float x, float y, float width, float height, String imagePath) {
         this.x = x;
         this.y = y;
         this.width = width;
@@ -49,10 +48,48 @@ public class GameObject {
         GameInfo.getInstance().getObjects().remove(this);
     }
 
+    public boolean isCollide(GameObject other) {
+        float leftA = x - width / 2;
+        float rightA = x + width / 2;
+        float topA = y - height / 2;
+        float bottomA = y + height / 2;
+
+        float leftB = other.x - other.width / 2;
+        float rightB = other.x + other.width / 2;
+        float topB = other.y - other.height / 2;
+        float bottomB = other.y + other.height / 2;
+        // Kiểm tra giao nhau
+        return !(rightA < leftB || leftA > rightB || bottomA < topB || topA > bottomB);
+    }
+
     // Getter/Setter
-    public float getX() { return x; }
-    public float getY() { return y; }
-    public float getWidth() { return width; }
-    public float getHeight() { return height; }
-    public void setPosition(float x, float y) { this.x = x; this.y = y; }
+    public float getX() {
+        return x;
+    }
+    
+
+    public float getY() {
+        return y;
+    }
+    
+
+    public float getWidth() {
+        return width;
+    }
+    
+
+    public float getHeight() {
+        return height;
+    }
+    
+    public void setSize(float w, float h) {
+        width = w;
+        height = h;
+    }
+
+    public void setPosition(float x, float y) {
+        this.x = x;
+        this.y = y;
+    }
+    
 }

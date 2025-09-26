@@ -53,17 +53,17 @@ public class GameManager extends JFrame {
             if (GameInfo.isTesting) {
                 System.out.println("Welcome to Arkanoid - Cuộc sống cô đơn");
                 //Tạo một gameObject kích cỡ vừa phải tại mỗi vị trí click chuột
-                gm.panel.addMouseListener(new java.awt.event.MouseAdapter() {
-                    @Override
-                    public void mouseClicked(java.awt.event.MouseEvent e) {
-                        GameObject.create(
-                            e.getX(), 
-                            e.getY(),
-                            50, 50
-                        );
-                        System.out.println("Create test object");
-                    }
-                });
+                // gm.panel.addMouseListener(new java.awt.event.MouseAdapter() {
+                //     @Override
+                //     public void mouseClicked(java.awt.event.MouseEvent e) {
+                //         GameObject.create(
+                //             e.getX(), 
+                //             e.getY(),
+                //             50, 50
+                //         );
+                //         System.out.println("Create test object");
+                //     }
+                // });
             }
         });
     }
