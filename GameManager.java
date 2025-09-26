@@ -1,6 +1,10 @@
 import gobj.*;
 import info.GameInfo;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+
 import javax.swing.*;
 
 public class GameManager extends JFrame {
@@ -16,6 +20,27 @@ public class GameManager extends JFrame {
         panel = new GamePanel();
         add(panel);
 
+        // tạo paddle
+        Paddle paddle = new Paddle(0,0,100,25,5f,null);
+        paddle.setUp(800, 600);
+        GameObject.create(paddle.getX(), paddle.getY(), paddle.getWidth(), paddle.getHeight());
+
+        // gắn KeyListener
+        addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent ev) {
+                paddle.handleInput(ev.getKeyCode(), true);
+            }
+
+            @Override
+            public void keyReleased(KeyEvent ev) {
+                paddle.handleInput(ev.getKeyCode(), false);
+            }
+        });
+
+        setFocusable(true);
+        requestFocusInWindow();
+        
         setVisible(true);
 
         // Khởi động vòng lặp game
@@ -49,7 +74,6 @@ public class GameManager extends JFrame {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             GameManager gm = new GameManager();
-
             if (GameInfo.isTesting) {
                 System.out.println("Welcome to Arkanoid - Cuộc sống cô đơn");
                 //Tạo một gameObject kích cỡ vừa phải tại mỗi vị trí click chuột
