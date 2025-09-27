@@ -39,6 +39,11 @@ public class GameManager extends JFrame {
         Ball ball = new Ball(400, 300, "Ball.png", 25f, paddle);
         GameInfo.getInstance().getObjects().add(ball);
 
+        // brick
+        Brick brick = new Brick(0, 0, 0, 0, 1);
+        Brick.debug(100, 200, 60, 20, 50);
+        GameInfo.getInstance().getObjects().add(brick);
+
         setFocusable(true);
         setVisible(true);
         requestFocusInWindow();
@@ -53,6 +58,15 @@ public class GameManager extends JFrame {
         for (GameObject obj : GameInfo.getInstance().getObjects()) {
             obj.update();
         }
+
+        // Check if brick has been destoryed
+        GameInfo.getInstance().getObjects().removeIf(obj -> {
+            if (obj instanceof Brick) {
+                return ((Brick) obj).isDestroyed();
+            }
+        return false;
+        });
+
         panel.repaint();
     }
 
