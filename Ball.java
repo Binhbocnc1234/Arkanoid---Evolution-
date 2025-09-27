@@ -1,9 +1,6 @@
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.io.IOException;
-
-import javax.imageio.ImageIO;
 
 import gobj.*;
 
