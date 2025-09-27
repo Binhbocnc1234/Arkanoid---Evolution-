@@ -1,10 +1,10 @@
 package framework;
 
 // Generic singleton base class
-public abstract class Singleton<T> {
+public abstract class singleton<T> {
     private static Object instance;
 
-    protected Singleton() {}
+    protected singleton() {}
 
     @SuppressWarnings("unchecked")
     public static <T> T getInstance(Class<T> clazz) {
