@@ -10,6 +10,7 @@ import javax.swing.*;
 public class GameManager extends JFrame {
     
     private final GamePanel panel;
+    private Image background; 
 
     public GameManager() {
         setTitle("Arkanoid Evolution");
@@ -21,27 +22,26 @@ public class GameManager extends JFrame {
         add(panel);
 
         // tạo paddle
-        Paddle paddle = new Paddle(0,0,100,25,5f,null);
+        Paddle paddle = new Paddle(0,0,0,0,5f,"VietNam.png");
         paddle.setUp(800, 600);
-        GameObject.create(paddle.getX(), paddle.getY(), paddle.getWidth(), paddle.getHeight());
+        // thêm paddle vào game
+        GameInfo.getInstance().getObjects().add(paddle);
 
-        // gắn KeyListener
         addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyPressed(KeyEvent ev) {
+            @Override public void keyPressed(KeyEvent ev) {
                 paddle.handleInput(ev.getKeyCode(), true);
             }
-
-            @Override
-            public void keyReleased(KeyEvent ev) {
+            @Override public void keyReleased(KeyEvent ev) {
                 paddle.handleInput(ev.getKeyCode(), false);
             }
         });
 
+        Ball ball = new Ball(400, 300, "Ball.png", 25f, paddle);
+        GameInfo.getInstance().getObjects().add(ball);
+
         setFocusable(true);
-        requestFocusInWindow();
-        
         setVisible(true);
+        requestFocusInWindow();
 
         // Khởi động vòng lặp game
         Timer timer = new Timer(16, e -> gameLoop());

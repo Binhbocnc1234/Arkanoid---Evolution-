@@ -37,7 +37,7 @@ public class Paddle extends MovableObject {
     public void update() {
         move(); // cộng dx, dy vào x,y
         // giới hạn paddle trong màn hình
-        if (this.x - width / 2f < 0) {
+        if (x - width / 2f < 0) {
             x = width / 2f;
         }
         if (x + width / 2f > 800) {
