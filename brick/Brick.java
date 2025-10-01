@@ -1,16 +1,15 @@
 package brick;
+
 import gobj.*;
-import info.GameInfo;
 import javax.swing.ImageIcon;
 
-// Temporary brick class
-// TODO: Subclasses for other types of bricks.
-public class Brick extends GameObject {
+public abstract class Brick extends GameObject {
 
-    private int hp;
+    protected int hp;
+    protected int id;
     // private float dropChance;       // TODO
-    private boolean isDestroyed;
-    private boolean canCollide;
+    protected boolean isDestroyed;
+    protected boolean canCollide;
 
     /**
      * Brick instance's constructor.
@@ -20,12 +19,12 @@ public class Brick extends GameObject {
      * @param w             Object's width
      * @param h             Object's height
      * @param hp            Object's hit points
-     * @param dropChance    Object's Power-up drop chance
-     * @param imagePath     Texture
+     * @param id            Object's ID    
      */
-    public Brick(float x, float y, float w, float h, int hp) {    //TODO: them tham chieu dropchance 
+    public Brick(float x, float y, float w, float h, int hp, int id) {    //TODO: them tham chieu dropchance 
         super(x, y, w, h, "");
         this.hp = hp;
+        this.id = id;
         // this.dropChance = dropChance;
         this.isDestroyed = false;
         this.canCollide = true;
@@ -36,26 +35,14 @@ public class Brick extends GameObject {
         return isDestroyed;
     }
 
-    /**
-     * Debug.
-     * @param windowHeight
-     * @param windowWidth
-     */
-    public static void debug(float startX, float startY, float brickW, float brickH, float gap) {
-        int[] hpList = {1, 2, 3, 4, Integer.MAX_VALUE}; // In accordance to Normal, Steel, Gold, Diamond and Obsidian.
-        float x = startX;
-
-        for (int hp : hpList) {
-            Brick brick = new Brick(x, startY, brickW, brickH, hp);
-            GameInfo.getInstance().getObjects().add(brick);
-            x += brickW + gap;
-        }
+    public int getBrickId() {
+        return id;
     }
 
     /**
-     * Check collision with Ball object.
+     * Handling damage taken.
      * 
-     * @param ball      Ball instance
+     * @param amount      amount of damage dealt
      */
     public void takeDamage(int amount) {
         if (hp < Integer.MAX_VALUE) {       // Obsidian -> indestructable
@@ -65,10 +52,17 @@ public class Brick extends GameObject {
 
         if (hp <= 0) {
             isDestroyed = true;
-            // Tô đức anh viết 
-            
+            onDestroyed();
+            // Tô đức anh viết
+            // cam on thay to
         }
     }
+
+    /**
+     * Special effects upon destroying the Brick instance.
+     * Only serves for TNT Brick for now.
+     */
+    public void onDestroyed() {};
 
     /**
      * Override function for the updating of the Brick instance.
@@ -81,7 +75,7 @@ public class Brick extends GameObject {
     /**
      * Update the brick's hp in accordance to it's remaining HP.
      */
-    private void updateTexture() {
+    protected void updateTexture() {
         String textureName = null;
 
         if (hp == Integer.MAX_VALUE) {
