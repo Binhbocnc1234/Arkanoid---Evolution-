@@ -2,6 +2,7 @@ import brick.*;
 import gobj.*;
 import info.GameInfo;
 import java.awt.*;
+import java.util.List;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import javax.swing.*;
@@ -37,10 +38,13 @@ public class GameManager extends JFrame {
         Ball ball = new Ball(400, 300, "Ball.png", 25f, paddle);
         GameInfo.getInstance().getObjects().add(ball);
 
-        // brick
-        Brick brick = new Brick(0, 0, 0, 0, 1);
-        Brick.debug(100, 200, 60, 20, 50);
-        GameInfo.getInstance().getObjects().add(brick);
+        // brick & level reader debug
+        List<GameObject> levelBricks = level.LevelLoader.loadLevel(
+            "assets/level/level1.txt",
+            (GameInfo.SCREEN_WIDTH / 10), 25,
+            30, 12
+        );
+        GameInfo.getInstance().getObjects().addAll(levelBricks);
 
         setFocusable(true);
         setVisible(true);
