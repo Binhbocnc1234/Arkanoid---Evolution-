@@ -1,4 +1,5 @@
 package info;
+import brick.*;
 import gobj.GameObject;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,13 +12,13 @@ public class GameInfo {
 
     /* static field phục vụ cho coders, nếu bạn muốn chạy game ở chế độ test thì để giá trị là true */
     public static boolean isTesting = true;
-
+    public static final int SCREEN_WIDTH = 600, SCREEN_HEIGHT = 700;
     private static GameInfo instance;
     private final List<GameObject> container;
-
+    private final List<Brick> bricks;
     GameInfo() {
         container = new ArrayList<>();
-
+        bricks = new ArrayList<>();
     }
 
     public static GameInfo getInstance() {

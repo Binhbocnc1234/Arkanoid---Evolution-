@@ -1,21 +1,19 @@
+import brick.*;
 import gobj.*;
 import info.GameInfo;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-
 import javax.swing.*;
 
 public class GameManager extends JFrame {
     
     private final GamePanel panel;
-    private Image background; 
 
     public GameManager() {
         setTitle("Arkanoid Evolution");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(800, 600); // có thể chỉnh kích thước
+        setSize(GameInfo.SCREEN_WIDTH, GameInfo.SCREEN_HEIGHT);
         setLocationRelativeTo(null);
 
         panel = new GamePanel();
@@ -64,7 +62,7 @@ public class GameManager extends JFrame {
             if (obj instanceof Brick) {
                 return ((Brick) obj).isDestroyed();
             }
-        return false;
+            return false;
         });
 
         panel.repaint();

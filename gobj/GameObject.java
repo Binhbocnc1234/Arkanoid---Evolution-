@@ -35,6 +35,9 @@ public class GameObject {
         this.image = new ImageIcon("assets/img/" + imagePath).getImage();
     }
 
+    /*
+     * Hàm này sẽ được GameManager goi liên tục khi game chạy
+     */
     public void update() {
 
     }
@@ -48,19 +51,25 @@ public class GameObject {
         GameInfo.getInstance().getObjects().remove(this);
     }
 
-    public boolean isCollide(GameObject other) {
-        float leftA = x - width / 2;
-        float rightA = x + width / 2;
-        float topA = y - height / 2;
-        float bottomA = y + height / 2;
+    // public Direction isCollide(GameObject other) {
+    //     float leftA = x - width / 2;
+    //     float rightA = x + width / 2;
+    //     float topA = y - height / 2;
+    //     float bottomA = y + height / 2;
 
-        float leftB = other.x - other.width / 2;
-        float rightB = other.x + other.width / 2;
-        float topB = other.y - other.height / 2;
-        float bottomB = other.y + other.height / 2;
-        // Kiểm tra giao nhau
-        return !(rightA < leftB || leftA > rightB || bottomA < topB || topA > bottomB);
-    }
+    //     float leftB = other.x - other.width / 2;
+    //     float rightB = other.x + other.width / 2;
+    //     float topB = other.y - other.height / 2;
+    //     float bottomB = other.y + other.height / 2;
+    //     // Kiểm tra giao nhau
+    //     if (rightA > leftB){
+    //         return Direction.Right;
+    //     }
+    //     else if (leftA > rightB){
+
+    //     }
+    //     return !(rightA < leftB || leftA > rightB || bottomA < topB || topA > bottomB);
+    // }
 
     // Getter/Setter
     public float getX() {

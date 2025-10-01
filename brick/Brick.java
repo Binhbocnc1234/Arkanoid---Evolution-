@@ -1,7 +1,7 @@
-import javax.swing.ImageIcon;
-
+package brick;
 import gobj.*;
 import info.GameInfo;
+import javax.swing.ImageIcon;
 
 // Temporary brick class
 // TODO: Subclasses for other types of bricks.
@@ -9,7 +9,7 @@ public class Brick extends GameObject {
 
     private int hp;
     // private float dropChance;       // TODO
-    private boolean destroyed;
+    private boolean isDestroyed;
     private boolean canCollide;
 
     /**
@@ -27,13 +27,13 @@ public class Brick extends GameObject {
         super(x, y, w, h, "");
         this.hp = hp;
         // this.dropChance = dropChance;
-        this.destroyed = false;
+        this.isDestroyed = false;
         this.canCollide = true;
         updateTexture();
     }
 
     public boolean isDestroyed() {
-        return destroyed;
+        return isDestroyed;
     }
 
     /**
@@ -57,51 +57,16 @@ public class Brick extends GameObject {
      * 
      * @param ball      Ball instance
      */
-    private void collide(Ball ball) {
-        if (!canCollide) { return; }        // Once collided, turn off collision check for this Brick.
-
+    public void takeDamage(int amount) {
         if (hp < Integer.MAX_VALUE) {       // Obsidian -> indestructable
-            hp--;
+            hp-= amount;
             updateTexture();
         }
 
-
-        // Ball collision check and redirection.
-
-        float left   = this.x - this.width / 2f;
-        float right  = this.x + this.width / 2f;
-        float top    = this.y - this.height / 2f;
-        float bottom = this.y + this.height / 2f;
-
-        float ballX = ball.getX();
-        float ballY = ball.getY();
-        float ballR = ball.getWidth() / 2f;
-
-            // Ball is approaching either left or right side.
-        if (ballX < left || ballX > right) {        
-            ball.setVelocity(-ball.getDx(), ball.getDy());
-
-                // Push ball outside of Brick, to avoid additional collision.
-            if (ballX < left) {        
-                ball.setPosition(left - ballR - 1f, ballY);
-            } else {
-                ball.setPosition(right + ballR + 1f, ballY);
-            }
-        } else {        // Ball is approaching from either up or down.
-            ball.setVelocity(ball.getDx(), -ball.getDy());
-
-                // Push ball outside of Brick, to avoid additional collision.
-            if (ballY < top) {
-                ball.setPosition(ballX, top - ballR - 1f);
-            } else {
-                ball.setPosition(ballX, bottom + ballR + 1f);
-            }
-        }
-
-        canCollide = false;
-
         if (hp <= 0) {
-            destroyed = true;
+            isDestroyed = true;
+            // Tô đức anh viết 
+            
         }
     }
 
@@ -110,18 +75,7 @@ public class Brick extends GameObject {
      */
     @Override
     public void update() {
-        if (destroyed) { return; }
-
-        for (GameObject obj : GameInfo.getInstance().getObjects()) {
-            if (obj instanceof Ball) {
-                Ball ball = (Ball) obj;
-                if (this.isCollide(ball)) {
-                    collide(ball);
-                } else {
-                    canCollide = true;      // Reset collision once ball left the Brick
-                }
-            }
-        }
+        if (isDestroyed) { return; }
     }
 
     /**
@@ -148,4 +102,5 @@ public class Brick extends GameObject {
             this.image = null;
         }
     }
+
 }

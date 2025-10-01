@@ -1,6 +1,6 @@
-import java.awt.event.KeyEvent;
-
 import gobj.MovableObject;
+import info.*;
+import java.awt.event.KeyEvent;
 
 public class Paddle extends MovableObject {
 
@@ -40,8 +40,8 @@ public class Paddle extends MovableObject {
         if (x - width / 2f < 0) {
             x = width / 2f;
         }
-        if (x + width / 2f > 800) {
-            x = 800 - width / 2;
+        if (x + width / 2f > GameInfo.SCREEN_WIDTH) {
+            x = GameInfo.SCREEN_WIDTH - width / 2;
         }
     }
 }
