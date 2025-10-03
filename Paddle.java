@@ -3,14 +3,17 @@ import info.*;
 import java.awt.event.KeyEvent;
 
 public class Paddle extends MovableObject {
-
+    private static Paddle instance;
     private float speed;
 
     public Paddle(float x, float y, float w, float h, float speed, String imagePath) {
         super(x, y, w, h, imagePath);
         this.speed = speed;
+        instance = this;
     }
-
+    public static Paddle getInstance(){
+        return instance;
+    }
     public void setUp(float windowWidth, float windowHeight) {
         this.height = 20;
         this.width = (windowWidth / 10) * 2;

@@ -9,7 +9,7 @@ import java.awt.Graphics;
 public class Ball extends MovableObject{
     private final float diameter;
     private final Paddle paddle;
-
+    private boolean isPowerUp = false;
     protected Ball(float x, float y, String imagePath, float diameter, Paddle paddle) {
         super(x, y, diameter, diameter, imagePath);
         this.paddle = paddle;
@@ -96,7 +96,7 @@ public class Ball extends MovableObject{
             dx = hitPos * 4f;
         }
 
-        //Kiểm tra khi bóng va chạm với Brick
+        // Kiểm tra khi bóng va chạm với Brick
         for(GameObject obj : GameInfo.getInstance().getObjects()){
             if (obj instanceof Brick){
                 Direction collideAns = intersect(obj);

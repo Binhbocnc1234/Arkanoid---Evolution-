@@ -6,10 +6,11 @@ public class Powerup extends MovableObject{
         super(x, y, width, height, imagePath);
     }
     @Override
-    public void update(){
-
+    public void update() {
+        //Check collision với Paddle
+        
     }
-    void ApplyPowerup(){
-
+    protected void ApplyPowerup() {
+        
     }
 }
