@@ -14,7 +14,7 @@ import javax.swing.*;
 public class GameManager extends JFrame {
     
     private final GamePanel panel;
-    Paddle paddle = new Paddle(0,0,0,0,5f,"VietNam.png");
+    Paddle paddle = new Paddle(0,0,0,0,20f,"VietNam.png");
     Ball ball = new Ball(400, 300, "Ball.png", 25f, paddle);
 
     public GameManager() {

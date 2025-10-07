@@ -2,15 +2,21 @@ package weapon;
 import brick.*;
 import gobj.*;
 import info.*;
+
+import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics;
-
+import java.awt.Graphics2D;
+import java.util.ArrayList;
 
 
 public class Ball extends MovableObject{
     private final float diameter;
     private final Paddle paddle;
     private boolean isPowerUp = false;
+    private final ArrayList<float[]> trail = new ArrayList<>();
+    private static final int MAX_TRAIL = 6;
+
     public Ball(float x, float y, String imagePath, float diameter, Paddle paddle) {
         super(x, y, diameter, diameter, imagePath);
         this.paddle = paddle;
@@ -55,6 +61,18 @@ public class Ball extends MovableObject{
     }
     
     @Override public void render(Graphics g) {
+        Graphics2D g2d = (Graphics2D) g;
+        float alpha = 0.5f;
+        float trail_diameter = diameter ;
+        for (int i = trail.size() - 1; i >= 0; i--) {
+            float[] pos = trail.get(i);
+            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
+            g2d.setColor(Color.CYAN);
+            g2d.fillOval((int) (pos[0] - trail_diameter / 2f), (int) (pos[1] - trail_diameter / 2f),(int) trail_diameter,(int) trail_diameter);
+            alpha -= 0.08f;
+            trail_diameter -= 3.6f;
+        }
+        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f ));
         if (image != null ) {
             g.drawImage(image, (int) (x - diameter / 2f), (int) (y - diameter / 2f), (int) diameter, (int) diameter, null);
         }
@@ -68,13 +86,17 @@ public class Ball extends MovableObject{
     @Override
     public void update() {
         move();
+        trail.add(new float[]{x,y});
+        if (trail.size() > MAX_TRAIL) {
+            trail.remove(0);
+        }
 
         // nảy khi chạm tường trái hoặc phải
         if (x - diameter / 2f <= 0) {
             BounceOff(Direction.Left);
         }
 
-        if (x + diameter / 2f >= GameInfo.SCREEN_WIDTH) {
+        if (x + diameter >= GameInfo.SCREEN_WIDTH) {
             BounceOff(Direction.Right);
         }
 
@@ -83,7 +105,7 @@ public class Ball extends MovableObject{
             BounceOff(Direction.Top);
         }
 
-        if (y + diameter / 2f >= GameInfo.SCREEN_HEIGHT) {
+        if (y + diameter >= GameInfo.SCREEN_HEIGHT) {
             // thêm dừng trò chơi sau
             BounceOff(Direction.Down);
         }

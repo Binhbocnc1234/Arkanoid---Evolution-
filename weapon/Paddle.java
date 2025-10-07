@@ -6,6 +6,8 @@ import java.awt.event.KeyEvent;
 public class Paddle extends MovableObject {
     private static Paddle instance;
     private float speed;
+    private boolean moveLeft = false;
+    private boolean moveRight = false;
 
     public Paddle(float x, float y, float w, float h, float speed, String imagePath) {
         super(x, y, w, h, imagePath);
@@ -30,10 +32,19 @@ public class Paddle extends MovableObject {
 
     public void handleInput(int key, boolean pressed) {
         if (key == KeyEvent.VK_LEFT || key == KeyEvent.VK_A) {
-            dx = pressed ? -speed : 0;
+            moveLeft = pressed;
         }
-        else if (key == KeyEvent.VK_RIGHT || key == KeyEvent.VK_D) {
-            dx = pressed ? speed : 0;
+        if (key == KeyEvent.VK_RIGHT || key == KeyEvent.VK_D) {
+            moveRight = pressed;
+        }
+        if (moveLeft && !moveRight) {
+            dx = -speed;
+        }
+        else if (!moveLeft && moveRight) {
+            dx = speed;
+        }
+        else {
+            dx = 0;
         }
     }
 
