@@ -59,4 +59,12 @@ public class Paddle extends MovableObject {
             x = GameInfo.SCREEN_WIDTH - width / 2;
         }
     }
+
+    /**
+     * Reset the Paddle instance to its default location.
+     */
+    public void reset() {
+        this.setUp(GameInfo.SCREEN_WIDTH, GameInfo.SCREEN_HEIGHT);
+        this.setVelocity(0, 0);
+    }
 }
