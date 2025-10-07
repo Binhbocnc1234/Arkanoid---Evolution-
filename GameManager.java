@@ -8,6 +8,9 @@ import level.LevelManager;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.List;
+import java.util.ArrayList;
+
 import javax.swing.*;
 
 public class GameManager extends JFrame {
@@ -65,7 +68,10 @@ public class GameManager extends JFrame {
 
     private void gameLoop() {
         // Cập nhật tất cả GameObject
-        for (GameObject obj : GameInfo.getInstance().getObjects()) {
+        // FIX: Sử dụng snapshot (giống như đọc ireator) để game không cần phải gọi list.size mỗi gameloop
+        // fix bởi thầy tô cảm ơn thầy ạ
+        for (int i = 0; i < GameInfo.getInstance().getObjects().size(); i++) {
+            GameObject obj = GameInfo.getInstance().getObjects().get(i);
             obj.update();
         }
 
