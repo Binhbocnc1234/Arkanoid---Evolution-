@@ -164,4 +164,13 @@ public class Ball extends MovableObject{
         }
     }
 
+    /**
+     * Reset the Ball instance to its default position.
+     * 
+     */
+    public void reset() {
+        this.setPosition(GameInfo.SCREEN_WIDTH / 2f, 300);
+        this.setVelocity(0, 10f);
+    }
+
 }
