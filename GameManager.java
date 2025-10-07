@@ -3,10 +3,9 @@ import gobj.*;
 import info.GameInfo;
 import powerup.*;
 import weapon.*;
-
+import level.LevelManager;
 
 import java.awt.*;
-import java.util.List;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import javax.swing.*;
@@ -14,8 +13,8 @@ import javax.swing.*;
 public class GameManager extends JFrame {
     
     private final GamePanel panel;
-    Paddle paddle = new Paddle(0,0,0,0,20f,"VietNam.png");
-    Ball ball = new Ball(400, 300, "Ball.png", 25f, paddle);
+    Paddle paddle = new Paddle(0,0,0,0,12f,"VietNam.png");
+    Ball ball = new Ball(GameInfo.SCREEN_WIDTH / 2f, 300, "Ball.png", 25f, paddle);
 
     public GameManager() {
         setTitle("Arkanoid Evolution");
@@ -28,7 +27,7 @@ public class GameManager extends JFrame {
 
         // tạo paddle
         //Paddle paddle = new Paddle(0,0,0,0,5f,"VietNam.png");
-        paddle.setUp(800, 600);
+        paddle.setUp(GameInfo.SCREEN_WIDTH, GameInfo.SCREEN_HEIGHT);
         // thêm paddle vào game
         GameInfo.getInstance().getObjects().add(paddle);
 
@@ -44,13 +43,8 @@ public class GameManager extends JFrame {
         //Ball ball = new Ball(400, 300, "Ball.png", 25f, paddle);
         GameInfo.getInstance().getObjects().add(ball);
 
-        // brick & level reader debug
-        List<GameObject> levelBricks = level.LevelLoader.loadLevel(
-            "assets/level/level1.txt",
-            (GameInfo.SCREEN_WIDTH / 10), 25,
-            30, 12
-        );
-        GameInfo.getInstance().getObjects().addAll(levelBricks);
+        /* Initiate the first level to avoid immediately switching to next level */
+        LevelManager.getInstance().loadCurrentLevel();
 
         //PowerUp
         PowerUp amplifyPaddle = new AmplifyPaddle(300, 300, 25, 25, "white square.png");
@@ -80,13 +74,30 @@ public class GameManager extends JFrame {
             obj.update();
         }
 
-        // Check if brick has been destoryed
+        /* Check if brick has been destoryed */ 
         GameInfo.getInstance().getObjects().removeIf(obj -> {
             if (obj instanceof Brick) {
                 return ((Brick) obj).isDestroyed();
             }
             return false;
         });
+
+        /* Check if all bricks has been destroyed, then switch level. */
+        boolean allBricksDestroyed = GameInfo.getInstance().getObjects().stream()
+            .noneMatch(obj -> obj instanceof Brick);
+
+        if(allBricksDestroyed) {
+            LevelManager.getInstance().switchToNextLevel();
+
+            for(GameObject obj : GameInfo.getInstance().getObjects()) {
+                if (obj instanceof Paddle paddle) {
+                    paddle.reset();
+                }
+                if (obj instanceof Ball ball) {
+                    ball.reset();;
+                }
+            }
+        }
 
         //panel.repaint();
 
