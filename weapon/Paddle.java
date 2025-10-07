@@ -7,6 +7,9 @@ public class Paddle extends MovableObject {
     private static Paddle instance;
     private float speed;
 
+    private boolean leftPressed = false;
+    private boolean rightPressed = false;
+
     public Paddle(float x, float y, float w, float h, float speed, String imagePath) {
         super(x, y, w, h, imagePath);
         this.speed = speed;
@@ -28,14 +31,28 @@ public class Paddle extends MovableObject {
      * @param pressed nhấn thì trả về true, còn lại trả về false
      */
 
+    /**
+     * Handling input of the Paddle instance
+     */
     public void handleInput(int key, boolean pressed) {
+        /* FIX: Updates velocity outside the function rather than restting directly. */
         if (key == KeyEvent.VK_LEFT || key == KeyEvent.VK_A) {
-            dx = pressed ? -speed : 0;
+            leftPressed = pressed;
+        } else if (key == KeyEvent.VK_RIGHT || key == KeyEvent.VK_D) {
+            rightPressed = pressed;
         }
-        else if (key == KeyEvent.VK_RIGHT || key == KeyEvent.VK_D) {
-            dx = pressed ? speed : 0;
-        }
+        updateVelocity();
     }
+
+    /**
+     * Calcuate velocity of the Paddle instance.
+     */
+    private void updateVelocity() {
+        if (leftPressed && !rightPressed) dx = -speed;
+        else if (rightPressed && !leftPressed) dx = speed;
+        else dx = 0;
+    }
+    
 
     @Override
     public void update() {
