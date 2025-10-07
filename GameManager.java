@@ -1,6 +1,10 @@
 import brick.*;
 import gobj.*;
 import info.GameInfo;
+import powerup.*;
+import weapon.*;
+
+
 import java.awt.*;
 import java.util.List;
 import java.awt.event.KeyAdapter;
@@ -10,6 +14,8 @@ import javax.swing.*;
 public class GameManager extends JFrame {
     
     private final GamePanel panel;
+    Paddle paddle = new Paddle(0,0,0,0,5f,"VietNam.png");
+    Ball ball = new Ball(400, 300, "Ball.png", 25f, paddle);
 
     public GameManager() {
         setTitle("Arkanoid Evolution");
@@ -21,7 +27,7 @@ public class GameManager extends JFrame {
         add(panel);
 
         // tạo paddle
-        Paddle paddle = new Paddle(0,0,0,0,5f,"VietNam.png");
+        //Paddle paddle = new Paddle(0,0,0,0,5f,"VietNam.png");
         paddle.setUp(800, 600);
         // thêm paddle vào game
         GameInfo.getInstance().getObjects().add(paddle);
@@ -35,7 +41,7 @@ public class GameManager extends JFrame {
             }
         });
 
-        Ball ball = new Ball(400, 300, "Ball.png", 25f, paddle);
+        //Ball ball = new Ball(400, 300, "Ball.png", 25f, paddle);
         GameInfo.getInstance().getObjects().add(ball);
 
         // brick & level reader debug
@@ -45,6 +51,18 @@ public class GameManager extends JFrame {
             30, 12
         );
         GameInfo.getInstance().getObjects().addAll(levelBricks);
+
+        //PowerUp
+        PowerUp amplifyPaddle = new AmplifyPaddle(300, 300, 25, 25, "white square.png");
+        GameInfo.getInstance().getObjects().add(amplifyPaddle);
+        amplifyPaddle.paddle = paddle;
+        TripleBall threeBall = new TripleBall(400, 300, 25, 25, "white square.png");
+        threeBall.paddle = paddle;
+        threeBall.ball = ball;
+        PowerUp tripleBall = threeBall;
+        GameInfo.getInstance().getObjects().add(tripleBall);
+
+
 
         setFocusable(true);
         setVisible(true);
@@ -57,7 +75,8 @@ public class GameManager extends JFrame {
 
     private void gameLoop() {
         // Cập nhật tất cả GameObject
-        for (GameObject obj : GameInfo.getInstance().getObjects()) {
+        for (int i = 0; i < GameInfo.getInstance().getObjects().size(); i++) {
+            GameObject obj = GameInfo.getInstance().getObjects().get(i);
             obj.update();
         }
 
@@ -69,6 +88,23 @@ public class GameManager extends JFrame {
             return false;
         });
 
+        //panel.repaint();
+
+        /**for (GameObject obj : GameInfo.getInstance().getObjects()) {
+            if (obj instanceof Powerup p) {
+                if (((Powerup) obj).isCollected()) {
+                    p.ApplyPowerup();
+                    //Ball n = new Ball(400, 300, "Ball.png", 25f, paddle);
+                    //GameInfo.getInstance().getObjects().add(n);
+                    //i = true;
+                    p.isCollected = true;
+                    //GameInfo.getInstance().getObjects().remove(p);
+                }
+            }
+        }*/
+
+        GameInfo.getInstance().getObjects().removeIf(obj -> obj instanceof PowerUp && 
+                                                  ((PowerUp) obj).isCollected);
         panel.repaint();
     }
 
