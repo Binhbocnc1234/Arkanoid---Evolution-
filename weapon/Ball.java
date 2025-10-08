@@ -80,8 +80,8 @@ public class Ball extends MovableObject{
 
         //Tạo hiệu ứng đuôi bóng
         long now = System.nanoTime();
-        if (now - lastTrailStamp >= 300_000_000L){
-            lastTrailStamp = this;
+        if (now - lastTrailStamp >= 50_000_000L){
+            lastTrailStamp = now;
             GameInfo.getInstance().getObjects().add(new BallTrail(getX(), getY(), diameter, "Ball.png"));
         }
 

@@ -137,11 +137,9 @@ public class GameManager extends JFrame {
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            GameManager gm = new GameManager();
-            if (GameInfo.isTesting) {
-                System.out.println("Welcome to Arkanoid - Cuộc sống cô đơn");
-            }
-        });
+        GameManager gm = new GameManager();
+        if (GameInfo.isTesting) {
+            System.out.println("Welcome to Arkanoid - Cuộc sống cô đơn");
+        }
     }
 }
