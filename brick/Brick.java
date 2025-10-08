@@ -1,16 +1,16 @@
 package brick;
 
 import gobj.*;
+
 import javax.swing.ImageIcon;
 
 public abstract class Brick extends GameObject {
 
     protected int hp;
     protected int id;
-    // private float dropChance;       // TODO
+    private float dropChance;       // TODO: Tạo powerup tại vị trí brick 
     protected boolean isDestroyed;
-    protected boolean canCollide;
-
+    protected int iFrames = 0;
     /**
      * Brick instance's constructor.
      * 
@@ -19,15 +19,15 @@ public abstract class Brick extends GameObject {
      * @param w             Object's width
      * @param h             Object's height
      * @param hp            Object's hit points
+     * @param dropChance    Object's PowerUp drop chance
      * @param id            Object's ID    
      */
-    public Brick(float x, float y, float w, float h, int hp, int id) {    //TODO: them tham chieu dropchance 
+    public Brick(float x, float y, float w, float h, int hp, float dropChance, int id) { 
         super(x, y, w, h, "");
         this.hp = hp;
         this.id = id;
-        // this.dropChance = dropChance;
+        this.dropChance = dropChance;
         this.isDestroyed = false;
-        this.canCollide = true;
         updateTexture();
     }
 
@@ -39,12 +39,22 @@ public abstract class Brick extends GameObject {
         return id;
     }
 
+    public void setInvulnerable(int frames) {
+        this.iFrames = frames;
+    }
+    
+    public boolean isInvulnerable() {
+        return iFrames > 0;
+    }
+
     /**
      * Handling damage taken.
      * 
      * @param amount      amount of damage dealt
      */
     public void takeDamage(int amount) {
+        if (isInvulnerable()) return;
+
         if (hp < Integer.MAX_VALUE) {       // Obsidian -> indestructable
             hp-= amount;
             updateTexture();
@@ -69,7 +79,8 @@ public abstract class Brick extends GameObject {
      */
     @Override
     public void update() {
-        if (isDestroyed) { return; }
+        if (isInvulnerable()) iFrames--;
+        if (isDestroyed) return;
     }
 
     /**
@@ -96,5 +107,4 @@ public abstract class Brick extends GameObject {
             this.image = null;
         }
     }
-
 }
