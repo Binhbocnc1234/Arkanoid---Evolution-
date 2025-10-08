@@ -121,7 +121,7 @@ public class Ball extends MovableObject{
                 Brick brick = (Brick)obj;
                 if (!hasCollidedThisFrame && collideAns != Direction.None){
                     brick.takeDamage(1);
-                    brick.setInvulnerable(5);   // Added iframe
+                    brick.setInvulnerable(10);   // Added iframe
                     hasCollidedThisFrame = true;
                 }
 

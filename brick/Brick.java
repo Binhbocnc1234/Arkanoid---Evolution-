@@ -2,6 +2,11 @@ package brick;
 
 import gobj.*;
 
+import java.awt.AlphaComposite;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+
 import javax.swing.ImageIcon;
 
 public abstract class Brick extends GameObject {
@@ -10,7 +15,10 @@ public abstract class Brick extends GameObject {
     protected int id;
     private float dropChance;       // TO DO: Tạo powerup tại vị trí brick 
     protected boolean isDestroyed;
-    protected int iFrames = 0;
+    protected boolean isHit;
+    protected int iFrames;
+    protected int aniTimer;
+    public static final int ANI_DURATION = 5;
     /**
      * Brick instance's constructor.
      * 
@@ -27,6 +35,7 @@ public abstract class Brick extends GameObject {
         this.hp = hp;
         this.id = id;
         this.dropChance = dropChance;
+        this.isHit = false;
         this.isDestroyed = false;
         updateTexture();
     }
@@ -47,6 +56,10 @@ public abstract class Brick extends GameObject {
         return iFrames > 0;
     }
 
+    public int getHp() {
+        return hp;
+    }
+
     /**
      * Handling damage taken.
      * 
@@ -58,8 +71,12 @@ public abstract class Brick extends GameObject {
         if (hp < Integer.MAX_VALUE) {       // Obsidian -> indestructable
             hp-= amount;
             updateTexture();
+            isHit = true;
+            aniTimer = ANI_DURATION;
         }
 
+
+        
         if (hp <= 0) {
             isDestroyed = true;
             onDestroyed();
@@ -79,7 +96,17 @@ public abstract class Brick extends GameObject {
      */
     @Override
     public void update() {
+        /* Update timer for damage animation */
+        if (isHit) {
+            aniTimer--;
+            if (aniTimer <= 0) {
+                isHit = false;
+            }
+        }
+
+        /* Update timer for iframes */
         if (isInvulnerable()) iFrames--;
+
         if (isDestroyed) return;
     }
 
@@ -105,6 +132,31 @@ public abstract class Brick extends GameObject {
             this.image = new ImageIcon("assets/img/brick/" + textureName).getImage();
         } else {
             this.image = null;
+        }
+    }
+
+    @Override
+    public void render(Graphics g) {
+        if (image != null) {
+            Graphics2D g2d = (Graphics2D) g;
+    
+            if (isHit) {
+                g2d.setComposite(AlphaComposite.getInstance(
+                                AlphaComposite.SRC_OVER, 0.25f));
+            }
+    
+            g.drawImage(image, (
+                        int)(x - width / 2f), (int)(y - height / 2f), 
+                        (int)width, (int)height, 
+                        null);
+    
+            if (isHit) {
+                g.setColor(new Color(255, 255, 255, 150));
+                g.fillRect((int)(x - width / 2f), (int)(y - height / 2f), 
+                            (int)width, (int)height);
+
+                g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
+            }
         }
     }
 }
