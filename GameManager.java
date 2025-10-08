@@ -1,14 +1,13 @@
 import brick.*;
 import gobj.*;
 import info.GameInfo;
-import powerup.*;
-import weapon.*;
-import level.LevelManager;
-
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import javax.swing.*;
+import level.LevelManager;
+import powerup.*;
+import weapon.*;
 
 public class GameManager extends JFrame {
     
@@ -139,18 +138,6 @@ public class GameManager extends JFrame {
             GameManager gm = new GameManager();
             if (GameInfo.isTesting) {
                 System.out.println("Welcome to Arkanoid - Cuộc sống cô đơn");
-                //Tạo một gameObject kích cỡ vừa phải tại mỗi vị trí click chuột
-                // gm.panel.addMouseListener(new java.awt.event.MouseAdapter() {
-                //     @Override
-                //     public void mouseClicked(java.awt.event.MouseEvent e) {
-                //         GameObject.create(
-                //             e.getX(), 
-                //             e.getY(),
-                //             50, 50
-                //         );
-                //         System.out.println("Create test object");
-                //     }
-                // });
             }
         });
     }

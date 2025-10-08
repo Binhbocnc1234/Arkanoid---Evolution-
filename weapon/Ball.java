@@ -3,18 +3,16 @@ import brick.*;
 import gobj.*;
 import info.*;
 import java.awt.AlphaComposite;
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.util.ArrayList;
 
 
 public class Ball extends MovableObject{
     private final float diameter;
     private final Paddle paddle;
     private boolean isPowerUp = false;
-    private final ArrayList<float[]> trail = new ArrayList<>();
     private static final int MAX_TRAIL = 6;
+    private long lastTrailStamp = 0;
     private boolean hasCollidedThisFrame = false;
 
     public Ball(float x, float y, String imagePath, float diameter, Paddle paddle) {
@@ -61,17 +59,15 @@ public class Ball extends MovableObject{
     
     @Override public void render(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
-        float alpha = 0.5f;
-        float trail_diameter = diameter ;
-        for (int i = trail.size() - 1; i >= 0; i--) {
-            float[] pos = trail.get(i);
-            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
-            g2d.setColor(Color.CYAN);
-            g2d.drawImage(image, (int) (pos[0] - trail_diameter / 2f), (int) (pos[1] - trail_diameter / 2f), (int) trail_diameter, (int) trail_diameter,  null);
-            //g2d.fillOval((int) (pos[0] - trail_diameter / 2f), (int) (pos[1] - trail_diameter / 2f),(int) trail_diameter,(int) trail_diameter);
-            alpha -= 0.08f;
-            trail_diameter -= 1.8f;
-        }
+        // for (int i = trail.size() - 1; i >= 0; i--) {
+        //     float[] pos = trail.get(i);
+        //     g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
+        //     g2d.setColor(Color.CYAN);
+        //     g2d.drawImage(image, (int) (pos[0] - trail_diameter / 2f), (int) (pos[1] - trail_diameter / 2f), (int) trail_diameter, (int) trail_diameter,  null);
+        //     //g2d.fillOval((int) (pos[0] - trail_diameter / 2f), (int) (pos[1] - trail_diameter / 2f),(int) trail_diameter,(int) trail_diameter);
+        //     alpha -= 0.08f;
+        //     trail_diameter -= 1.8f;
+        // }
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f ));
         super.render(g);
         
@@ -81,9 +77,12 @@ public class Ball extends MovableObject{
     public void update() {
         hasCollidedThisFrame = false;
         move();
-        trail.add(new float[]{x,y});
-        if (trail.size() > MAX_TRAIL) {
-            trail.remove(0);
+
+        //Tạo hiệu ứng đuôi bóng
+        long now = System.nanoTime();
+        if (now - lastTrailStamp >= 300_000_000L){
+            lastTrailStamp = this;
+            GameInfo.getInstance().getObjects().add(new BallTrail(getX(), getY(), diameter, "Ball.png"));
         }
 
         // nảy khi chạm tường trái hoặc phải
