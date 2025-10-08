@@ -13,7 +13,6 @@ public class Ball extends MovableObject{
     private boolean isPowerUp = false;
     private static final int MAX_TRAIL = 6;
     private long lastTrailStamp = 0;
-    private boolean hasCollidedThisFrame = false;
 
     public Ball(float x, float y, String imagePath, float diameter, Paddle paddle) {
         super(x, y, diameter, diameter, imagePath);
@@ -75,7 +74,6 @@ public class Ball extends MovableObject{
 
     @Override
     public void update() {
-        hasCollidedThisFrame = false;
         move();
 
         //Tạo hiệu ứng đuôi bóng
@@ -119,10 +117,9 @@ public class Ball extends MovableObject{
             if (obj instanceof Brick){
                 Direction collideAns = intersect(obj);
                 Brick brick = (Brick)obj;
-                if (!hasCollidedThisFrame && collideAns != Direction.None){
+                if (brick.getIFrame() < 0 && collideAns != Direction.None){
                     brick.takeDamage(1);
-                    brick.setInvulnerable(10);   // Added iframe
-                    hasCollidedThisFrame = true;
+                    brick.setIFrame(10);   // Added iframe
                 }
 
                 if (collideAns == Direction.Down){
