@@ -25,7 +25,7 @@ public class GameManager extends JFrame {
         add(panel);
 
         // tạo paddle
-        Paddle paddle = new Paddle(0,0,0,0,5f,"VietNam.png");
+        Paddle paddle = new Paddle(0,0,0,0,12f,"VietNam.png");
         paddle.setUp(GameInfo.SCREEN_WIDTH, GameInfo.SCREEN_HEIGHT);
         // thêm paddle vào game
         GameInfo.getInstance().getObjects().add(paddle);
