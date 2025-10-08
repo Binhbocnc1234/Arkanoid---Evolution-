@@ -13,8 +13,8 @@ import javax.swing.*;
 public class GameManager extends JFrame {
     
     private final GamePanel panel;
-    Paddle paddle = new Paddle(0,0,0,0,12f,"VietNam.png");
-    Ball ball = new Ball(GameInfo.SCREEN_WIDTH / 2f, 300, "Ball.png", 25f, paddle);
+    //Paddle paddle = new Paddle(0,0,0,0,12f,"VietNam.png");
+    //Ball ball = new Ball(GameInfo.SCREEN_WIDTH / 2f, 300, "Ball.png", 25f, paddle);
 
     public GameManager() {
         setTitle("Arkanoid Evolution");
@@ -26,7 +26,7 @@ public class GameManager extends JFrame {
         add(panel);
 
         // tạo paddle
-        //Paddle paddle = new Paddle(0,0,0,0,5f,"VietNam.png");
+        Paddle paddle = new Paddle(0,0,0,0,5f,"VietNam.png");
         paddle.setUp(GameInfo.SCREEN_WIDTH, GameInfo.SCREEN_HEIGHT);
         // thêm paddle vào game
         GameInfo.getInstance().getObjects().add(paddle);
@@ -40,7 +40,7 @@ public class GameManager extends JFrame {
             }
         });
 
-        //Ball ball = new Ball(400, 300, "Ball.png", 25f, paddle);
+        Ball ball = new Ball(paddle.getX(), paddle.getY() - paddle.getHeight(), "Ball.png", 25f, paddle);
         GameInfo.getInstance().getObjects().add(ball);
 
         /* Initiate the first level to avoid immediately switching to next level */
