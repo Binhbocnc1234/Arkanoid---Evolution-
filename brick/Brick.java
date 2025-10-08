@@ -48,16 +48,24 @@ public abstract class Brick extends GameObject {
         return id;
     }
 
-    public void setInvulnerable(int frames) {
-        this.iFrames = frames;
+    public int getIFrame() {
+        return iFrames;
     }
-    
-    public boolean isInvulnerable() {
-        return iFrames > 0;
+
+    public void setIFrame(int iFrames) {
+        this.iFrames = iFrames;
     }
 
     public int getHp() {
         return hp;
+    }
+
+    /**
+     * Check whether the Brick instance is in invulnerable state.
+     * @return      a boolean
+     */
+    public boolean isInvulnerable() {
+        return iFrames > 0;
     }
 
     /**
@@ -74,8 +82,6 @@ public abstract class Brick extends GameObject {
             isHit = true;
             aniTimer = ANI_DURATION;
         }
-
-
         
         if (hp <= 0) {
             isDestroyed = true;
