@@ -16,6 +16,7 @@ public class Ball extends MovableObject{
     private boolean isPowerUp = false;
     private final ArrayList<float[]> trail = new ArrayList<>();
     private static final int MAX_TRAIL = 6;
+    private boolean hasCollidedThisFrame = false;
 
     public Ball(float x, float y, String imagePath, float diameter, Paddle paddle) {
         super(x, y, diameter, diameter, imagePath);
@@ -85,6 +86,7 @@ public class Ball extends MovableObject{
 
     @Override
     public void update() {
+        hasCollidedThisFrame = false;
         move();
         trail.add(new float[]{x,y});
         if (trail.size() > MAX_TRAIL) {
@@ -120,13 +122,17 @@ public class Ball extends MovableObject{
         }
 
         // Kiểm tra khi bóng va chạm với Brick
+        // TODO: Bug: Hiện tại collision check không hoạt động khi Ball đi vào chính giữa 2 Brick
         for(GameObject obj : GameInfo.getInstance().getObjects()){
             if (obj instanceof Brick){
                 Direction collideAns = intersect(obj);
                 Brick brick = (Brick)obj;
-                if (collideAns != Direction.None){
+                if (!hasCollidedThisFrame && collideAns != Direction.None){
                     brick.takeDamage(1);
+                    brick.setInvulnerable(5);   // Added iframe
+                    hasCollidedThisFrame = true;
                 }
+
                 if (collideAns == Direction.Down){
                     BounceOff(Direction.Top);
                 }
