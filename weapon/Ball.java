@@ -2,7 +2,6 @@ package weapon;
 import brick.*;
 import gobj.*;
 import info.*;
-
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -23,7 +22,6 @@ public class Ball extends MovableObject{
         this.paddle = paddle;
         this.diameter = diameter;
         this.setVelocity(0, 10f);
-        
     }
 
     /*
@@ -69,18 +67,13 @@ public class Ball extends MovableObject{
             float[] pos = trail.get(i);
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
             g2d.setColor(Color.CYAN);
-            g2d.fillOval((int) (pos[0] - trail_diameter / 2f), (int) (pos[1] - trail_diameter / 2f),(int) trail_diameter,(int) trail_diameter);
+            g2d.drawImage(image, (int) (pos[0] - trail_diameter / 2f), (int) (pos[1] - trail_diameter / 2f), (int) trail_diameter, (int) trail_diameter,  null);
+            //g2d.fillOval((int) (pos[0] - trail_diameter / 2f), (int) (pos[1] - trail_diameter / 2f),(int) trail_diameter,(int) trail_diameter);
             alpha -= 0.08f;
-            trail_diameter -= 3.6f;
+            trail_diameter -= 1.8f;
         }
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f ));
-        if (image != null ) {
-            g.drawImage(image, (int) (x - diameter / 2f), (int) (y - diameter / 2f), (int) diameter, (int) diameter, null);
-        }
-        else {
-            g.setColor(Color.BLUE);
-            g.fillOval((int) (x - diameter / 2f), (int) (y - diameter / 2f), (int) diameter, (int) diameter);
-        }
+        super.render(g);
         
     }
 
@@ -118,11 +111,11 @@ public class Ball extends MovableObject{
             dy = -Math.abs(dy); // bật trở lại
             //chạm giữa thì bật lại giữa, chạm lệch trái thì bật lệch trái, chạm lệch phải thì bật lệnh phải
             float hitPos = ((this.x - paddle.getX()) / (paddle.getWidth() / 2f)); 
-            dx = hitPos * 4f;
+            dx = hitPos * 6.9f;
         }
 
         // Kiểm tra khi bóng va chạm với Brick
-        // TODO: Bug: Hiện tại collision check không hoạt động khi Ball đi vào chính giữa 2 Brick
+        // TO DO: Bug: Hiện tại collision check không hoạt động khi Ball đi vào chính giữa 2 Brick
         for(GameObject obj : GameInfo.getInstance().getObjects()){
             if (obj instanceof Brick){
                 Direction collideAns = intersect(obj);
