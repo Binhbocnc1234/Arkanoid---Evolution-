@@ -117,7 +117,7 @@ public class Ball extends MovableObject{
             if (obj instanceof Brick){
                 Direction collideAns = intersect(obj);
                 Brick brick = (Brick)obj;
-                if (brick.getIFrame() < 0 && collideAns != Direction.None){
+                if (brick.getIFrame() <= 0 && collideAns != Direction.None){
                     brick.takeDamage(1);
                     brick.setIFrame(10);   // Added iframe
                 }
