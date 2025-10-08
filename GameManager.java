@@ -84,6 +84,9 @@ public class GameManager extends JFrame {
 
         /* Check if all bricks has been destroyed, then switch level. */
         boolean allBricksDestroyed = GameInfo.getInstance().getObjects().stream()
+            .filter(obj -> obj instanceof Brick)
+            .map(obj -> (Brick) obj)
+            .filter(brick -> brick.getHp() < Integer.MAX_VALUE)
             .noneMatch(obj -> obj instanceof Brick);
 
         if(allBricksDestroyed) {
