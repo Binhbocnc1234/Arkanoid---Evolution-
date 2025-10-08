@@ -2,7 +2,6 @@ package weapon;
 import brick.*;
 import gobj.*;
 import info.*;
-
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -74,13 +73,7 @@ public class Ball extends MovableObject{
             trail_diameter -= 3.6f;
         }
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f ));
-        if (image != null ) {
-            g.drawImage(image, (int) (x - diameter / 2f), (int) (y - diameter / 2f), (int) diameter, (int) diameter, null);
-        }
-        else {
-            g.setColor(Color.BLUE);
-            g.fillOval((int) (x - diameter / 2f), (int) (y - diameter / 2f), (int) diameter, (int) diameter);
-        }
+        super.render(g);
         
     }
 
