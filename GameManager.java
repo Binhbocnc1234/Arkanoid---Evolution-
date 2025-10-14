@@ -8,6 +8,7 @@ import javax.swing.*;
 import level.LevelManager;
 import powerup.*;
 import weapon.*;
+import UI.*;
 
 public class GameManager extends JFrame {
     
@@ -136,10 +137,17 @@ public class GameManager extends JFrame {
         }
     }
 
+    public static void startGame() {
+        new GameManager();
+    }
+
     public static void main(String[] args) {
-        GameManager gm = new GameManager();
-        if (GameInfo.isTesting) {
-            System.out.println("Welcome to Arkanoid - Cuộc sống cô đơn");
-        }
+        UI.Lobby lobby = new UI.Lobby();
+        lobby.setVisible(true);
+        // Xử lý khi nhấn Play
+        lobby.playButton.addActionListener(e -> {
+            setVisible(false);
+            GameManager.startGame();
+        });
     }
 }
