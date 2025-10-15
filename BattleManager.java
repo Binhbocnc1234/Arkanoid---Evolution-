@@ -1,3 +1,4 @@
+import UI.*;
 import brick.*;
 import gobj.*;
 import info.GameInfo;
@@ -9,7 +10,15 @@ import level.LevelManager;
 import powerup.*;
 import weapon.*;
 
+enum BattleState {
+    Fighting,
+    Lose,
+    Win
+}
+
 public class BattleManager extends JPanel {
+    BattleState state = BattleState.Fighting;
+    private long loseTimestamp = -1;
     public BattleManager() {
 
         // tạo paddle
@@ -55,55 +64,72 @@ public class BattleManager extends JPanel {
     }
 
     private void gameLoop() {
-        // Cập nhật tất cả GameObject
-        for (int i = 0; i < GameInfo.getInstance().getObjects().size(); i++) {
-            GameObject obj = GameInfo.getInstance().getObjects().get(i);
-            obj.update();
+        if (state == BattleState.Lose) {
+            long now = System.nanoTime();
+            if (now - loseTimestamp >= 3_000_000_000L) {
+                GameManager.instance.switchTo(new Lobby());
+            }
+            add(new MyLabel("You lose", GameInfo.SCREEN_WIDTH/2, GameInfo.SCREEN_HEIGHT/2, 300, 200));
+        }
+        else {
+                    // Cập nhật tất cả GameObject
+            for (int i = 0; i < GameInfo.getInstance().getObjects().size(); i++) {
+                GameObject obj = GameInfo.getInstance().getObjects().get(i);
+                obj.update();
+            }
+            // Nếu GameObject được đánh dấu là đã chết thì loại nó khỏi dãy
+            GameInfo.getInstance().getObjects().removeIf(obj -> obj.isDie());
+
+            /* Check if all bricks has been destroyed, then switch level. */
+            boolean allBricksDestroyed = GameInfo.getInstance().getObjects().stream()
+                .filter(obj -> obj instanceof Brick)
+                .map(obj -> (Brick) obj)
+                .filter(brick -> brick.getHp() < Integer.MAX_VALUE)
+                .noneMatch(obj -> obj instanceof Brick);
+
+            if (allBricksDestroyed) {
+                LevelManager.getInstance().switchToNextLevel();
+
+                for (GameObject obj : GameInfo.getInstance().getObjects()) {
+                    if (obj instanceof Paddle paddle) {
+                        paddle.reset();
+                    }
+                    if (obj instanceof Ball ball) {
+                        ball.reset();
+                    }
+                }
+            }
+
+            /* Kiểm tra nếu Ball bị destroyed toàn bộ thì dẫn đến thua cuộc*/
+            boolean haveBall = false;
+            for (GameObject obj : GameInfo.getInstance().getCurrentObjects()) {
+                if (obj instanceof Ball) {
+                    haveBall = true;
+                }
+            }
+            if (haveBall == false) {
+                System.out.print("Bạn đã thua, vài giây nữa sẽ quay trở lại màn hình chính");
+                state = BattleState.Lose;
+                loseTimestamp = System.nanoTime();
+            }
+            
+            /**for (GameObject obj : GameInfo.getInstance().getObjects()) {
+                if (obj instanceof Powerup p) {
+                    if (((Powerup) obj).isCollected()) {
+                        p.ApplyPowerup();
+                        //Ball n = new Ball(400, 300, "Ball.png", 25f, paddle);
+                        //GameInfo.getInstance().getObjects().add(n);
+                        //i = true;
+                        p.isCollected = true;
+                        //GameInfo.getInstance().getObjects().remove(p);
+                    }
+                }
+            }*/
+
+            GameInfo.getInstance().getObjects().removeIf(obj -> obj instanceof PowerUp && 
+                    ((PowerUp) obj).isCollected);
         }
 
-        /* Check if brick has been destoryed */ 
-        GameInfo.getInstance().getObjects().removeIf(obj -> {
-            if (obj instanceof Brick) {
-                return ((Brick) obj).isDestroyed();
-            }
-            return false;
-        });
-
-        /* Check if all bricks has been destroyed, then switch level. */
-        boolean allBricksDestroyed = GameInfo.getInstance().getObjects().stream()
-            .filter(obj -> obj instanceof Brick)
-            .map(obj -> (Brick) obj)
-            .filter(brick -> brick.getHp() < Integer.MAX_VALUE)
-            .noneMatch(obj -> obj instanceof Brick);
-
-        if(allBricksDestroyed) {
-            LevelManager.getInstance().switchToNextLevel();
-
-            for(GameObject obj : GameInfo.getInstance().getObjects()) {
-                if (obj instanceof Paddle paddle) {
-                    paddle.reset();
-                }
-                if (obj instanceof Ball ball) {
-                    ball.reset();;
-                }
-            }
-        }
-
-        /**for (GameObject obj : GameInfo.getInstance().getObjects()) {
-            if (obj instanceof Powerup p) {
-                if (((Powerup) obj).isCollected()) {
-                    p.ApplyPowerup();
-                    //Ball n = new Ball(400, 300, "Ball.png", 25f, paddle);
-                    //GameInfo.getInstance().getObjects().add(n);
-                    //i = true;
-                    p.isCollected = true;
-                    //GameInfo.getInstance().getObjects().remove(p);
-                }
-            }
-        }*/
-
-        GameInfo.getInstance().getObjects().removeIf(obj -> obj instanceof PowerUp && 
-                ((PowerUp) obj).isCollected);
         setBackground(Color.BLACK);
         this.repaint();
     }
@@ -112,7 +138,7 @@ public class BattleManager extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        for (GameObject obj : GameInfo.getInstance().getObjects()) {
+        for (GameObject obj : GameInfo.getInstance().getCurrentObjects()) {
             obj.render(g);
         }
     }

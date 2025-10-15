@@ -4,10 +4,15 @@ import java.awt.Graphics;
 import java.awt.Image;
 import javax.swing.ImageIcon;
 
+
+
 public class GameObject {
+
+    public int sortingIndex = 1;
     protected float x, y;
     protected float width, height;
     protected Image image;
+    private boolean isDead = false;
 
     /**
      * Creates a game object with position, size and image. The pivot of GameObject is in the middle
@@ -48,7 +53,11 @@ public class GameObject {
     }
     
     public void selfDestroy() {
-        GameInfo.getInstance().getObjects().remove(this);
+        isDead = true;
+    }
+
+    public boolean isDie() {
+        return isDead;
     }
 
     // public Direction isCollide(GameObject other) {

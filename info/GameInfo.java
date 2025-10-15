@@ -1,7 +1,10 @@
 package info;
 
 import gobj.GameObject;
+import java.awt.*;
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 /*
@@ -13,11 +16,19 @@ public class GameInfo {
     /* static field phục vụ cho coders, nếu bạn muốn chạy game ở chế độ test thì để giá trị là true */
     public static boolean isTesting = true;
     public static final int SCREEN_WIDTH = 600, SCREEN_HEIGHT = 700;
+    private Font mainFont; 
     private static GameInfo instance;
     private final List<GameObject> container;
 
     GameInfo() {
         container = new ArrayList<>();
+        try {
+            mainFont = Font.createFont(Font.TRUETYPE_FONT, new File("assets/font/Radiant-Kingdom.ttf")).deriveFont(32f);
+            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            ge.registerFont(mainFont);
+        } catch (Exception e) {
+            mainFont = new Font("Serif", Font.BOLD, 32);
+        }
     }
 
     public static GameInfo getInstance() {
@@ -27,6 +38,9 @@ public class GameInfo {
         return instance;
     }
 
+    public Font getFont() {
+        return mainFont;
+    }
     /*
     * Trả về danh sách gốc, hàm lỗi thời, khuyên không dùng!
     */
@@ -46,6 +60,9 @@ public class GameInfo {
      * Trả về danh sách copy, phục vụ cho việc duyệt GameObject
      */
     public List<GameObject> getCurrentObjects() {
-        return new ArrayList<>(container);
+        List<GameObject> list = new ArrayList<>(container);
+        list.sort(Comparator.comparingInt(o -> o.sortingIndex));
+        return list;
     }
+
 }

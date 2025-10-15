@@ -3,7 +3,7 @@ import javax.swing.*;
 
 public class GameManager extends JFrame {
     public static GameManager instance;
-
+    private JPanel activePanel;
     public GameManager() {
         instance = this;
         setTitle("Arkanoid Evolution");
@@ -27,6 +27,8 @@ public class GameManager extends JFrame {
         revalidate();
         repaint();
         panel.setFocusable(true);
+        activePanel = panel;
+        SwingUtilities.invokeLater(() -> panel.requestFocusInWindow());
         // panel.requestFocusWindow();
     }
 

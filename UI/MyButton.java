@@ -1,30 +1,19 @@
 package UI;
 
+import info.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.File;
 import javax.swing.*;
 
-public class Button extends JButton {
-    private static Font customFont;
-
-    static {
-        try {
-            customFont = Font.createFont(Font.TRUETYPE_FONT, new File("assets/font/Radiant-Kingdom.ttf")).deriveFont(32f);
-            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            ge.registerFont(customFont);
-        } catch (Exception e) {
-            customFont = new Font("Serif", Font.BOLD, 32);
-        }
-    }
-
-    public Button(String text) {
+public class MyButton extends JButton {
+    public MyButton(String text, int x, int y, int width, int height) {
         super(text);
-        setFont(customFont);
+        setFont(GameInfo.getInstance().getFont());
         setFocusPainted(false);
         setBackground(new Color(120, 80, 200)); // sáng hơn nền
         setForeground(Color.WHITE);
         setBorderPainted(false);
+        setBounds(x - width/2, y - height/2, width, height);
 
         addMouseListener(new MouseAdapter() {
             @Override

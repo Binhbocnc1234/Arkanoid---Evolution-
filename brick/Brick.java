@@ -1,12 +1,10 @@
 package brick;
 
 import gobj.*;
-
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-
 import javax.swing.ImageIcon;
 
 public abstract class Brick extends GameObject {
@@ -86,6 +84,7 @@ public abstract class Brick extends GameObject {
         if (hp <= 0) {
             isDestroyed = true;
             onDestroyed();
+            selfDestroy(); // Cường nên sử dụng hàm selfDestroy() để xóa GameObject
             // Tô đức anh viết
             // cam on thay to
         }

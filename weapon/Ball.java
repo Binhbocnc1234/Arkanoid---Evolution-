@@ -97,9 +97,8 @@ public class Ball extends MovableObject{
             BounceOff(Direction.Top);
         }
 
-        if (y + diameter >= GameInfo.SCREEN_HEIGHT) {
-            // thêm dừng trò chơi sau
-            BounceOff(Direction.Down);
+        if (y - diameter >= GameInfo.SCREEN_HEIGHT) {
+            selfDestroy();
         }
 
         // kiểm tra khi bóng va chạm với paddle thì bật ra
