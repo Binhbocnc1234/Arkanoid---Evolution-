@@ -1,18 +1,12 @@
-package UI;
+ 
 
 import java.awt.*;
 import javax.swing.*;
 
-public class Lobby extends JFrame {
+public class Lobby extends JPanel {
     public Button playButton;
     private Font customFont;
-
     public Lobby() {
-        setTitle("Arkanoid-Evolution");
-        setSize(800, 600);
-        setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
         try {
             customFont = Font.createFont(Font.TRUETYPE_FONT, new java.io.File("assets/font/Radiant-Kingdom.ttf")).deriveFont(48f);
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -33,6 +27,6 @@ public class Lobby extends JFrame {
         playButton.setBounds(300, 300, 200, 70);
         add(playButton);
 
-        getContentPane().setBackground(new Color(30, 20, 60));
+        this.setBackground(new Color(30, 20, 60));
     }
 }

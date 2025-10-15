@@ -28,18 +28,18 @@ public class GameInfo {
     }
 
     /*
+    * Trả về danh sách gốc, hàm lỗi thời, khuyên không dùng!
+    */
+    public List<GameObject> getObjects() {
+        return container;
+    }
+
+    /*
      * Khi tạo GameObject mới thì luôn phải thêm vào container, nếu không thì GameObject
      * không gọi được hàm update() 
      */
     public void addGameObject(GameObject gameObject) {
         container.add(gameObject);
-    }
-
-    /*
-     * Trả về danh sách gốc, hàm lỗi thời, khuyên không dùng!
-     */
-    public List<GameObject> getObjects() {
-        return container;
     }
 
     /*
