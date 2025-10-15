@@ -13,7 +13,7 @@ public abstract class Brick extends GameObject {
 
     protected int hp;
     protected int id;
-    private float dropChance;       // TO DO: Tạo powerup tại vị trí brick 
+    private float dropChance;       // TODO: Tạo powerup tại vị trí brick 
     protected boolean isDestroyed;
     protected boolean isHit;
     protected int iFrames;
@@ -48,16 +48,24 @@ public abstract class Brick extends GameObject {
         return id;
     }
 
-    public void setInvulnerable(int frames) {
-        this.iFrames = frames;
+    public int getIFrame() {
+        return iFrames;
     }
-    
-    public boolean isInvulnerable() {
-        return iFrames > 0;
+
+    public void setIFrame(int iFrames) {
+        this.iFrames = iFrames;
     }
 
     public int getHp() {
         return hp;
+    }
+
+    /**
+     * Check whether the Brick instance is in invulnerable state.
+     * @return      a boolean
+     */
+    public boolean isInvulnerable() {
+        return iFrames > 0;
     }
 
     /**
@@ -74,8 +82,6 @@ public abstract class Brick extends GameObject {
             isHit = true;
             aniTimer = ANI_DURATION;
         }
-
-
         
         if (hp <= 0) {
             isDestroyed = true;
@@ -135,6 +141,12 @@ public abstract class Brick extends GameObject {
         }
     }
 
+    /**
+     * Renders hit animation for Brick instance.
+     * Only works with Bricks with HP > 2 for now.
+     * TODO: add explosion effect for destroyed bricks
+     * TODO: add effect for TNT bricks 
+     */
     @Override
     public void render(Graphics g) {
         if (image != null) {
