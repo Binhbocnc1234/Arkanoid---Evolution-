@@ -12,14 +12,7 @@ public class GameManager extends JFrame {
         setLocationRelativeTo(null);
         setVisible(true);
 
-
-        // Xử lý khi nhấn Play
-        Lobby lobby = new Lobby();
-        GameManager.instance.switchTo(lobby);
-        lobby.playButton.addActionListener(e -> {
-            lobby.setVisible(false);
-            switchTo(new BattleManager());
-        });
+        GameManager.instance.switchTo(new Lobby());
     }
 
     public void switchTo(JPanel panel) {
@@ -27,9 +20,9 @@ public class GameManager extends JFrame {
         revalidate();
         repaint();
         panel.setFocusable(true);
+        panel.setVisible(true);
         activePanel = panel;
         SwingUtilities.invokeLater(() -> panel.requestFocusInWindow());
-        // panel.requestFocusWindow();
     }
 
     public static void main(String[] args) {

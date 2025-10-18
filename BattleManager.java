@@ -19,13 +19,14 @@ enum BattleState {
 public class BattleManager extends JPanel {
     BattleState state = BattleState.Fighting;
     private long loseTimestamp = -1;
+    private Timer timer;
     public BattleManager() {
-
+        GameInfo.getInstance().Initialize();
         // tạo paddle
         Paddle paddle = new Paddle(0,0,0,0,5f,"VietNam.png");
         paddle.setUp(GameInfo.SCREEN_WIDTH, GameInfo.SCREEN_HEIGHT);
         // thêm paddle vào game
-        GameInfo.getInstance().getObjects().add(paddle);
+        GameInfo.getInstance().addGameObject(paddle);
 
         addKeyListener(new KeyAdapter() {
             @Override public void keyPressed(KeyEvent ev) {
@@ -52,27 +53,24 @@ public class BattleManager extends JPanel {
         PowerUp tripleBall = threeBall;
         GameInfo.getInstance().getObjects().add(tripleBall);
 
-
-
-        setFocusable(true);
-        setVisible(true);
-        SwingUtilities.invokeLater(() -> requestFocusInWindow());
-
         // Khởi động vòng lặp game
-        Timer timer = new Timer(16, e -> gameLoop());
+        timer = new Timer(16, e -> gameLoop());
         timer.start();
     }
 
+    private void endBattle() {
+        GameManager.instance.switchTo(new Lobby());
+        timer.stop();
+    }
     private void gameLoop() {
         if (state == BattleState.Lose) {
             long now = System.nanoTime();
             if (now - loseTimestamp >= 3_000_000_000L) {
-                GameManager.instance.switchTo(new Lobby());
+                endBattle();
             }
-            add(new MyLabel("You lose", GameInfo.SCREEN_WIDTH/2, GameInfo.SCREEN_HEIGHT/2, 300, 200));
         }
         else {
-                    // Cập nhật tất cả GameObject
+            // Cập nhật tất cả GameObject
             for (int i = 0; i < GameInfo.getInstance().getObjects().size(); i++) {
                 GameObject obj = GameInfo.getInstance().getObjects().get(i);
                 obj.update();
@@ -86,7 +84,7 @@ public class BattleManager extends JPanel {
                 .map(obj -> (Brick) obj)
                 .filter(brick -> brick.getHp() < Integer.MAX_VALUE)
                 .noneMatch(obj -> obj instanceof Brick);
-
+                
             if (allBricksDestroyed) {
                 LevelManager.getInstance().switchToNextLevel();
 
@@ -111,6 +109,9 @@ public class BattleManager extends JPanel {
                 System.out.print("Bạn đã thua, vài giây nữa sẽ quay trở lại màn hình chính");
                 state = BattleState.Lose;
                 loseTimestamp = System.nanoTime();
+                add(new MyLabel("You lose",
+                        GameInfo.SCREEN_WIDTH / 2, GameInfo.SCREEN_HEIGHT / 2,
+                        300, 60));
             }
             
             /**for (GameObject obj : GameInfo.getInstance().getObjects()) {
