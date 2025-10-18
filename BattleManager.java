@@ -9,6 +9,7 @@ import javax.swing.*;
 import level.LevelManager;
 import powerup.*;
 import weapon.*;
+import soundmanager.*;
 
 enum BattleState {
     Fighting,
@@ -23,7 +24,7 @@ public class BattleManager extends JPanel {
     public BattleManager() {
         GameInfo.getInstance().Initialize();
         // tạo paddle
-        Paddle paddle = new Paddle(0,0,0,0,5f,"VietNam.png");
+        Paddle paddle = new Paddle(0,0,0,0,12f,"VietNam.png");
         paddle.setUp(GameInfo.SCREEN_WIDTH, GameInfo.SCREEN_HEIGHT);
         // thêm paddle vào game
         GameInfo.getInstance().addGameObject(paddle);
@@ -52,7 +53,10 @@ public class BattleManager extends JPanel {
         threeBall.ball = ball;
         PowerUp tripleBall = threeBall;
         GameInfo.getInstance().getObjects().add(tripleBall);
-
+        
+        SoundManager.getSound("wall", "/assets/sound/bounce.wav");
+        SoundManager.getSound("paddle", "/assets/sound/bounce.wav");
+        SoundManager.getSound("brick", "/assets/sound/brick.wav");
         // Khởi động vòng lặp game
         timer = new Timer(16, e -> gameLoop());
         timer.start();

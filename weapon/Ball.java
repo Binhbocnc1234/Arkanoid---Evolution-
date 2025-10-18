@@ -5,6 +5,7 @@ import info.*;
 import java.awt.AlphaComposite;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import soundmanager.*;
 
 
 public class Ball extends MovableObject{
@@ -86,15 +87,18 @@ public class Ball extends MovableObject{
         // nảy khi chạm tường trái hoặc phải
         if (x - diameter / 2f <= 0) {
             BounceOff(Direction.Left);
+            SoundManager.playSound("wall");
         }
 
         if (x + diameter >= GameInfo.SCREEN_WIDTH) {
             BounceOff(Direction.Right);
+            SoundManager.playSound("wall");
         }
 
         // nảy khi chạm trên hoặc dưới
         if (y - diameter / 2f <= 0) {
             BounceOff(Direction.Top);
+            SoundManager.playSound("wall");
         }
 
         if (y - diameter >= GameInfo.SCREEN_HEIGHT) {
@@ -108,8 +112,8 @@ public class Ball extends MovableObject{
             //chạm giữa thì bật lại giữa, chạm lệch trái thì bật lệch trái, chạm lệch phải thì bật lệnh phải
             float hitPos = ((this.x - paddle.getX()) / (paddle.getWidth() / 2f)); 
             dx = hitPos * 6.9f;
+            SoundManager.playSound("paddle");
         }
-
         // Kiểm tra khi bóng va chạm với Brick
         // TO DO: Bug: Hiện tại collision check không hoạt động khi Ball đi vào chính giữa 2 Brick
         for(GameObject obj : GameInfo.getInstance().getObjects()){

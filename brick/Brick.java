@@ -11,7 +11,7 @@ public abstract class Brick extends GameObject {
 
     protected int hp;
     protected int id;
-    private float dropChance;       // TODO: Tạo powerup tại vị trí brick 
+    private float dropChance;       // TO DO: Tạo powerup tại vị trí brick 
     protected boolean isDestroyed;
     protected boolean isHit;
     protected int iFrames;
@@ -143,8 +143,8 @@ public abstract class Brick extends GameObject {
     /**
      * Renders hit animation for Brick instance.
      * Only works with Bricks with HP > 2 for now.
-     * TODO: add explosion effect for destroyed bricks
-     * TODO: add effect for TNT bricks 
+     * TO DO: add explosion effect for destroyed bricks
+     * TO DO: add effect for TNT bricks 
      */
     @Override
     public void render(Graphics g) {
