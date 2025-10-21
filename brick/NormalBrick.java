@@ -13,12 +13,10 @@ public class NormalBrick extends Brick {
     public void selfDestroy() {
         super.selfDestroy();
         int count = 3 + (int) (Math.random() * 3);
-        System.out.println("Creating " + count + " brick particles...");
 
         for (int i = 0; i < count; i++) {
                 BrickParticle particle = new BrickParticle(x, y);
                 GameInfo.getInstance().addGameObject(particle);
-                System.out.println("Particle created at (" + x + ", " + y + ")");
         }
     }
 }

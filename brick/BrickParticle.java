@@ -16,16 +16,16 @@ public class BrickParticle extends MovableObject {
 
         /* Randomize particle's attributes. */
 
-        this.size = 30 + (float) Math.random() * 10;          // size 5px -> 10px
+        this.size = 5 + (float) Math.random() * 5;           // size 5px -> 10px
 
             /* Calculating flying path */
         double angle = Math.random() * 2 * Math.PI;         // angle 0 -> 2pi
-        double speed = 0f;    // speed 3f -> 5f
+        double speed = 3f + (float) Math.random() * 7;      // speed 3f -> 10f
 
         this.dx = (float) (Math.cos(angle) * speed);
         this.dy = (float) (Math.sin(angle) * speed);
 
-        this.aniDur = 60f;      // 10->20 frames
+        this.aniDur = 30 + (float) Math.random() * 40;        // 30->40 frames
 
         this.isDead = false;
     }

@@ -1,6 +1,15 @@
 package brick;
 
 public class BrickFactory {
+    /**
+     * Create a Brick instance in accordance to the ID.
+     * @param id        Brick's id
+     * @param x         Brick's x Coord
+     * @param y         Brick's y Coord
+     * @param w         Brick's width
+     * @param h         Brick's height
+     * @return          A Brick instance
+     */
     public static Brick createBrick(int id, float x, float y, float w, float h) {
         switch (id) {
             /*
