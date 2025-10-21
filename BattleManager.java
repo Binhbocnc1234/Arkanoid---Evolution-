@@ -56,7 +56,7 @@ public class BattleManager extends JPanel {
 
         //sound
         SoundManager.getSound("wall", "/assets/sound/bounce.wav");
-        SoundManager.getSound("paddle", "/assets/sound/bounce.wav");
+        SoundManager.getSound("paddle", "/assets/sound/paddle.wav");
         SoundManager.getSound("brick", "/assets/sound/brick.wav");
         // Khởi động vòng lặp game
         timer = new Timer(16, e -> gameLoop());

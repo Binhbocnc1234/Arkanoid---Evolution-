@@ -1,7 +1,11 @@
 package weapon;
 import gobj.MovableObject;
 import info.*;
+
+import java.awt.Graphics;
 import java.awt.event.KeyEvent;
+
+import javax.swing.plaf.basic.BasicBorders.RadioButtonBorder;
 
 public class Paddle extends MovableObject {
     private static Paddle instance;
@@ -9,10 +13,17 @@ public class Paddle extends MovableObject {
     private boolean moveLeft = false;
     private boolean moveRight = false;
 
+    private boolean isRecoiling = false;
+    private boolean isRecoilDown = false;
+    private float startY;
+    private static final float RECOIL_DISTANCE = 8.0f;
+    private static final float RECOIL_SPEED = 1.5f;
+
     public Paddle(float x, float y, float w, float h, float speed, String imagePath) {
         super(x, y, w, h, imagePath);
         this.speed = speed;
         instance = this;
+        this.startY = y;
     }
     public static Paddle getInstance(){
         return instance;
@@ -22,6 +33,7 @@ public class Paddle extends MovableObject {
         this.width = (windowWidth / 10) * 2;
         this.x = windowWidth / 2f;
         this.y = windowHeight - this.height / 2f - 50;
+        this.startY = this.y;
     }
 
     /**
@@ -58,6 +70,23 @@ public class Paddle extends MovableObject {
         if (x + width / 2f > GameInfo.SCREEN_WIDTH) {
             x = GameInfo.SCREEN_WIDTH - width / 2;
         }
+        if (isRecoiling) {
+            float recoilY = startY + RECOIL_DISTANCE;
+            if (isRecoilDown) {
+                y += RECOIL_SPEED;
+                if (y >= recoilY) {
+                    y = recoilY;
+                    isRecoilDown = false;
+                }
+
+            } else {
+                y -= RECOIL_SPEED;
+                if (y <= startY) {
+                    y = startY;
+                    isRecoiling = false;
+                }
+            }
+        }
     }
 
     /**
@@ -66,5 +95,14 @@ public class Paddle extends MovableObject {
     public void reset() {
         this.setUp(GameInfo.SCREEN_WIDTH, GameInfo.SCREEN_HEIGHT);
         this.setVelocity(0, 0);
+    }
+
+
+    public void recoil() {
+        if (!isRecoiling) {
+            this.isRecoilDown = true;
+            this.isRecoiling = true;
+        }
+        
     }
 }

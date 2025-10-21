@@ -14,13 +14,13 @@ public class Ball extends MovableObject{
     private boolean isPowerUp = false;
     private static final int MAX_TRAIL = 6;
     private long lastTrailStamp = 0;
-    private boolean hasLeftPaddleInitially = false;
+    //private boolean hasLeftPaddleInitially = false;
 
     public Ball(float x, float y, String imagePath, float diameter, Paddle paddle) {
         super(x, y, diameter, diameter, imagePath);
         this.paddle = paddle;
         this.diameter = diameter;
-        this.setVelocity(0, 10f);
+        this.setVelocity(0, -10f);
     }
 
     /*
@@ -80,9 +80,9 @@ public class Ball extends MovableObject{
 
         //Tạo hiệu ứng đuôi bóng
         long now = System.nanoTime();
-        if (now - lastTrailStamp >= 50_000_000L){
+        if (now - lastTrailStamp >= 25_000_000L){
             lastTrailStamp = now;
-            GameInfo.getInstance().addGameObject(new BallTrail(getX(), getY(), diameter, "Ball.png"));
+            GameInfo.getInstance().getObjects().add(new BallTrail(getX(), getY(), diameter, "Ball.png"));
         }
 
         // nảy khi chạm tường trái hoặc phải
@@ -113,14 +113,18 @@ public class Ball extends MovableObject{
             //chạm giữa thì bật lại giữa, chạm lệch trái thì bật lệch trái, chạm lệch phải thì bật lệnh phải
             float hitPos = ((this.x - paddle.getX()) / (paddle.getWidth() / 2f)); 
             dx = hitPos * 6.9f;
+            /*
             if (hasLeftPaddleInitially == true) {
                 SoundManager.playSound("paddle");
             }
             hasLeftPaddleInitially = true;
+            */
+            paddle.recoil();
+            SoundManager.playSound("paddle");
         }
         // Kiểm tra khi bóng va chạm với Brick
         // TO DO: Bug: Hiện tại collision check không hoạt động khi Ball đi vào chính giữa 2 Brick
-        for(GameObject obj : GameInfo.getInstance().getCurrentObjects()){
+        for(GameObject obj : GameInfo.getInstance().getObjects()){
             if (obj instanceof Brick){
                 Direction collideAns = intersect(obj);
                 Brick brick = (Brick)obj;
