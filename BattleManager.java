@@ -76,8 +76,8 @@ public class BattleManager extends JPanel {
         }
         else {
             // Cập nhật tất cả GameObject
-            for (int i = 0; i < GameInfo.getInstance().getObjects().size(); i++) {
-                GameObject obj = GameInfo.getInstance().getObjects().get(i);
+            for (int i = 0; i < GameInfo.getInstance().getCurrentObjects().size(); i++) {
+                GameObject obj = GameInfo.getInstance().getCurrentObjects().get(i);
                 obj.update();
             }
             GameInfo.getInstance().flushGameObject();

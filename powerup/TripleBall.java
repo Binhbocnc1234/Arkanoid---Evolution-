@@ -11,9 +11,9 @@ public class TripleBall extends PowerUp{
 
     @Override
     public void ApplyPowerup() {
-        GameInfo.getInstance().getObjects().add(new Ball(ball.getX()/1.2f, ball.getY()/1.2f,
+        GameInfo.getInstance().addGameObject(new Ball(ball.getX()/1.2f, ball.getY()/1.2f,
                                             "Ball.png", 25, paddle));
-        GameInfo.getInstance().getObjects().add(new Ball(ball.getX()/1.1f, ball.getY()/1.1f,
+        GameInfo.getInstance().addGameObject(new Ball(ball.getX()/1.1f, ball.getY()/1.1f,
                                             "Ball.png", 25, paddle));
     }
 
