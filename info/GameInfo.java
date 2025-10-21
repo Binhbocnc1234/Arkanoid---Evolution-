@@ -19,9 +19,10 @@ public class GameInfo {
     private Font mainFont;
     private static GameInfo instance;
     private final List<GameObject> container;
-
+    private final List<GameObject> pendingGameObjects;
     GameInfo() {
         container = new ArrayList<>();
+        pendingGameObjects = new ArrayList<>();
         try {
             mainFont = Font.createFont(Font.TRUETYPE_FONT, new File("assets/font/Radiant-Kingdom.ttf")).deriveFont(60f);
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -57,9 +58,19 @@ public class GameInfo {
      * không gọi được hàm update() 
      */
     public void addGameObject(GameObject gameObject) {
-        container.add(gameObject);
+        pendingGameObjects.add(gameObject);
     }
 
+    /*
+     * Đưa những object ở trạng thái pending thành object chính thức
+     * Hiện tại chỉ có BattleManager::gameloop() mới gọi hàm này
+     */
+    public void flushGameObject() {
+        for (GameObject gobj : pendingGameObjects) {
+            container.add(gobj);
+        }
+        pendingGameObjects.clear();
+    }
     /*
      * Trả về danh sách copy, phục vụ cho việc duyệt GameObject
      */

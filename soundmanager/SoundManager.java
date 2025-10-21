@@ -1,9 +1,9 @@
 package soundmanager;
 
-import java.util.HashMap;
-import javax.sound.sampled.*;
-import java.util.Map;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
+import javax.sound.sampled.*;
 
 public class SoundManager {
     private static Map<String, Clip> sound = new HashMap<>();
@@ -20,6 +20,7 @@ public class SoundManager {
             Clip clip = AudioSystem.getClip();
             clip.open(audioInput);
             sound.put(name, clip);
+            System.out.println("Đã tạo object Clip cho " + name);
         } catch (Exception e) {
             System.out.println("Khong the tai file am thanh");
         }
