@@ -1,7 +1,5 @@
 package brick;
 
-import javax.swing.SwingUtilities;
-
 import info.GameInfo;
 
 public class NormalBrick extends Brick {
@@ -14,12 +12,10 @@ public class NormalBrick extends Brick {
     @Override
     public void onDestroyed() {
         int count = 3 + (int) (Math.random() * 3);
-        System.out.println("Creating " + count + " brick particles...");
 
         for (int i = 0; i < count; i++) {
                 BrickParticle particle = new BrickParticle(x, y);
                 GameInfo.getInstance().getObjects().add(particle);
-                System.out.println("Particle created at (" + x + ", " + y + ")");
         }
     }
 }
