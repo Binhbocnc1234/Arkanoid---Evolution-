@@ -14,6 +14,7 @@ public class Ball extends MovableObject{
     private boolean isPowerUp = false;
     private static final int MAX_TRAIL = 6;
     private long lastTrailStamp = 0;
+    private boolean hasLeftPaddleInitially = false;
 
     public Ball(float x, float y, String imagePath, float diameter, Paddle paddle) {
         super(x, y, diameter, diameter, imagePath);
@@ -112,7 +113,10 @@ public class Ball extends MovableObject{
             //chạm giữa thì bật lại giữa, chạm lệch trái thì bật lệch trái, chạm lệch phải thì bật lệnh phải
             float hitPos = ((this.x - paddle.getX()) / (paddle.getWidth() / 2f)); 
             dx = hitPos * 6.9f;
-            SoundManager.playSound("paddle");
+            if (hasLeftPaddleInitially == true) {
+                SoundManager.playSound("paddle");
+            }
+            hasLeftPaddleInitially = true;
         }
         // Kiểm tra khi bóng va chạm với Brick
         // TO DO: Bug: Hiện tại collision check không hoạt động khi Ball đi vào chính giữa 2 Brick

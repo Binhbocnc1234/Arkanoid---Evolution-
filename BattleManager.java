@@ -24,7 +24,7 @@ public class BattleManager extends JPanel {
     public BattleManager() {
         GameInfo.getInstance().Initialize();
         // tạo paddle
-        Paddle paddle = new Paddle(0,0,0,0,12f,"VietNam.png");
+        Paddle paddle = new Paddle(0,0,0,0,12f,"paddle.png");
         paddle.setUp(GameInfo.SCREEN_WIDTH, GameInfo.SCREEN_HEIGHT);
         // thêm paddle vào game
         GameInfo.getInstance().addGameObject(paddle);
@@ -53,7 +53,8 @@ public class BattleManager extends JPanel {
         threeBall.ball = ball;
         PowerUp tripleBall = threeBall;
         GameInfo.getInstance().getObjects().add(tripleBall);
-        
+
+        //sound
         SoundManager.getSound("wall", "/assets/sound/bounce.wav");
         SoundManager.getSound("paddle", "/assets/sound/bounce.wav");
         SoundManager.getSound("brick", "/assets/sound/brick.wav");
