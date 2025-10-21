@@ -1,5 +1,4 @@
 package gobj;
-import info.*;
 import java.awt.Graphics;
 import java.awt.Image;
 import javax.swing.ImageIcon;
@@ -24,13 +23,13 @@ public class GameObject {
      * @param imagePath relative path under {@code assets/img}, 
      *                  for example, if imagePath is "brick/gold.png" then when fetching the link it will be "assets/img/brick/gold.png"
      */
-    public static void create(float x, float y, float width, float height, String imagePath) {
-        GameInfo.getInstance().getObjects().add(new GameObject(x, y, width, height, imagePath));
-    }
+    // public static void create(float x, float y, float width, float height, String imagePath) {
+    //     GameInfo.getInstance().getObjects().add(new GameObject(x, y, width, height, imagePath));
+    // }
     
-    public static void create(float x, float y, float width, float height) {
-        GameInfo.getInstance().getObjects().add(new GameObject(x, y, width, height, "white square.png"));
-    }
+    // public static void create(float x, float y, float width, float height) {
+    //     GameInfo.getInstance().getObjects().add(new GameObject(x, y, width, height, "white square.png"));
+    // }
 
     protected GameObject(float x, float y, float width, float height, String imagePath) {
         this.x = x;
@@ -44,7 +43,7 @@ public class GameObject {
      * Hàm này sẽ được GameManager goi liên tục khi game chạy
      */
     public void update() {
-
+        
     }
 
     public void render(Graphics g) {

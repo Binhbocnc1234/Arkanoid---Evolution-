@@ -82,7 +82,7 @@ public class Ball extends MovableObject{
         long now = System.nanoTime();
         if (now - lastTrailStamp >= 50_000_000L){
             lastTrailStamp = now;
-            GameInfo.getInstance().getObjects().add(new BallTrail(getX(), getY(), diameter, "Ball.png"));
+            GameInfo.getInstance().addGameObject(new BallTrail(getX(), getY(), diameter, "Ball.png"));
         }
 
         // nảy khi chạm tường trái hoặc phải
@@ -120,7 +120,7 @@ public class Ball extends MovableObject{
         }
         // Kiểm tra khi bóng va chạm với Brick
         // TO DO: Bug: Hiện tại collision check không hoạt động khi Ball đi vào chính giữa 2 Brick
-        for(GameObject obj : GameInfo.getInstance().getObjects()){
+        for(GameObject obj : GameInfo.getInstance().getCurrentObjects()){
             if (obj instanceof Brick){
                 Direction collideAns = intersect(obj);
                 Brick brick = (Brick)obj;

@@ -8,8 +8,8 @@ import java.awt.event.KeyEvent;
 import javax.swing.*;
 import level.LevelManager;
 import powerup.*;
-import weapon.*;
 import soundmanager.*;
+import weapon.*;
 
 enum BattleState {
     Fighting,
@@ -76,10 +76,11 @@ public class BattleManager extends JPanel {
         }
         else {
             // Cập nhật tất cả GameObject
-            for (int i = 0; i < GameInfo.getInstance().getObjects().size(); i++) {
-                GameObject obj = GameInfo.getInstance().getObjects().get(i);
+            for (int i = 0; i < GameInfo.getInstance().getCurrentObjects().size(); i++) {
+                GameObject obj = GameInfo.getInstance().getCurrentObjects().get(i);
                 obj.update();
             }
+            GameInfo.getInstance().flushGameObject();
             // Nếu GameObject được đánh dấu là đã chết thì loại nó khỏi dãy
             GameInfo.getInstance().getObjects().removeIf(obj -> obj.isDie());
 

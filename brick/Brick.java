@@ -82,15 +82,9 @@ public abstract class Brick extends GameObject {
         }
         
         if (hp <= 0) {
-            isDestroyed = true;
+            selfDestroy();
         }
     }
-
-    /**
-     * Special effects upon destroying the Brick instance.
-     * Only serves for TNT Brick for now.
-     */
-    public void onDestroyed() {};
 
     /**
      * Override function for the updating of the Brick instance.
@@ -109,8 +103,6 @@ public abstract class Brick extends GameObject {
         if (isInvulnerable()) iFrames--;
 
         if (isDestroyed) {
-            onDestroyed();
-            selfDestroy();
             return;
         } 
     }
@@ -142,7 +134,6 @@ public abstract class Brick extends GameObject {
 
     /**
      * Renders hit animation for Brick instance.
-     * Only works with Bricks with HP > 2 for now.
      * TO DO: add explosion effect for destroyed bricks
      * TO DO: add effect for TNT bricks 
      */

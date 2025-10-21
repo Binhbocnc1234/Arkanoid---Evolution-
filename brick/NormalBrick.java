@@ -10,12 +10,13 @@ public class NormalBrick extends Brick {
     }
 
     @Override
-    public void onDestroyed() {
+    public void selfDestroy() {
+        super.selfDestroy();
         int count = 3 + (int) (Math.random() * 3);
 
         for (int i = 0; i < count; i++) {
                 BrickParticle particle = new BrickParticle(x, y);
-                GameInfo.getInstance().getObjects().add(particle);
+                GameInfo.getInstance().addGameObject(particle);
         }
     }
 }
