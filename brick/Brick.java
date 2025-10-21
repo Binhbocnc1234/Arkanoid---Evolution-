@@ -83,10 +83,6 @@ public abstract class Brick extends GameObject {
         
         if (hp <= 0) {
             isDestroyed = true;
-            onDestroyed();
-            selfDestroy(); // Cường nên sử dụng hàm selfDestroy() để xóa GameObject
-            // Tô đức anh viết
-            // cam on thay to
         }
     }
 
@@ -112,7 +108,11 @@ public abstract class Brick extends GameObject {
         /* Update timer for iframes */
         if (isInvulnerable()) iFrames--;
 
-        if (isDestroyed) return;
+        if (isDestroyed) {
+            onDestroyed();
+            selfDestroy();
+            return;
+        } 
     }
 
     /**
