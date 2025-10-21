@@ -11,6 +11,7 @@ public class NormalBrick extends Brick {
 
     @Override
     public void selfDestroy() {
+        super.selfDestroy();
         int count = 3 + (int) (Math.random() * 3);
         System.out.println("Creating " + count + " brick particles...");
 

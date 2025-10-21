@@ -74,7 +74,7 @@ public class LevelManager {
      * Load the current level.
      */
     public void loadCurrentLevel() {
-        GameInfo.getInstance().getObjects().removeIf(obj -> obj instanceof Brick);        // Deleting all remaining Brick instances
+        GameInfo.getInstance().getCurrentObjects().removeIf(obj -> obj instanceof Brick);        // Deleting all remaining Brick instances
 
         List<GameObject> levelBricks = level.LevelLoader.loadLevel(
             levelPaths.get(currentLevel),
@@ -82,7 +82,9 @@ public class LevelManager {
             30f, 12f
         );
 
-        GameInfo.getInstance().getObjects().addAll(levelBricks);
+        for (GameObject brick : levelBricks) {
+            GameInfo.getInstance().addGameObject(brick);
+        }
     }
 
     /**
