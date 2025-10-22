@@ -24,7 +24,7 @@ public class TNTBrick extends Brick {
 
     @Override
     public void selfDestroy() {
-        //List<GameObject> objects = GameInfo.getInstance().getCurrentObjects();
+        super.selfDestroy();
 
         for (GameObject obj : GameInfo.getInstance().getCurrentObjects()) {
             if (obj instanceof Brick brick) {
