@@ -2,8 +2,8 @@ package powerup;
 import gobj.*;
 import weapon.*;
 
-public class PowerUp extends MovableObject{
-    public Paddle paddle;
+public abstract class PowerUp extends MovableObject{
+    protected static Paddle paddle;
     //public Ball ball;
     public boolean isCollected = false;
 
@@ -11,6 +11,15 @@ public class PowerUp extends MovableObject{
         super(x, y, width, height, imagePath);
         setVelocity(0, 1.5f);
     }
+
+    public abstract float getRarity();
+
+    public abstract PowerUp summon();
+
+    public static void setPaddle(Paddle paddle) {
+        PowerUp.paddle = paddle;
+    }
+
     @Override
     public void update() {
         //Check collision với Paddle
@@ -22,18 +31,8 @@ public class PowerUp extends MovableObject{
         
     }
 
-    public void ApplyPowerup() {
-        
-    }
+    public abstract void ApplyPowerup();
 
-    /**
-     toa do tinh tu goc tren trai
-     public boolean isCollected() {
-        return (x >= paddle.getX() - width && x <= paddle.getX() + paddle.getWidth() &&
-                y >= paddle.getY() - height && y <= paddle.getY() + paddle.getHeight());
-    }*/
-
-    // neu toa do tinh tu tam
     public boolean isCollected() {
         float w = (width + paddle.getWidth()) / 2;
         float h = (height + paddle.getHeight()) / 2;
