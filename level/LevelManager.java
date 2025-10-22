@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Comparator;
 
 import brick.Brick;
-import gobj.GameObject;
+import gobj.*;
 import info.GameInfo;
 
 public class LevelManager {
@@ -74,7 +74,11 @@ public class LevelManager {
      * Load the current level.
      */
     public void loadCurrentLevel() {
-        GameInfo.getInstance().getCurrentObjects().removeIf(obj -> obj instanceof Brick);        // Deleting all remaining Brick instances
+        for (GameObject obj : GameInfo.getInstance().getObjects()) {
+            if (obj instanceof Brick brick) {
+                brick.selfDestroy();
+            }       // Deleting all remaining Brick instances
+        }
 
         List<GameObject> levelBricks = level.LevelLoader.loadLevel(
             levelPaths.get(currentLevel),
