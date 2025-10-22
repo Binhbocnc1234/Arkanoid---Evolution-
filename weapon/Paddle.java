@@ -30,7 +30,7 @@ public class Paddle extends MovableObject {
     }
     public void setUp(float windowWidth, float windowHeight) {
         this.height = 20;
-        this.width = (windowWidth / 10) * 2;
+        this.width = 120;
         this.x = windowWidth / 2f;
         this.y = windowHeight - this.height / 2f - 50;
         this.startY = this.y;
