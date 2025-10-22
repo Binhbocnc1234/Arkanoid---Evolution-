@@ -17,11 +17,12 @@ public abstract class Brick extends GameObject {
 
     protected int hp;
     protected int id;
-    private float dropChance;       // TO DO: Tạo powerup tại vị trí brick 
+    private float dropChance;      
     protected boolean isDestroyed;
     protected boolean isHit;
     protected int iFrames;
     protected int aniTimer;
+    protected int brickScore;
     public static final int ANI_DURATION = 5;
     private static final Random gacha = new Random();
     /**
@@ -42,6 +43,7 @@ public abstract class Brick extends GameObject {
         this.dropChance = dropChance;
         this.isHit = false;
         this.isDestroyed = false;
+        this.brickScore = 100;
         updateTexture();
     }
 
@@ -148,6 +150,25 @@ public abstract class Brick extends GameObject {
             this.image = new ImageIcon("assets/img/brick/" + textureName).getImage();
         } else {
             this.image = null;
+        }
+    }
+
+    // TODO: add score system
+    // public void addScore() {
+    //     score.updatePlayerScore(brickScore);
+    // }
+
+    /**
+     * Upon destroying: Also create particles.
+     */
+    @Override
+    public void selfDestroy() {
+        super.selfDestroy();
+        int count = 3 + (int) (Math.random() * 3);
+
+        for (int i = 0; i < count; i++) {
+                BrickParticle particle = new BrickParticle(x, y);
+                GameInfo.getInstance().addGameObject(particle);
         }
     }
 
