@@ -2,6 +2,8 @@ package powerup;
 
 public class AmplifyPaddle extends PowerUp {
     private static float rarity = 0.5f;
+    public static final float MAX_WIDTH = 300;
+    public static final float MAX_HEIGHT = 45;
 
     public AmplifyPaddle() {
         super(0, 0, 25, 25, "Powerup/Extended Paddle Powerup.png");
@@ -22,8 +24,12 @@ public class AmplifyPaddle extends PowerUp {
 
     @Override
     public void ApplyPowerup() {
-        paddle.setSize(paddle.getWidth() * 1.5f, paddle.getHeight() * 1.5f);
+        float amplifiedWidth = paddle.getWidth() + 20;
+        float amplifiedHeight = paddle.getHeight() + 5f;
+
+        if (amplifiedWidth > MAX_WIDTH) amplifiedWidth = MAX_WIDTH;
+        if (amplifiedHeight > MAX_HEIGHT) amplifiedHeight = MAX_HEIGHT;
+
+        paddle.setSize(amplifiedWidth, amplifiedHeight);
     }
 }
-
-// Note: paddle hien thi loi khi sang het ben phai
