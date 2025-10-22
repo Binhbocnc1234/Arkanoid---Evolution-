@@ -5,16 +5,21 @@ import info.*;
 import java.awt.AlphaComposite;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.util.ArrayList;
+import java.util.List;
+
 import soundmanager.*;
 
 
 public class Ball extends MovableObject{
     private final float diameter;
     private final Paddle paddle;
-    private boolean isPowerUp = false;
-    private static final int MAX_TRAIL = 6;
-    private long lastTrailStamp = 0;
+    /* value khong dung ? */
+    // private boolean isPowerUp = false;
+    // private static final int MAX_TRAIL = 6;
     //private boolean hasLeftPaddleInitially = false;
+    private long lastTrailStamp = 0;
+
 
     public Ball(float x, float y, String imagePath, float diameter, Paddle paddle) {
         super(x, y, diameter, diameter, imagePath);
@@ -172,11 +177,24 @@ public class Ball extends MovableObject{
 
     /**
      * Reset the Ball instance to its default position.
-     * 
+     * If there are more than 1 Ball instance, remove all but one.
      */
     public void reset() {
-        this.setPosition(GameInfo.SCREEN_WIDTH / 2f, 300);
-        this.setVelocity(0, 10f);
+        List<Ball> balls = new ArrayList<>();
+
+        for (GameObject obj : GameInfo.getInstance().getCurrentObjects()) {
+            if (obj instanceof Ball) balls.add((Ball) obj);
+        }
+
+        if (balls.size() > 1) {
+            for (int i = 1; i < balls.size(); i++) {
+                balls.get(i).selfDestroy();
+            }
+        }
+
+        Ball mainBall = balls.get(0);
+        mainBall.setPosition(GameInfo.SCREEN_WIDTH / 2f, 300);
+        mainBall.setVelocity(0, 10f);
     }
 
 }
