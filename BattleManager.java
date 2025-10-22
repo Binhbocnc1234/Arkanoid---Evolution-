@@ -45,14 +45,7 @@ public class BattleManager extends JPanel {
         LevelManager.getInstance().loadCurrentLevel();
 
         //PowerUp
-        PowerUp amplifyPaddle = new AmplifyPaddle(300, 300, 25, 25, "white square.png");
-        GameInfo.getInstance().getObjects().add(amplifyPaddle);
-        amplifyPaddle.paddle = paddle;
-        TripleBall threeBall = new TripleBall(400, 300, 25, 25, "white square.png");
-        threeBall.paddle = paddle;
-        threeBall.ball = ball;
-        PowerUp tripleBall = threeBall;
-        GameInfo.getInstance().getObjects().add(tripleBall);
+        PowerUp.setPaddle(paddle);
 
         //sound
         SoundManager.getSound("wall", "/assets/sound/bounce.wav");
@@ -76,10 +69,14 @@ public class BattleManager extends JPanel {
         }
         else {
             // Cập nhật tất cả GameObject
-            for (int i = 0; i < GameInfo.getInstance().getCurrentObjects().size(); i++) {
+            /**for (int i = 0; i < GameInfo.getInstance().getCurrentObjects().size(); i++) {
                 GameObject obj = GameInfo.getInstance().getCurrentObjects().get(i);
                 obj.update();
-            }
+            }*/
+            for (GameObject obj : GameInfo.getInstance().getCurrentObjects()) {
+                obj.update();
+            } 
+
             GameInfo.getInstance().flushGameObject();
             // Nếu GameObject được đánh dấu là đã chết thì loại nó khỏi dãy
             GameInfo.getInstance().getObjects().removeIf(obj -> obj.isDie());
