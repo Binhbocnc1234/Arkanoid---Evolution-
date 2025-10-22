@@ -1,11 +1,17 @@
 package brick;
 
 import gobj.*;
+import info.GameInfo;
+import powerup.PowerUp;
+import powerup.PowerUpSummoner;
+
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import javax.swing.ImageIcon;
+
+import java.util.Random;
 
 public abstract class Brick extends GameObject {
 
@@ -17,6 +23,7 @@ public abstract class Brick extends GameObject {
     protected int iFrames;
     protected int aniTimer;
     public static final int ANI_DURATION = 5;
+    private static final Random gacha = new Random();
     /**
      * Brick instance's constructor.
      * 
@@ -83,6 +90,18 @@ public abstract class Brick extends GameObject {
         
         if (hp <= 0) {
             selfDestroy();
+            dropPowerUp();
+        }
+    }
+
+    /**
+     * Chance to drop a PowerUp upon breaks.
+     */
+    public void dropPowerUp() {
+        if (gacha.nextFloat() < dropChance) {
+            PowerUp p = PowerUpSummoner.summonPowerUp();
+            p.setPosition(x, y);
+            GameInfo.getInstance().addGameObject(p);
         }
     }
 
