@@ -124,7 +124,7 @@ public class Ball extends MovableObject{
         }
         // Kiểm tra khi bóng va chạm với Brick
         // TO DO: Bug: Hiện tại collision check không hoạt động khi Ball đi vào chính giữa 2 Brick
-        for(GameObject obj : GameInfo.getInstance().getObjects()){
+        for(GameObject obj : GameInfo.getInstance().getCurrentObjects()){
             if (obj instanceof Brick){
                 Direction collideAns = intersect(obj);
                 Brick brick = (Brick)obj;
