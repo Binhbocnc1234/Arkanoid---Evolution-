@@ -6,8 +6,10 @@ import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import javax.swing.*;
+
 import level.LevelManager;
 import powerup.*;
+// import score.Score;
 import soundmanager.*;
 import weapon.*;
 
@@ -21,6 +23,7 @@ public class BattleManager extends JPanel {
     BattleState state = BattleState.Fighting;
     private long loseTimestamp = -1;
     private Timer timer;
+
     public BattleManager() {
         GameInfo.getInstance().Initialize();
         // tạo paddle
@@ -38,7 +41,7 @@ public class BattleManager extends JPanel {
             }
         });
 
-        Ball ball = new Ball(paddle.getX(), paddle.getY() - paddle.getHeight(), "Ball.png", 25f, paddle);
+        Ball ball = new Ball(paddle.getX() + 20, paddle.getY() - paddle.getHeight(), "Ball.png", 25f, paddle);
         GameInfo.getInstance().getObjects().add(ball);
 
         /* Initiate the first level to avoid immediately switching to next level */
@@ -54,6 +57,9 @@ public class BattleManager extends JPanel {
         // Khởi động vòng lặp game
         timer = new Timer(16, e -> gameLoop());
         timer.start();
+
+        // TODO: Add score
+        // Score playerScore = new Score();
     }
 
     private void endBattle() {
@@ -98,6 +104,12 @@ public class BattleManager extends JPanel {
                     if (obj instanceof Ball ball) {
                         ball.reset();
                     }
+                    if (obj instanceof PowerUp powerUp) {
+                        powerUp.selfDestroy();
+                    }
+                    if (obj instanceof BrickParticle particle) {
+                        particle.selfDestroy();
+                    }
                 }
             }
 
@@ -117,19 +129,6 @@ public class BattleManager extends JPanel {
                         300, 60));
             }
             
-            /**for (GameObject obj : GameInfo.getInstance().getObjects()) {
-                if (obj instanceof Powerup p) {
-                    if (((Powerup) obj).isCollected()) {
-                        p.ApplyPowerup();
-                        //Ball n = new Ball(400, 300, "Ball.png", 25f, paddle);
-                        //GameInfo.getInstance().getObjects().add(n);
-                        //i = true;
-                        p.isCollected = true;
-                        //GameInfo.getInstance().getObjects().remove(p);
-                    }
-                }
-            }*/
-
             GameInfo.getInstance().getObjects().removeIf(obj -> obj instanceof PowerUp && 
                     ((PowerUp) obj).isCollected);
         }
