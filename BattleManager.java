@@ -14,53 +14,155 @@ import weapon.*;
 enum BattleState {
     Fighting,
     Lose,
-    Win
+    Win,
+    Pause,
 }
 
 public class BattleManager extends JPanel {
     BattleState state = BattleState.Fighting;
     private long loseTimestamp = -1;
     private Timer timer;
-    public BattleManager() {
+    private JPanel pauseMenu;
+    private JButton pauseButton;  // thay đổi kiểu
+
+    public BattleManager(boolean isMultiplayer) {
+        setLayout(null); // Để có thể set vị trí chính xác cho các component
         GameInfo.getInstance().Initialize();
-        // tạo paddle
-        Paddle paddle = new Paddle(0,0,0,0,12f,"paddle.png");
-        paddle.setUp(GameInfo.SCREEN_WIDTH, GameInfo.SCREEN_HEIGHT);
-        // thêm paddle vào game
-        GameInfo.getInstance().addGameObject(paddle);
 
-        addKeyListener(new KeyAdapter() {
-            @Override public void keyPressed(KeyEvent ev) {
-                paddle.handleInput(ev.getKeyCode(), true);
-            }
-            @Override public void keyReleased(KeyEvent ev) {
-                paddle.handleInput(ev.getKeyCode(), false);
-            }
-        });
+        // Paddle và Ball
+        Ball ball;
+        if (isMultiplayer) {
+            Paddle paddle1 = new Paddle(0,0,0,0,12f,"paddle.png");
+            paddle1.setUp(0, GameInfo.SCREEN_WIDTH / 2, GameInfo.SCREEN_HEIGHT);
+            paddle1.setKey(KeyEvent.VK_A, KeyEvent.VK_D);
+            GameInfo.getInstance().addGameObject(paddle1);
 
-        Ball ball = new Ball(paddle.getX(), paddle.getY() - paddle.getHeight(), "Ball.png", 25f, paddle);
-        GameInfo.getInstance().getObjects().add(ball);
+            Paddle paddle2 = new Paddle(0,0,0,0,12f,"paddle.png");
+            paddle2.setUp(GameInfo.SCREEN_WIDTH / 2, GameInfo.SCREEN_WIDTH, GameInfo.SCREEN_HEIGHT);
+            paddle2.setKey(KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT);
+            GameInfo.getInstance().addGameObject(paddle2);
+            //Tạo keyevent cho Paddle
+            addKeyListener(new KeyAdapter() {
+                @Override public void keyPressed(KeyEvent ev) {
+                    paddle1.handleInput(ev.getKeyCode(), true);
+                    paddle2.handleInput(ev.getKeyCode(), true);
+                }
+                @Override public void keyReleased(KeyEvent ev) {
+                    paddle1.handleInput(ev.getKeyCode(), false);
+                    paddle2.handleInput(ev.getKeyCode(), false);
+                }
+                
+            });
+
+            ball = new Ball(paddle1.getX(), paddle1.getY() - paddle1.getHeight(), "Ball.png", 25f);
+            GameInfo.getInstance().getObjects().add(ball);
+        }
+        else {
+            Paddle paddle = new Paddle(0,0,0,0,12f,"paddle.png");
+            paddle.setUp(0, GameInfo.CAMPAIN_WIDTH, GameInfo.SCREEN_HEIGHT);
+            paddle.setKey(KeyEvent.VK_A, KeyEvent.VK_D);
+            GameInfo.getInstance().addGameObject(paddle);
+            //Tạo keyevent cho Paddle
+            addKeyListener(new KeyAdapter() {
+                @Override public void keyPressed(KeyEvent ev) {
+                    paddle.handleInput(ev.getKeyCode(), true);
+                }
+                @Override public void keyReleased(KeyEvent ev) {
+                    paddle.handleInput(ev.getKeyCode(), false);
+                }
+                
+            });
+            // thêm Ball vào game
+            ball = new Ball(paddle.getX(), paddle.getY() - paddle.getHeight(), "Ball.png", 25f);
+            GameInfo.getInstance().getObjects().add(ball);
+            //PowerUp
+            PowerUp.setPaddle(paddle);
+        }
 
         /* Initiate the first level to avoid immediately switching to next level */
         LevelManager.getInstance().loadCurrentLevel();
-
-        //PowerUp
-        PowerUp.setPaddle(paddle);
 
         //sound
         SoundManager.getSound("wall", "/assets/sound/bounce.wav");
         SoundManager.getSound("paddle", "/assets/sound/paddle.wav");
         SoundManager.getSound("brick", "/assets/sound/brick.wav");
         // Khởi động vòng lặp game
-        timer = new Timer(16, e -> gameLoop());
+        timer = new Timer(1000/GameInfo.FPS, e -> gameLoop());
         timer.start();
+
+        // Pause button
+        pauseButton = new JButton();
+        pauseButton.setBounds(GameInfo.CAMPAIN_WIDTH - 60, 5, 40, 40);
+        pauseButton.setIcon(new ImageIcon("assets/img/Pause button.png"));
+        pauseButton.setBorderPainted(false);
+        pauseButton.setContentAreaFilled(false);
+        pauseButton.setFocusPainted(false);
+        pauseButton.addActionListener(e -> showPauseMenu());
+        add(pauseButton);
+
+        // Tạo pause menu
+        createPauseMenu();
+    }
+
+    private void createPauseMenu() {
+        pauseMenu = new JPanel(null) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                g.setColor(new Color(30, 20, 60)); // Tím than
+                g.fillRect(0, 0, getWidth(), getHeight());
+                g.setColor(Color.WHITE);
+                g.drawRect(0, 0, getWidth()-1, getHeight()-1); // Viền trắng
+            }
+        };
+        
+        // Set size và position cho pause menu
+        int menuWidth = 300;
+        int menuHeight = 400;
+        pauseMenu.setBounds(
+            (GameInfo.CAMPAIN_WIDTH - menuWidth)/2,
+            (GameInfo.SCREEN_HEIGHT - menuHeight)/2,
+            menuWidth,
+            menuHeight
+        );
+        pauseMenu.setVisible(false);
+
+        // Thêm label PAUSE
+        MyLabel pauseLabel = new MyLabel("PAUSE", menuWidth/2, 80, 200, 48);
+        pauseMenu.add(pauseLabel);
+
+        // Thêm nút Continue
+        MyButton continueBtn = new MyButton("Continue", menuWidth/2, 200, 200, 50);
+        continueBtn.addActionListener(e -> hidePauseMenu());
+        pauseMenu.add(continueBtn);
+
+        // Thêm nút Return to Lobby
+        MyButton returnBtn = new MyButton("Return to Lobby", menuWidth/2, 280, 200, 50);
+        returnBtn.addActionListener(e -> GameManager.instance.switchTo(new Lobby()));
+        pauseMenu.add(returnBtn);
+
+        add(pauseMenu);
+    }
+
+    private void showPauseMenu() {
+        state = BattleState.Pause;
+        pauseMenu.setVisible(true);
+    }
+
+    private void hidePauseMenu() {
+        state = BattleState.Fighting;
+        pauseMenu.setVisible(false);
     }
 
     private void endBattle() {
         GameManager.instance.switchTo(new Lobby());
         timer.stop();
     }
+
     private void gameLoop() {
+        if (state == BattleState.Pause) {
+            return;
+        }
         if (state == BattleState.Lose) {
             long now = System.nanoTime();
             if (now - loseTimestamp >= 3_000_000_000L) {
@@ -113,7 +215,7 @@ public class BattleManager extends JPanel {
                 state = BattleState.Lose;
                 loseTimestamp = System.nanoTime();
                 add(new MyLabel("You lose",
-                        GameInfo.SCREEN_WIDTH / 2, GameInfo.SCREEN_HEIGHT / 2,
+                        GameInfo.CAMPAIN_WIDTH / 2, GameInfo.SCREEN_HEIGHT / 2,
                         300, 60));
             }
             
@@ -142,8 +244,17 @@ public class BattleManager extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
+        
+        // Vẽ các GameObject
         for (GameObject obj : GameInfo.getInstance().getCurrentObjects()) {
             obj.render(g);
+        }
+
+        // Nếu đang pause, vẽ một lớp overlay tối
+        if (state == BattleState.Pause) {
+            Graphics2D g2d = (Graphics2D) g;
+            g2d.setColor(new Color(0, 0, 0, 0.5f)); // màu đen với độ trong suốt 50%
+            g2d.fillRect(0, 0, GameInfo.CAMPAIN_WIDTH, GameInfo.SCREEN_HEIGHT);
         }
     }
 }

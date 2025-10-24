@@ -11,7 +11,7 @@ public class MyLabel extends JLabel{
         setForeground(new Color(180, 160, 255));
         int height = (int) (fontSize * 1.25f);
         setBounds(x - width / 2, y - height / 2, width, height);
-        setFont(GameInfo.getInstance().getFont().deriveFont(fontSize));
+        setFont(GameInfo.getInstance().getTitleFont().deriveFont(fontSize));
     }
     
 }

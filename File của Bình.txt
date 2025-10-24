@@ -1,0 +1,6 @@
+Ý tưởng mới: Boss nguyên tố: 
+Máu: 20
+Đồng hành với Boss là 4 loại gạch nguyên tố xuất hiện thường xuyên trong trận
+Trạng thái của boss được miêu tả bằng 1 trong 4 loại nguyên tố: Fire, Earth, Air, Water
+Bóng lúc này cũng sẽ thuộc 1 trong 4 trạng thái trên. Trạng thái của Boss sẽ đổi sang một nguyên tố ngẫu nhiên sau mỗi 30s. 
+Boss chỉ nhận sát thương khi ta bắn trúng Brick có cùng nguyên tố với Boss

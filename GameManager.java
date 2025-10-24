@@ -11,7 +11,7 @@ public class GameManager extends JFrame {
         setSize(GameInfo.SCREEN_WIDTH, GameInfo.SCREEN_HEIGHT);
         setLocationRelativeTo(null);
         setVisible(true);
-
+        
         GameManager.instance.switchTo(new Lobby());
     }
 
@@ -27,6 +27,6 @@ public class GameManager extends JFrame {
 
     public static void main(String[] args) {
         // Nó đảm bảo toàn bộ code GUI (JFrame, JPanel, nút, v.v.) chạy trong "Event Dispatch Thread"
-        GameManager.instance = new GameManager();
+        SwingUtilities.invokeLater(() -> new GameManager());
     }
 }

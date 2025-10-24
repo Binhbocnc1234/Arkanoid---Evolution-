@@ -11,16 +11,14 @@ import soundmanager.*;
 
 public class Ball extends MovableObject {
     private final float diameter;
-    private final Paddle paddle;
     // private boolean isPowerUp = false;
     // private static final int MAX_TRAIL = 6;
     private long lastTrailStamp = 0;
     private float prevX, prevY;
     //private boolean hasLeftPaddleInitially = false;
 
-    public Ball(float x, float y, String imagePath, float diameter, Paddle paddle) {
+    public Ball(float x, float y, String imagePath, float diameter) {
         super(x, y, diameter, diameter, imagePath);
-        this.paddle = paddle;
         this.diameter = diameter;
         this.setVelocity(0, -10f);
     }
@@ -137,7 +135,7 @@ public class Ball extends MovableObject {
             SoundManager.playSound("wall");
         }
 
-        if (x + diameter >= GameInfo.SCREEN_WIDTH) {
+        if (x + diameter >= GameInfo.CAMPAIN_WIDTH) {
             BounceOff(Direction.Right);
             SoundManager.playSound("wall");
         }
@@ -152,22 +150,6 @@ public class Ball extends MovableObject {
             selfDestroy();
         }
 
-        // kiểm tra khi bóng va chạm với paddle thì bật ra
-        if (paddle != null && intersect(paddle) != Direction.None) {
-            this.y = paddle.getY() - paddle.getHeight() / 2f - diameter / 2f;
-            dy = -Math.abs(dy); // bật trở lại
-            //chạm giữa thì bật lại giữa, chạm lệch trái thì bật lệch trái, chạm lệch phải thì bật lệnh phải
-            float hitPos = ((this.x - paddle.getX()) / (paddle.getWidth() / 2f));
-            dx = hitPos * 6.9f;
-            /*
-            if (hasLeftPaddleInitially == true) {
-                SoundManager.playSound("paddle");
-            }
-            hasLeftPaddleInitially = true;
-            */
-            paddle.recoil();
-            SoundManager.playSound("paddle");
-        }
         // Kiểm tra khi bóng va chạm với Brick
         // TO DO: Bug: Hiện tại collision check không hoạt động khi Ball đi vào chính giữa 2 Brick
         for (GameObject obj : GameInfo.getInstance().getCurrentObjects()) {
@@ -188,6 +170,25 @@ public class Ball extends MovableObject {
                     brick.takeDamage(1);
                     brick.setIFrame(10); // Added iframe
                     break;
+                }
+            }
+            else if (obj instanceof Paddle) {
+                Paddle paddle = (Paddle) obj;
+                if (isIntersect(paddle)) {
+                    // kiểm tra khi bóng va chạm với paddle thì bật ra
+                    this.y = paddle.getY() - paddle.getHeight() / 2f - diameter / 2f;
+                    dy = -Math.abs(dy); // bật trở lại
+                    //chạm giữa thì bật lại giữa, chạm lệch trái thì bật lệch trái, chạm lệch phải thì bật lệnh phải
+                    float hitPos = ((this.x - paddle.getX()) / (paddle.getWidth() / 2f));
+                    dx = hitPos * 6.9f;
+                    /*
+                    if (hasLeftPaddleInitially == true) {
+                        SoundManager.playSound("paddle");
+                    }
+                    hasLeftPaddleInitially = true;
+                    */
+                    paddle.recoil();
+                    SoundManager.playSound("paddle");
                 }
             }
         }
@@ -213,11 +214,10 @@ public class Ball extends MovableObject {
     }
 
     /**
-     * Reset the Ball instance to its default position.
-     * 
+     * Reset the Ball instance to its default position. 
      */
     public void reset() {
-        this.setPosition(GameInfo.SCREEN_WIDTH / 2f, 300);
+        this.setPosition(GameInfo.CAMPAIN_WIDTH / 2f, 300);
         this.setVelocity(0, 10f);
     }
 
