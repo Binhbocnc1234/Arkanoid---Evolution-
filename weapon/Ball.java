@@ -8,7 +8,6 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import soundmanager.*;
 
-
 public class Ball extends MovableObject {
     private final float diameter;
     // private boolean isPowerUp = false;
@@ -124,7 +123,7 @@ public class Ball extends MovableObject {
 
         //Tạo hiệu ứng đuôi bóng
         long now = System.nanoTime();
-        if (now - lastTrailStamp >= 25_000_000L) {
+        if (now - lastTrailStamp >= 5_000_000L) {
             lastTrailStamp = now;
             GameInfo.getInstance().getObjects().add(new BallTrail(getX(), getY(), diameter, "Ball.png"));
         }
@@ -168,6 +167,9 @@ public class Ball extends MovableObject {
                 }
                 if (brick.getIFrame() <= 0 && collideAns != Direction.None) {
                     brick.takeDamage(1);
+                    if (brick.getHp() == 0) {
+                        SoundManager.playSound("brick");
+                    }
                     brick.setIFrame(10); // Added iframe
                     break;
                 }
