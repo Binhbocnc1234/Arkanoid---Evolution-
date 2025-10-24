@@ -5,7 +5,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 
 public class BallTrail extends  GameObject{
-    private static final float existTime = 0.5f;
+    // private static final float existTime = 0.5f;
     private float alpha = 0.7f, trailDiameter;
 
 

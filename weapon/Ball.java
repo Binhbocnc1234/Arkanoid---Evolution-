@@ -12,8 +12,8 @@ import soundmanager.*;
 public class Ball extends MovableObject {
     private final float diameter;
     private final Paddle paddle;
-    private boolean isPowerUp = false;
-    private static final int MAX_TRAIL = 6;
+    // private boolean isPowerUp = false;
+    // private static final int MAX_TRAIL = 6;
     private long lastTrailStamp = 0;
     private float prevX, prevY;
     //private boolean hasLeftPaddleInitially = false;

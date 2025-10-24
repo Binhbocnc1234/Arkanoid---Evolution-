@@ -2,7 +2,6 @@ package brick;
 
 import gobj.GameObject;
 import info.GameInfo;
-import java.util.List;
 import javax.swing.ImageIcon;
 
 public class TNTBrick extends Brick {
