@@ -9,7 +9,7 @@ import javax.swing.*;
 
 import level.LevelManager;
 import powerup.*;
-// import score.Score;
+import score.Score;
 import soundmanager.*;
 import weapon.*;
 
@@ -22,17 +22,22 @@ enum BattleState {
 public class BattleManager extends JPanel {
     BattleState state = BattleState.Fighting;
     private long loseTimestamp = -1;
+    private Score score;
     private Timer timer;
 
+    /**
+     * Constructor for BattleManager.
+     */
     public BattleManager() {
         GameInfo.getInstance().Initialize();
-        // tạo paddle
+
+        /* Paddle */
         Paddle paddle = new Paddle(0,0,0,0,12f,"paddle.png");
         paddle.setUp(GameInfo.SCREEN_WIDTH, GameInfo.SCREEN_HEIGHT);
-        // thêm paddle vào game
+
         GameInfo.getInstance().addGameObject(paddle);
 
-        addKeyListener(new KeyAdapter() {
+        addKeyListener(new KeyAdapter() {   // Paddle input handling
             @Override public void keyPressed(KeyEvent ev) {
                 paddle.handleInput(ev.getKeyCode(), true);
             }
@@ -41,6 +46,7 @@ public class BattleManager extends JPanel {
             }
         });
 
+        /* Ball */
         Ball ball = new Ball(paddle.getX() + 20, paddle.getY() - paddle.getHeight(), "Ball.png", 25f, paddle);
         GameInfo.getInstance().getObjects().add(ball);
 
@@ -58,14 +64,14 @@ public class BattleManager extends JPanel {
         timer = new Timer(16, e -> gameLoop());
         timer.start();
 
-        // TODO: Add score
-        // Score playerScore = new Score();
+        score = new Score();
     }
 
     private void endBattle() {
         GameManager.instance.switchTo(new Lobby());
         timer.stop();
     }
+
     private void gameLoop() {
         if (state == BattleState.Lose) {
             long now = System.nanoTime();
@@ -75,13 +81,23 @@ public class BattleManager extends JPanel {
         }
         else {
             // Cập nhật tất cả GameObject
-            /**for (int i = 0; i < GameInfo.getInstance().getCurrentObjects().size(); i++) {
-                GameObject obj = GameInfo.getInstance().getCurrentObjects().get(i);
-                obj.update();
-            }*/
             for (GameObject obj : GameInfo.getInstance().getCurrentObjects()) {
                 obj.update();
             } 
+
+            /* Update player score */
+            for (GameObject obj: GameInfo.getInstance().getCurrentObjects()) {
+                if (obj instanceof Brick brick) {
+                    if (brick.isDie()) {
+                        score.updatePlayerScore(brick.getBrickScore());
+                    }
+                }
+                if (obj instanceof PowerUp powerUp) {
+                    if (powerUp.isCollected()) {
+                        score.updatePlayerScore(150);
+                    }
+                }
+            }
 
             GameInfo.getInstance().flushGameObject();
             // Nếu GameObject được đánh dấu là đã chết thì loại nó khỏi dãy
@@ -120,6 +136,7 @@ public class BattleManager extends JPanel {
                     haveBall = true;
                 }
             }
+
             if (haveBall == false) {
                 System.out.print("Bạn đã thua, vài giây nữa sẽ quay trở lại màn hình chính");
                 state = BattleState.Lose;
@@ -131,6 +148,8 @@ public class BattleManager extends JPanel {
             
             GameInfo.getInstance().getObjects().removeIf(obj -> obj instanceof PowerUp && 
                     ((PowerUp) obj).isCollected);
+
+            
         }
 
         setBackground(Color.BLACK);
@@ -141,8 +160,16 @@ public class BattleManager extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
+
         for (GameObject obj : GameInfo.getInstance().getCurrentObjects()) {
             obj.render(g);
         }
+
+        g.setColor(Color.WHITE);
+        g.setFont(GameInfo.getInstance().getFont());
+
+        String currentScoreText = String.format("SCORE: %06d", score.getPlayerScore());
+        int currentScorePos = (GameInfo.SCREEN_WIDTH - g.getFontMetrics().stringWidth(currentScoreText)) / 2;
+        g.drawString(currentScoreText, currentScorePos, 500);
     }
 }
