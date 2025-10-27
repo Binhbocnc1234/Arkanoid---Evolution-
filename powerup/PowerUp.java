@@ -1,5 +1,6 @@
 package powerup;
 import gobj.*;
+import soundmanager.SoundManager;
 import weapon.*;
 
 public abstract class PowerUp extends MovableObject{
@@ -25,6 +26,7 @@ public abstract class PowerUp extends MovableObject{
         //Check collision với Paddle
         move();
         if (isCollected()) {
+            SoundManager.playSound("powerUpCollected");
             ApplyPowerup();
             isCollected = true;
         }

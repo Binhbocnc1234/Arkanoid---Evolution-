@@ -86,6 +86,9 @@ public class BattleManager extends JPanel {
         SoundManager.getSound("wall", "/assets/sound/bounce.wav");
         SoundManager.getSound("paddle", "/assets/sound/paddle.wav");
         SoundManager.getSound("brick", "/assets/sound/brick.wav");
+        SoundManager.getSound("background", "/assets/sound/backgroundMusic.wav");
+        SoundManager.getSound("powerUpCollected", "/assets/sound/powerUpCollected.wav");
+        SoundManager.getSound("button", "/assets/sound/button.wav");
         // Khởi động vòng lặp game
         timer = new Timer(1000/GameInfo.FPS, e -> gameLoop());
         timer.start();
@@ -97,9 +100,13 @@ public class BattleManager extends JPanel {
         pauseButton.setBorderPainted(false);
         pauseButton.setContentAreaFilled(false);
         pauseButton.setFocusPainted(false);
-        pauseButton.addActionListener(e -> showPauseMenu());
+        pauseButton.addActionListener(e -> {
+            SoundManager.playSound("button");
+            showPauseMenu();
+        });
         add(pauseButton);
 
+        SoundManager.playSoundLoop("background");
         // Tạo pause menu
         createPauseMenu();
     }
@@ -133,12 +140,18 @@ public class BattleManager extends JPanel {
 
         // Thêm nút Continue
         MyButton continueBtn = new MyButton("Continue", menuWidth/2, 200, 200, 50);
-        continueBtn.addActionListener(e -> hidePauseMenu());
+        continueBtn.addActionListener(e -> {
+            SoundManager.playSound("button");
+            hidePauseMenu();
+        });
         pauseMenu.add(continueBtn);
 
         // Thêm nút Return to Lobby
         MyButton returnBtn = new MyButton("Return to Lobby", menuWidth/2, 280, 200, 50);
-        returnBtn.addActionListener(e -> GameManager.instance.switchTo(new Lobby()));
+        returnBtn.addActionListener(e -> {
+            SoundManager.playSound("button");
+            GameManager.instance.switchTo(new Lobby());
+        } );
         pauseMenu.add(returnBtn);
 
         add(pauseMenu);
@@ -147,16 +160,19 @@ public class BattleManager extends JPanel {
     private void showPauseMenu() {
         state = BattleState.Pause;
         pauseMenu.setVisible(true);
+        SoundManager.stopSound("background");
     }
 
     private void hidePauseMenu() {
         state = BattleState.Fighting;
         pauseMenu.setVisible(false);
+        SoundManager.playSoundLoop("background");
     }
 
     private void endBattle() {
         GameManager.instance.switchTo(new Lobby());
         timer.stop();
+        SoundManager.stopSound("background");
     }
 
     private void gameLoop() {
