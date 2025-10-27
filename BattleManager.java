@@ -6,8 +6,10 @@ import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import javax.swing.*;
+
 import level.LevelManager;
 import powerup.*;
+import score.Score;
 import soundmanager.*;
 import weapon.*;
 
@@ -21,6 +23,7 @@ enum BattleState {
 public class BattleManager extends JPanel {
     BattleState state = BattleState.Fighting;
     private long loseTimestamp = -1;
+    private Score score;
     private Timer timer;
     private JPanel pauseMenu;
     private JButton pauseButton;  // thay đổi kiểu
@@ -93,6 +96,8 @@ public class BattleManager extends JPanel {
         timer = new Timer(1000/GameInfo.FPS, e -> gameLoop());
         timer.start();
 
+        score = new Score();
+      
         // Pause button
         pauseButton = new JButton();
         pauseButton.setBounds(GameInfo.CAMPAIN_WIDTH - 60, 5, 40, 40);
@@ -187,13 +192,23 @@ public class BattleManager extends JPanel {
         }
         else {
             // Cập nhật tất cả GameObject
-            /**for (int i = 0; i < GameInfo.getInstance().getCurrentObjects().size(); i++) {
-                GameObject obj = GameInfo.getInstance().getCurrentObjects().get(i);
-                obj.update();
-            }*/
             for (GameObject obj : GameInfo.getInstance().getCurrentObjects()) {
                 obj.update();
             } 
+
+            /* Update player score */
+            for (GameObject obj: GameInfo.getInstance().getCurrentObjects()) {
+                if (obj instanceof Brick brick) {
+                    if (brick.isDie()) {
+                        score.updatePlayerScore(brick.getBrickScore());
+                    }
+                }
+                if (obj instanceof PowerUp powerUp) {
+                    if (powerUp.isCollected()) {
+                        score.updatePlayerScore(150);
+                    }
+                }
+            }
 
             GameInfo.getInstance().flushGameObject();
             // Nếu GameObject được đánh dấu là đã chết thì loại nó khỏi dãy
@@ -216,6 +231,12 @@ public class BattleManager extends JPanel {
                     if (obj instanceof Ball ball) {
                         ball.reset();
                     }
+                    if (obj instanceof PowerUp powerUp) {
+                        powerUp.selfDestroy();
+                    }
+                    if (obj instanceof BrickParticle particle) {
+                        particle.selfDestroy();
+                    }
                 }
             }
 
@@ -226,6 +247,7 @@ public class BattleManager extends JPanel {
                     haveBall = true;
                 }
             }
+
             if (haveBall == false) {
                 System.out.print("Bạn đã thua, vài giây nữa sẽ quay trở lại màn hình chính");
                 state = BattleState.Lose;
@@ -235,21 +257,10 @@ public class BattleManager extends JPanel {
                         300, 60));
             }
             
-            /**for (GameObject obj : GameInfo.getInstance().getObjects()) {
-                if (obj instanceof Powerup p) {
-                    if (((Powerup) obj).isCollected()) {
-                        p.ApplyPowerup();
-                        //Ball n = new Ball(400, 300, "Ball.png", 25f, paddle);
-                        //GameInfo.getInstance().getObjects().add(n);
-                        //i = true;
-                        p.isCollected = true;
-                        //GameInfo.getInstance().getObjects().remove(p);
-                    }
-                }
-            }*/
-
             GameInfo.getInstance().getObjects().removeIf(obj -> obj instanceof PowerUp && 
                     ((PowerUp) obj).isCollected);
+
+            
         }
 
         setBackground(Color.BLACK);
@@ -266,6 +277,14 @@ public class BattleManager extends JPanel {
             obj.render(g);
         }
 
+        g.setColor(Color.WHITE);
+        g.setFont(GameInfo.getInstance().getFont());
+        
+        /* Rendering score */
+        String currentScoreText = String.format("SCORE: %06d", score.getPlayerScore());
+        int currentScorePos = (GameInfo.SCREEN_WIDTH - g.getFontMetrics().stringWidth(currentScoreText)) / 2;
+        g.drawString(currentScoreText, currentScorePos, 500);
+        
         // Nếu đang pause, vẽ một lớp overlay tối
         if (state == BattleState.Pause) {
             Graphics2D g2d = (Graphics2D) g;
