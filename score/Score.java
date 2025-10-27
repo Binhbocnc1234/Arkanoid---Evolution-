@@ -16,10 +16,10 @@ public class Score {
     }
 
     public void updatePlayerScore(int score) {
-        setPlayerScore(this.playerScore + score);
+        this.playerScore += score;
     }
 
-    public void printPlayerScore() {
-        System.out.printf("Current score: %6d", playerScore);
+    public void resetPlayerScore() {
+        playerScore = 0;
     }
 }
