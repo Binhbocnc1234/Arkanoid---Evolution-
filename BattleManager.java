@@ -278,7 +278,7 @@ public class BattleManager extends JPanel {
         }
 
         g.setColor(Color.WHITE);
-        g.setFont(GameInfo.getInstance().getFont());
+        g.setFont(GameInfo.getInstance().getSmallFont());
         
         /* Rendering score */
         String currentScoreText = String.format("SCORE: %06d", score.getPlayerScore());
