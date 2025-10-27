@@ -15,20 +15,30 @@ public class GameInfo {
 
     /* static field phục vụ cho coders, nếu bạn muốn chạy game ở chế độ test thì để giá trị là true */
     public static boolean isTesting = true;
-    public static final int SCREEN_WIDTH = 600, SCREEN_HEIGHT = 700;
-    private Font mainFont;
+    public static final int CAMPAIN_WIDTH = 600,
+            SCREEN_HEIGHT = 700, SCREEN_WIDTH = 900;
+    public static final int FPS = 60;
+    private Font titleFont, smallFont;
     private static GameInfo instance;
+    public boolean isPaused = false;
     private final List<GameObject> container;
     private final List<GameObject> pendingGameObjects;
     GameInfo() {
         container = new ArrayList<>();
         pendingGameObjects = new ArrayList<>();
         try {
-            mainFont = Font.createFont(Font.TRUETYPE_FONT, new File("assets/font/Radiant-Kingdom.ttf")).deriveFont(60f);
+            titleFont = Font.createFont(Font.TRUETYPE_FONT, new File("assets/font/Radiant-Kingdom.ttf")).deriveFont(60f);
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            ge.registerFont(mainFont);
+            ge.registerFont(titleFont);
         } catch (Exception e) {
-            mainFont = new Font("Serif", Font.BOLD, 32);
+            titleFont = new Font("Serif", Font.BOLD, 32);
+        }
+        try {
+            smallFont = Font.createFont(Font.TRUETYPE_FONT, new File("assets/font/Radiant-Kingdom.ttf")).deriveFont(30f);
+            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            ge.registerFont(smallFont);
+        } catch (Exception e) {
+            smallFont = new Font("Serif", Font.BOLD, 32);
         }
     }
     public void Initialize() {
@@ -43,8 +53,12 @@ public class GameInfo {
         return instance;
     }
 
-    public Font getFont() {
-        return mainFont;
+    public Font getTitleFont() {
+        return titleFont;
+    }
+
+    public Font getSmallFont() {
+        return smallFont;
     }
     /*
     * Trả về danh sách gốc, hàm lỗi thời, khuyên không dùng!

@@ -29,7 +29,7 @@ public class TripleBall extends PowerUp{
                                             "Ball.png", 25, paddle));
         */
         GameInfo.getInstance().addGameObject(new Ball(paddle.getX(), paddle.getY(),
-                                            "Ball.png", 25, paddle));
+                                            "Ball.png", 25));
     }
 
 }

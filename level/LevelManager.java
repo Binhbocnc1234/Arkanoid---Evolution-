@@ -82,7 +82,7 @@ public class LevelManager {
 
         List<GameObject> levelBricks = level.LevelLoader.loadLevel(
             levelPaths.get(currentLevel),
-            (GameInfo.SCREEN_WIDTH / 10f), 25f,
+            (GameInfo.CAMPAIN_WIDTH / 10f), 25f,
             30f, 12f
         );
 

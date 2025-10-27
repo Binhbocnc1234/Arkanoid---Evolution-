@@ -1,40 +1,28 @@
 package weapon;
 import brick.*;
+import framework.*;
 import gobj.*;
 import info.*;
 import java.awt.AlphaComposite;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.util.ArrayList;
-import java.util.List;
-
 import soundmanager.*;
 
-
-public class Ball extends MovableObject{
+public class Ball extends MovableObject {
     private final float diameter;
-    private final Paddle paddle;
-    /* value khong dung ? */
     // private boolean isPowerUp = false;
     // private static final int MAX_TRAIL = 6;
-    //private boolean hasLeftPaddleInitially = false;
     private long lastTrailStamp = 0;
+    private float prevX, prevY;
+    //private boolean hasLeftPaddleInitially = false;
 
-
-    public Ball(float x, float y, String imagePath, float diameter, Paddle paddle) {
+    public Ball(float x, float y, String imagePath, float diameter) {
         super(x, y, diameter, diameter, imagePath);
-        this.paddle = paddle;
         this.diameter = diameter;
         this.setVelocity(0, -10f);
     }
 
-    /*
-     * Kiểm tra xem Ball va chạm với cạnh nào của vật thể
-     * 
-     * @param gameObj vật thể cần kiểm tra
-     * Trả về Direction.Top nếu va chạm với cạnh trên...
-     */
-    private Direction intersect(GameObject obj) {
+    private boolean isIntersect(GameObject obj) {
         float rectLeft   = obj.getX() - obj.getWidth() / 2f;
         float rectRight  = obj.getX() + obj.getWidth() / 2f;
         float rectTop    = obj.getY() - obj.getHeight() / 2f;
@@ -47,23 +35,73 @@ public class Ball extends MovableObject{
         float distY = this.y - closestY;
         boolean isCollide = (distX * distX + distY * distY) <= (radius * radius);
 
-        if (!isCollide) return Direction.None;
-
-        // Xác định cạnh va chạm dựa trên hướng di chuyển và vị trí tiếp xúc
-        float overlapLeft   = Math.abs((this.x + radius) - rectLeft);
-        float overlapRight  = Math.abs((this.x - radius) - rectRight);
-        float overlapTop    = Math.abs((this.y + radius) - rectTop);
-        float overlapBottom = Math.abs((this.y - radius) - rectBottom);
-
-        float minOverlap = Math.min(Math.min(overlapLeft, overlapRight), Math.min(overlapTop, overlapBottom));
-
-        if (minOverlap == overlapLeft) return Direction.Left;
-        if (minOverlap == overlapRight) return Direction.Right;
-        if (minOverlap == overlapTop) return Direction.Top;
-        return Direction.Down;
+        return isCollide;
     }
-    
-    @Override public void render(Graphics g) {
+    /*
+     * Kiểm tra xem Ball va chạm với cạnh nào của vật thể
+     * 
+     * @param gameObj vật thể cần kiểm tra
+     * Trả về Direction.Top nếu va chạm với cạnh trên...
+     */
+    private Direction intersect(GameObject obj) {
+        if (!isIntersect(obj)) {
+            return Direction.None;
+        }
+        float rectLeft = obj.getX() - obj.getWidth() / 2f;
+        float rectRight = obj.getX() + obj.getWidth() / 2f;
+        float rectTop = obj.getY() - obj.getHeight() / 2f;
+        float rectBottom = obj.getY() + obj.getHeight() / 2f;
+        float r = this.diameter / 2f;
+
+        // mở rộng hình chữ nhật thêm bán kính quả bóng
+        rectLeft -= r;
+        rectRight += r;
+        rectTop -= r;
+        rectBottom += r;
+
+        Vector2 p0 = new Vector2(this.prevX, this.prevY);
+        Vector2 p1 = new Vector2(this.x, this.y);
+        Vector2 d = new Vector2(p1.x - p0.x, p1.y - p0.y);
+
+        // kiểm tra thời điểm t khi đoạn thẳng cắt AABB mở rộng
+        float tEntryX, tExitX, tEntryY, tExitY;
+        if (Math.abs(d.x) < 1e-6f) {
+            tEntryX = Float.NEGATIVE_INFINITY;
+            tExitX = Float.POSITIVE_INFINITY;
+        } else {
+            float invDx = 1.0f / d.x;
+            float tx1 = (rectLeft - p0.x) * invDx;
+            float tx2 = (rectRight - p0.x) * invDx;
+            tEntryX = Math.min(tx1, tx2);
+            tExitX = Math.max(tx1, tx2);
+        }
+
+        if (Math.abs(d.y) < 1e-6f) {
+            tEntryY = Float.NEGATIVE_INFINITY;
+            tExitY = Float.POSITIVE_INFINITY;
+        } else {
+            float invDy = 1.0f / d.y;
+            float ty1 = (rectTop - p0.y) * invDy;
+            float ty2 = (rectBottom - p0.y) * invDy;
+            tEntryY = Math.min(ty1, ty2);
+            tExitY = Math.max(ty1, ty2);
+        }
+
+        float tEntry = Math.max(tEntryX, tEntryY);
+        float tExit = Math.min(tExitX, tExitY);
+
+        if (tEntry > tExit || tEntry < 0f || tEntry > 1f)
+            return Direction.None; // không va chạm trong đoạn di chuyển
+
+        // xác định cạnh va chạm đầu tiên (theo trục nào chạm trước)
+        if (tEntryX > tEntryY)
+            return (d.x > 0) ? Direction.Left : Direction.Right;
+        else
+            return (d.y > 0) ? Direction.Top : Direction.Down;
+    }
+
+    @Override
+    public void render(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
         // for (int i = trail.size() - 1; i >= 0; i--) {
         //     float[] pos = trail.get(i);
@@ -74,9 +112,9 @@ public class Ball extends MovableObject{
         //     alpha -= 0.08f;
         //     trail_diameter -= 1.8f;
         // }
-        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f ));
+        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
         super.render(g);
-        
+
     }
 
     @Override
@@ -85,7 +123,7 @@ public class Ball extends MovableObject{
 
         //Tạo hiệu ứng đuôi bóng
         long now = System.nanoTime();
-        if (now - lastTrailStamp >= 25_000_000L){
+        if (now - lastTrailStamp >= 5_000_000L) {
             lastTrailStamp = now;
             GameInfo.getInstance().getObjects().add(new BallTrail(getX(), getY(), diameter, "Ball.png"));
         }
@@ -96,7 +134,7 @@ public class Ball extends MovableObject{
             SoundManager.playSound("wall");
         }
 
-        if (x + diameter >= GameInfo.SCREEN_WIDTH) {
+        if (x + diameter >= GameInfo.CAMPAIN_WIDTH) {
             BounceOff(Direction.Right);
             SoundManager.playSound("wall");
         }
@@ -111,90 +149,78 @@ public class Ball extends MovableObject{
             selfDestroy();
         }
 
-        // kiểm tra khi bóng va chạm với paddle thì bật ra
-        if (paddle != null && intersect(paddle) != Direction.None) {
-            this.y = paddle.getY() - paddle.getHeight() / 2f - diameter / 2f;
-            dy = -Math.abs(dy); // bật trở lại
-            //chạm giữa thì bật lại giữa, chạm lệch trái thì bật lệch trái, chạm lệch phải thì bật lệnh phải
-            float hitPos = ((this.x - paddle.getX()) / (paddle.getWidth() / 2f)); 
-            dx = hitPos * 6.9f;
-            /*
-            if (hasLeftPaddleInitially == true) {
-                SoundManager.playSound("paddle");
-            }
-            hasLeftPaddleInitially = true;
-            */
-            paddle.recoil();
-            SoundManager.playSound("paddle");
-        }
         // Kiểm tra khi bóng va chạm với Brick
         // TO DO: Bug: Hiện tại collision check không hoạt động khi Ball đi vào chính giữa 2 Brick
-        for(GameObject obj : GameInfo.getInstance().getCurrentObjects()){
-            if (obj instanceof Brick){
+        for (GameObject obj : GameInfo.getInstance().getCurrentObjects()) {
+            if (obj instanceof Brick) {
                 Direction collideAns = intersect(obj);
-                Brick brick = (Brick)obj;
-                if (brick.getIFrame() <= 0 && collideAns != Direction.None){
-                    brick.takeDamage(1);
-                    brick.setIFrame(10);   // Added iframe
-                }
+                Brick brick = (Brick) obj;
 
-                if (collideAns == Direction.Down){
+                if (collideAns == Direction.Down) {
                     BounceOff(Direction.Top);
-                }
-                else if (collideAns == Direction.Top){
+                } else if (collideAns == Direction.Top) {
                     BounceOff(Direction.Down);
-                }
-                else if (collideAns == Direction.Left){
+                } else if (collideAns == Direction.Left) {
                     BounceOff(Direction.Right);
-                }
-                else if (collideAns == Direction.Right){
+                } else if (collideAns == Direction.Right) {
                     BounceOff(Direction.Left);
+                }
+                if (brick.getIFrame() <= 0 && collideAns != Direction.None) {
+                    brick.takeDamage(1);
+                    if (brick.getHp() == 0) {
+                        SoundManager.playSound("brick");
+                    }
+                    brick.setIFrame(10); // Added iframe
+                    break;
+                }
+            }
+            else if (obj instanceof Paddle) {
+                Paddle paddle = (Paddle) obj;
+                if (isIntersect(paddle)) {
+                    // kiểm tra khi bóng va chạm với paddle thì bật ra
+                    this.y = paddle.getY() - paddle.getHeight() / 2f - diameter / 2f;
+                    dy = -Math.abs(dy); // bật trở lại
+                    //chạm giữa thì bật lại giữa, chạm lệch trái thì bật lệch trái, chạm lệch phải thì bật lệnh phải
+                    float hitPos = ((this.x - paddle.getX()) / (paddle.getWidth() / 2f));
+                    dx = hitPos * 6.9f;
+                    /*
+                    if (hasLeftPaddleInitially == true) {
+                        SoundManager.playSound("paddle");
+                    }
+                    hasLeftPaddleInitially = true;
+                    */
+                    paddle.recoil();
+                    SoundManager.playSound("paddle");
                 }
             }
         }
+        prevX = x;
+        prevY = y;
     }
-    
 
     public void BounceOff(Direction dir) {
 
         if (dir == Direction.Top) {
             y += 2;
             dy = -dy;
-        }
-        else if (dir == Direction.Down) {
+        } else if (dir == Direction.Down) {
             y -= 2;
             dy = -dy;
-        }
-        else if (dir == Direction.Left) {
+        } else if (dir == Direction.Left) {
             x += 2;
             dx = -dx;
-        }
-        else {
+        } else {
             x -= 2;
             dx = -dx;
         }
     }
 
     /**
-     * Reset the Ball instance to its default position.
-     * If there are more than 1 Ball instance, remove all but one.
+     * Reset the Ball instance to its default position. 
      */
     public void reset() {
-        List<Ball> balls = new ArrayList<>();
-
-        for (GameObject obj : GameInfo.getInstance().getCurrentObjects()) {
-            if (obj instanceof Ball) balls.add((Ball) obj);
-        }
-
-        if (balls.size() > 1) {
-            for (int i = 1; i < balls.size(); i++) {
-                balls.get(i).selfDestroy();
-            }
-        }
-
-        Ball mainBall = balls.get(0);
-        mainBall.setPosition(GameInfo.SCREEN_WIDTH / 2f, 300);
-        mainBall.setVelocity(0, 10f);
+        this.setPosition(GameInfo.CAMPAIN_WIDTH / 2f, 300);
+        this.setVelocity(0, 10f);
     }
 
 }

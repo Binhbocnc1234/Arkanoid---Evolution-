@@ -21,6 +21,7 @@ public class SoundManager {
     }
 
     private static Map<String, SoundData> sound = new HashMap<>();
+    private static Map<String, Clip> clips = new HashMap<>();
 
     // tai file am thanh 
     public static void getSound(String name, String soundPath) {
@@ -61,6 +62,39 @@ public class SoundManager {
                 Clip clip = AudioSystem.getClip();
                 clip.open(audioInput);
                 clip.start();
+                clips.put(name, clip);
+            } catch (Exception e) {
+                System.err.println("loi phat am thanh");
+            }
+            
+        }
+    }
+    // dung sound
+    public static void stopSound(String name) {
+        Clip clip = clips.get(name);
+        if (clip != null) {
+            if (clip.isRunning()) {
+                clip.stop();
+            }
+            clip.close();
+            clips.remove(name);
+        }
+    }
+
+    public static void playSoundLoop(String name) {
+        SoundData soundData = sound.get(name);
+        if (soundData != null) {
+            try {
+                InputStream input = new ByteArrayInputStream(soundData.data);
+                AudioInputStream audioInput = new AudioInputStream(input, soundData.format, soundData.data.length / soundData.format.getFrameSize());
+                Clip clip = AudioSystem.getClip();
+                clip.open(audioInput);
+                clip.loop(Clip.LOOP_CONTINUOUSLY);
+                clip.start();
+                clips.put(name, clip);
+                if (!clip.isRunning()) {
+                    clip.start();
+                }
             } catch (Exception e) {
                 System.err.println("loi phat am thanh");
             }
