@@ -36,14 +36,14 @@ public abstract class Brick extends GameObject {
      * @param dropChance    Object's PowerUp drop chance
      * @param id            Object's ID    
      */
-    public Brick(float x, float y, float w, float h, int hp, float dropChance, int id) { 
+    public Brick(float x, float y, float w, float h, int hp, float dropChance, int id, int brickScore) { 
         super(x, y, w, h, "");
         this.hp = hp;
         this.id = id;
         this.dropChance = dropChance;
         this.isHit = false;
         this.isDestroyed = false;
-        this.brickScore = 100;
+        this.brickScore = brickScore;
         updateTexture();
     }
 
@@ -65,6 +65,10 @@ public abstract class Brick extends GameObject {
 
     public int getHp() {
         return hp;
+    }
+
+    public int getBrickScore() {
+        return brickScore;
     }
 
     /**
@@ -91,6 +95,7 @@ public abstract class Brick extends GameObject {
         }
         
         if (hp <= 0) {
+            isDestroyed = true;
             selfDestroy();
             dropPowerUp();
         }
@@ -152,11 +157,6 @@ public abstract class Brick extends GameObject {
             this.image = null;
         }
     }
-
-    // TODO: add score system
-    // public void addScore() {
-    //     score.updatePlayerScore(brickScore);
-    // }
 
     /**
      * Upon destroying: Also create particles.
