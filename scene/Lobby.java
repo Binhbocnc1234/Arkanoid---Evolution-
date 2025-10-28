@@ -1,9 +1,12 @@
+package scene;
  
 
 import UI.*;
 import info.GameInfo;
 import java.awt.*;
 import javax.swing.*;
+
+
 
 public class Lobby extends JPanel {
     public MyButton playButton;
@@ -13,17 +16,17 @@ public class Lobby extends JPanel {
 
         setLayout(null);
 
-        JLabel title = new MyLabel("Arkanoid-Evolution", GameInfo.CAMPAIN_WIDTH/2, GameInfo.SCREEN_HEIGHT/2 - 200, 500, 100);
+        JLabel title = new MyLabel("Arkanoid-Evolution", GameInfo.CAMPAIGN_WIDTH/2, GameInfo.SCREEN_HEIGHT/2 - 200, 500, 100);
         title.setForeground(new Color(180, 160, 255));
         add(title);
 
-        playButton = new MyButton("Play", GameInfo.CAMPAIN_WIDTH/2, GameInfo.SCREEN_HEIGHT/2, 200, 70);
+        playButton = new MyButton("Play", GameInfo.CAMPAIGN_WIDTH/2, GameInfo.SCREEN_HEIGHT/2, 200, 70);
         add(playButton);
         playButton.addActionListener(e -> {
             GameManager.instance.switchTo(new BattleManager(false));
         });
 
-        MyButton multiplayerButton = new MyButton("Multiplayer", GameInfo.CAMPAIN_WIDTH / 2, GameInfo.SCREEN_HEIGHT / 2 + 100,
+        MyButton multiplayerButton = new MyButton("Multiplayer", GameInfo.CAMPAIGN_WIDTH / 2, GameInfo.SCREEN_HEIGHT / 2 + 100,
                 200, 70);
         add(multiplayerButton);
         multiplayerButton.addActionListener(e -> {

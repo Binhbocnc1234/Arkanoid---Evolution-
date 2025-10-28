@@ -1,3 +1,4 @@
+package scene;
 import UI.*;
 import brick.*;
 import gobj.*;
@@ -59,7 +60,7 @@ public class BattleManager extends JPanel {
         }
         else {
             Paddle paddle = new Paddle(0,0,0,0,12f,"paddle.png");
-            paddle.setUp(0, GameInfo.CAMPAIN_WIDTH, GameInfo.SCREEN_HEIGHT);
+            paddle.setUp(0, GameInfo.CAMPAIGN_WIDTH, GameInfo.SCREEN_HEIGHT);
             paddle.setKey(KeyEvent.VK_A, KeyEvent.VK_D);
             GameInfo.getInstance().addGameObject(paddle);
             //Tạo keyevent cho Paddle
@@ -92,7 +93,7 @@ public class BattleManager extends JPanel {
 
         // Pause button
         pauseButton = new JButton();
-        pauseButton.setBounds(GameInfo.CAMPAIN_WIDTH - 60, 5, 40, 40);
+        pauseButton.setBounds(GameInfo.CAMPAIGN_WIDTH - 60, 5, 40, 40);
         pauseButton.setIcon(new ImageIcon("assets/img/Pause button.png"));
         pauseButton.setBorderPainted(false);
         pauseButton.setContentAreaFilled(false);
@@ -120,7 +121,7 @@ public class BattleManager extends JPanel {
         int menuWidth = 300;
         int menuHeight = 400;
         pauseMenu.setBounds(
-            (GameInfo.CAMPAIN_WIDTH - menuWidth)/2,
+            (GameInfo.CAMPAIGN_WIDTH - menuWidth)/2,
             (GameInfo.SCREEN_HEIGHT - menuHeight)/2,
             menuWidth,
             menuHeight
@@ -215,7 +216,7 @@ public class BattleManager extends JPanel {
                 state = BattleState.Lose;
                 loseTimestamp = System.nanoTime();
                 add(new MyLabel("You lose",
-                        GameInfo.CAMPAIN_WIDTH / 2, GameInfo.SCREEN_HEIGHT / 2,
+                        GameInfo.CAMPAIGN_WIDTH / 2, GameInfo.SCREEN_HEIGHT / 2,
                         300, 60));
             }
             
@@ -254,7 +255,7 @@ public class BattleManager extends JPanel {
         if (state == BattleState.Pause) {
             Graphics2D g2d = (Graphics2D) g;
             g2d.setColor(new Color(0, 0, 0, 0.5f)); // màu đen với độ trong suốt 50%
-            g2d.fillRect(0, 0, GameInfo.CAMPAIN_WIDTH, GameInfo.SCREEN_HEIGHT);
+            g2d.fillRect(0, 0, GameInfo.CAMPAIGN_WIDTH, GameInfo.SCREEN_HEIGHT);
         }
     }
 }

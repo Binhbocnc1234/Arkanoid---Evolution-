@@ -15,7 +15,7 @@ public class GameInfo {
 
     /* static field phục vụ cho coders, nếu bạn muốn chạy game ở chế độ test thì để giá trị là true */
     public static boolean isTesting = true;
-    public static final int CAMPAIN_WIDTH = 600,
+    public static final int CAMPAIGN_WIDTH = 600,
             SCREEN_HEIGHT = 700, SCREEN_WIDTH = 900;
     public static final int FPS = 60;
     private Font titleFont, smallFont;

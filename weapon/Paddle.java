@@ -27,7 +27,7 @@ public class Paddle extends MovableObject {
      */
     public void setUp(int leftBound, int rightBound, float windowHeight) {
         this.height = 20;
-        this.width = (GameInfo.CAMPAIN_WIDTH / 10) * 2;
+        this.width = (GameInfo.CAMPAIGN_WIDTH / 10) * 2;
         this.leftBound = leftBound;
         this.rightBound = rightBound;
         this.x = (leftBound + rightBound) / 2f;
@@ -70,8 +70,8 @@ public class Paddle extends MovableObject {
         if (x - width / 2f < 0) {
             x = width / 2f;
         }
-        if (x + width / 2f > GameInfo.CAMPAIN_WIDTH) {
-            x = GameInfo.CAMPAIN_WIDTH - width / 2;
+        if (x + width / 2f > GameInfo.CAMPAIGN_WIDTH) {
+            x = GameInfo.CAMPAIGN_WIDTH - width / 2;
         }
         if (isRecoiling) {
             float recoilY = startY + RECOIL_DISTANCE;

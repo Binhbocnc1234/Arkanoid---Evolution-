@@ -134,7 +134,7 @@ public class Ball extends MovableObject {
             SoundManager.playSound("wall");
         }
 
-        if (x + diameter >= GameInfo.CAMPAIN_WIDTH) {
+        if (x + diameter >= GameInfo.CAMPAIGN_WIDTH) {
             BounceOff(Direction.Right);
             SoundManager.playSound("wall");
         }
@@ -219,7 +219,7 @@ public class Ball extends MovableObject {
      * Reset the Ball instance to its default position. 
      */
     public void reset() {
-        this.setPosition(GameInfo.CAMPAIN_WIDTH / 2f, 300);
+        this.setPosition(GameInfo.CAMPAIGN_WIDTH / 2f, 300);
         this.setVelocity(0, 10f);
     }
 
