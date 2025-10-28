@@ -28,6 +28,7 @@ public class BattleManager extends JPanel {
     private Timer timer;
     private JPanel pauseMenu;
     private JButton pauseButton;  // thay đổi kiểu
+    private float volumePercent = 50f;
 
     public BattleManager(boolean isMultiplayer) {
         setLayout(null); // Để có thể set vị trí chính xác cho các component
@@ -131,7 +132,7 @@ public class BattleManager extends JPanel {
         
         // Set size và position cho pause menu
         int menuWidth = 300;
-        int menuHeight = 400;
+        int menuHeight = 450;
         pauseMenu.setBounds(
             (GameInfo.CAMPAIGN_WIDTH - menuWidth)/2,
             (GameInfo.SCREEN_HEIGHT - menuHeight)/2,
@@ -159,6 +160,28 @@ public class BattleManager extends JPanel {
             GameManager.instance.switchTo(new Lobby());
         } );
         pauseMenu.add(returnBtn);
+
+        MyButton changeSoundBtn = new MyButton("volume", menuWidth / 2, 340, 200,50);
+        pauseMenu.add(changeSoundBtn);
+
+        JSlider volumeSilder = new JSlider(0, 100,(int) volumePercent);
+        volumeSilder.setBounds(menuWidth / 2 - 100, 400, 200, 50);
+        volumeSilder.setMajorTickSpacing(25);
+        volumeSilder.setMinorTickSpacing(10);
+        volumeSilder.setPaintTicks(true);
+        volumeSilder.setPaintLabels(true);
+        volumeSilder.setVisible(false);
+        pauseMenu.add(volumeSilder);
+        changeSoundBtn.addActionListener(e -> {
+            SoundManager.playSound("button");
+            volumeSilder.setVisible(!volumeSilder.isVisible());
+        });
+
+        volumeSilder.addChangeListener(e -> {
+            volumePercent = volumeSilder.getValue();
+            SoundManager.setSpecificVolume("background", volumePercent);
+            System.out.println("Am luong : " + volumePercent + "%");
+        });
 
         add(pauseMenu);
     }
@@ -283,8 +306,8 @@ public class BattleManager extends JPanel {
         
         /* Rendering score */
         String currentScoreText = String.format("SCORE: %06d", score.getPlayerScore());
-        int currentScorePos = (GameInfo.SCREEN_WIDTH - g.getFontMetrics().stringWidth(currentScoreText)) / 2;
-        g.drawString(currentScoreText, currentScorePos, 500);
+        int currentScorePos = (GameInfo.SCREEN_WIDTH * 4 / 3 + g.getFontMetrics().stringWidth(currentScoreText)) / 2;
+        g.drawString(currentScoreText, currentScorePos, 300);
         
         // Nếu đang pause, vẽ một lớp overlay tối
         if (state == BattleState.Pause) {

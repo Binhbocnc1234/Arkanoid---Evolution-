@@ -8,6 +8,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import javax.sound.sampled.*;
+import java.util.Map.Entry;
 
 public class SoundManager {
     static class SoundData{
@@ -22,6 +23,7 @@ public class SoundManager {
 
     private static Map<String, SoundData> sound = new HashMap<>();
     private static Map<String, Clip> clips = new HashMap<>();
+    private static float currentVolume = 50f;
 
     // tai file am thanh 
     public static void getSound(String name, String soundPath) {
@@ -61,6 +63,7 @@ public class SoundManager {
                 AudioInputStream audioInput = new AudioInputStream(input, soundData.format, soundData.data.length / soundData.format.getFrameSize());
                 Clip clip = AudioSystem.getClip();
                 clip.open(audioInput);
+                setVolume(clip, currentVolume);
                 clip.start();
                 clips.put(name, clip);
             } catch (Exception e) {
@@ -89,6 +92,7 @@ public class SoundManager {
                 AudioInputStream audioInput = new AudioInputStream(input, soundData.format, soundData.data.length / soundData.format.getFrameSize());
                 Clip clip = AudioSystem.getClip();
                 clip.open(audioInput);
+                setVolume(clip, currentVolume);
                 clip.loop(Clip.LOOP_CONTINUOUSLY);
                 clip.start();
                 clips.put(name, clip);
@@ -99,6 +103,42 @@ public class SoundManager {
                 System.err.println("loi phat am thanh");
             }
             
+        }
+    }
+    
+    public static void setVolume(Clip clip, float volumePercent) {
+        if (clip == null) {
+            return;
+        }
+        try {
+            FloatControl fc = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+            float min = fc.getMinimum();
+            float max = fc.getMaximum();
+            float value;
+            float gain = volumePercent / 100f;
+            if (gain <= 0.0f) {
+                value = min;
+            } else {
+                float db = (float) (Math.log10(gain) * 20.0);
+                value = max + db;
+            }
+            if (value < min) value = min;
+            if (value > max) value = max;
+            fc.setValue(value);
+        } catch (IllegalArgumentException e) {
+            System.err.println("khong thay doi duoc am luong");
+        }
+    }
+
+    public static void setSpecificVolume(String name,float volumePercent) {
+        currentVolume = volumePercent;
+        setVolume(clips.get(name), currentVolume);
+    }
+
+    public static void setAllVolume(float volumePercent) {
+        currentVolume = volumePercent;
+        for (Clip clip : clips.values()) {
+            setVolume(clip, volumePercent);
         }
     }
 }

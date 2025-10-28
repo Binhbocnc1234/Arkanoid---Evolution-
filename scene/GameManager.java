@@ -12,7 +12,6 @@ public class GameManager extends JFrame {
         setSize(GameInfo.SCREEN_WIDTH, GameInfo.SCREEN_HEIGHT);
         setLocationRelativeTo(null);
         setVisible(true);
-        //SoundManager.playSound("background");
         GameManager.instance.switchTo(new Lobby());
     }
 
