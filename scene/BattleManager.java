@@ -7,8 +7,10 @@ import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import javax.swing.*;
+
 import level.LevelManager;
 import powerup.*;
+import score.Score;
 import soundmanager.*;
 import weapon.*;
 
@@ -22,6 +24,7 @@ enum BattleState {
 public class BattleManager extends JPanel {
     BattleState state = BattleState.Fighting;
     private long loseTimestamp = -1;
+    private Score score;
     private Timer timer;
     private JPanel pauseMenu;
     private JButton pauseButton;  // thay đổi kiểu
@@ -87,10 +90,15 @@ public class BattleManager extends JPanel {
         SoundManager.getSound("wall", "/assets/sound/bounce.wav");
         SoundManager.getSound("paddle", "/assets/sound/paddle.wav");
         SoundManager.getSound("brick", "/assets/sound/brick.wav");
+        SoundManager.getSound("background", "/assets/sound/backgroundMusic.wav");
+        SoundManager.getSound("powerUpCollected", "/assets/sound/powerUpCollected.wav");
+        SoundManager.getSound("button", "/assets/sound/button.wav");
         // Khởi động vòng lặp game
         timer = new Timer(1000/GameInfo.FPS, e -> gameLoop());
         timer.start();
 
+        score = new Score();
+      
         // Pause button
         pauseButton = new JButton();
         pauseButton.setBounds(GameInfo.CAMPAIGN_WIDTH - 60, 5, 40, 40);
@@ -98,9 +106,13 @@ public class BattleManager extends JPanel {
         pauseButton.setBorderPainted(false);
         pauseButton.setContentAreaFilled(false);
         pauseButton.setFocusPainted(false);
-        pauseButton.addActionListener(e -> showPauseMenu());
+        pauseButton.addActionListener(e -> {
+            SoundManager.playSound("button");
+            showPauseMenu();
+        });
         add(pauseButton);
 
+        SoundManager.playSoundLoop("background");
         // Tạo pause menu
         createPauseMenu();
     }
@@ -134,12 +146,18 @@ public class BattleManager extends JPanel {
 
         // Thêm nút Continue
         MyButton continueBtn = new MyButton("Continue", menuWidth/2, 200, 200, 50);
-        continueBtn.addActionListener(e -> hidePauseMenu());
+        continueBtn.addActionListener(e -> {
+            SoundManager.playSound("button");
+            hidePauseMenu();
+        });
         pauseMenu.add(continueBtn);
 
         // Thêm nút Return to Lobby
         MyButton returnBtn = new MyButton("Return to Lobby", menuWidth/2, 280, 200, 50);
-        returnBtn.addActionListener(e -> GameManager.instance.switchTo(new Lobby()));
+        returnBtn.addActionListener(e -> {
+            SoundManager.playSound("button");
+            GameManager.instance.switchTo(new Lobby());
+        } );
         pauseMenu.add(returnBtn);
 
         add(pauseMenu);
@@ -148,16 +166,19 @@ public class BattleManager extends JPanel {
     private void showPauseMenu() {
         state = BattleState.Pause;
         pauseMenu.setVisible(true);
+        SoundManager.stopSound("background");
     }
 
     private void hidePauseMenu() {
         state = BattleState.Fighting;
         pauseMenu.setVisible(false);
+        SoundManager.playSoundLoop("background");
     }
 
     private void endBattle() {
         GameManager.instance.switchTo(new Lobby());
         timer.stop();
+        SoundManager.stopSound("background");
     }
 
     private void gameLoop() {
@@ -172,13 +193,23 @@ public class BattleManager extends JPanel {
         }
         else {
             // Cập nhật tất cả GameObject
-            /**for (int i = 0; i < GameInfo.getInstance().getCurrentObjects().size(); i++) {
-                GameObject obj = GameInfo.getInstance().getCurrentObjects().get(i);
-                obj.update();
-            }*/
             for (GameObject obj : GameInfo.getInstance().getCurrentObjects()) {
                 obj.update();
             } 
+
+            /* Update player score */
+            for (GameObject obj: GameInfo.getInstance().getCurrentObjects()) {
+                if (obj instanceof Brick brick) {
+                    if (brick.isDie()) {
+                        score.updatePlayerScore(brick.getBrickScore());
+                    }
+                }
+                if (obj instanceof PowerUp powerUp) {
+                    if (powerUp.isCollected()) {
+                        score.updatePlayerScore(150);
+                    }
+                }
+            }
 
             GameInfo.getInstance().flushGameObject();
             // Nếu GameObject được đánh dấu là đã chết thì loại nó khỏi dãy
@@ -201,6 +232,12 @@ public class BattleManager extends JPanel {
                     if (obj instanceof Ball ball) {
                         ball.reset();
                     }
+                    if (obj instanceof PowerUp powerUp) {
+                        powerUp.selfDestroy();
+                    }
+                    if (obj instanceof BrickParticle particle) {
+                        particle.selfDestroy();
+                    }
                 }
             }
 
@@ -211,6 +248,7 @@ public class BattleManager extends JPanel {
                     haveBall = true;
                 }
             }
+
             if (haveBall == false) {
                 System.out.print("Bạn đã thua, vài giây nữa sẽ quay trở lại màn hình chính");
                 state = BattleState.Lose;
@@ -220,21 +258,10 @@ public class BattleManager extends JPanel {
                         300, 60));
             }
             
-            /**for (GameObject obj : GameInfo.getInstance().getObjects()) {
-                if (obj instanceof Powerup p) {
-                    if (((Powerup) obj).isCollected()) {
-                        p.ApplyPowerup();
-                        //Ball n = new Ball(400, 300, "Ball.png", 25f, paddle);
-                        //GameInfo.getInstance().getObjects().add(n);
-                        //i = true;
-                        p.isCollected = true;
-                        //GameInfo.getInstance().getObjects().remove(p);
-                    }
-                }
-            }*/
-
             GameInfo.getInstance().getObjects().removeIf(obj -> obj instanceof PowerUp && 
                     ((PowerUp) obj).isCollected);
+
+            
         }
 
         setBackground(Color.BLACK);
@@ -251,6 +278,14 @@ public class BattleManager extends JPanel {
             obj.render(g);
         }
 
+        g.setColor(Color.WHITE);
+        g.setFont(GameInfo.getInstance().getSmallFont());
+        
+        /* Rendering score */
+        String currentScoreText = String.format("SCORE: %06d", score.getPlayerScore());
+        int currentScorePos = (GameInfo.SCREEN_WIDTH - g.getFontMetrics().stringWidth(currentScoreText)) / 2;
+        g.drawString(currentScoreText, currentScorePos, 500);
+        
         // Nếu đang pause, vẽ một lớp overlay tối
         if (state == BattleState.Pause) {
             Graphics2D g2d = (Graphics2D) g;

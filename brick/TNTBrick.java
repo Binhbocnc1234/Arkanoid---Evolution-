@@ -8,7 +8,7 @@ public class TNTBrick extends Brick {
     public static final int ID = 6;
 
     public TNTBrick(float x, float y, float w, float h) {
-        super(x, y, w, h, 1, 0f, ID);
+        super(x, y, w, h, 1, 0f, ID, 100);
         updateTexture();
     }
 
@@ -24,7 +24,7 @@ public class TNTBrick extends Brick {
 
     @Override
     public void selfDestroy() {
-        //List<GameObject> objects = GameInfo.getInstance().getCurrentObjects();
+        super.selfDestroy();
 
         for (GameObject obj : GameInfo.getInstance().getCurrentObjects()) {
             if (obj instanceof Brick brick) {

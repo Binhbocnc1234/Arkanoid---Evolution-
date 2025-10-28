@@ -1,7 +1,6 @@
 package scene;
 import info.GameInfo;
 import javax.swing.*;
-import scene.Lobby;
 
 public class GameManager extends JFrame {
     public static GameManager instance;
@@ -13,7 +12,7 @@ public class GameManager extends JFrame {
         setSize(GameInfo.SCREEN_WIDTH, GameInfo.SCREEN_HEIGHT);
         setLocationRelativeTo(null);
         setVisible(true);
-        
+        //SoundManager.playSound("background");
         GameManager.instance.switchTo(new Lobby());
     }
 

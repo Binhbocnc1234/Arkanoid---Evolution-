@@ -1,5 +1,6 @@
 package powerup;
 import gobj.*;
+import soundmanager.SoundManager;
 import weapon.*;
 
 public abstract class PowerUp extends MovableObject{
@@ -9,7 +10,7 @@ public abstract class PowerUp extends MovableObject{
 
     public PowerUp(float x, float y, float width, float height, String imagePath) {
         super(x, y, width, height, imagePath);
-        setVelocity(0, 1.5f);
+        setVelocity(0, 1.5f + (float) Math.random() * 4.5f);
     }
 
     public abstract float getRarity();
@@ -25,6 +26,7 @@ public abstract class PowerUp extends MovableObject{
         //Check collision với Paddle
         move();
         if (isCollected()) {
+            SoundManager.playSound("powerUpCollected");
             ApplyPowerup();
             isCollected = true;
         }
