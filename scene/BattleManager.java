@@ -28,6 +28,9 @@ public class BattleManager extends JPanel {
     private PauseManager pauseManager;
 
     private Image rightPanelBackground;
+    private JPanel pauseMenu;
+    private JButton pauseButton;  // thay đổi kiểu
+    private float volumePercent = 50f;
 
     public BattleManager(boolean isMultiplayer) {
         // GameInfo.getInstance().isSlowmotion = true;
@@ -104,9 +107,9 @@ public class BattleManager extends JPanel {
         timer.start();
 
         score = new Score();
-      
-    // Pause UI is handled by PauseManager (encapsulates pause menu + button)
-    pauseManager = new PauseManager(this);
+        // Pause UI is handled by PauseManager (encapsulates pause menu + button)
+        // Áp dụng design pattern bridge
+        pauseManager = new PauseManager(this);
 
     SoundManager.playSoundLoop("background");
     }
@@ -161,6 +164,9 @@ public class BattleManager extends JPanel {
                 .noneMatch(obj -> obj instanceof Brick);
                 
             if (allBricksDestroyed) {
+                int currLevel = LevelManager.getInstance().getCurrentLevel();
+                GameInfo.getInstance().setUnlockedLevel(currLevel + 1);
+
                 LevelManager.getInstance().switchToNextLevel();
 
                 for (GameObject obj : GameInfo.getInstance().getObjects()) {
@@ -221,8 +227,8 @@ public class BattleManager extends JPanel {
         
         /* Rendering score */
         String currentScoreText = String.format("SCORE: %06d", score.getPlayerScore());
-        int currentScorePos = (GameInfo.SCREEN_WIDTH - g.getFontMetrics().stringWidth(currentScoreText)) / 2;
-        g.drawString(currentScoreText, currentScorePos, 500);
+        int currentScorePos = (GameInfo.SCREEN_WIDTH * 4 / 3 + g.getFontMetrics().stringWidth(currentScoreText)) / 2;
+        g.drawString(currentScoreText, currentScorePos, 300);
         
         // Nếu đang pause, vẽ một lớp overlay tối
         if (state == BattleState.Pause) {

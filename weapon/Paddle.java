@@ -98,6 +98,8 @@ public class Paddle extends MovableObject {
     public void reset() {
         this.x = (leftBound + rightBound) / 2f;
         this.setVelocity(0, 0);
+        this.height = 20;
+        this.width = (GameInfo.CAMPAIGN_WIDTH / 10) * 2;
     }
 
 

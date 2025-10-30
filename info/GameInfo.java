@@ -26,6 +26,8 @@ public class GameInfo {
     public boolean isPaused = false;
     private final List<GameObject> container;
     private final List<GameObject> pendingGameObjects;
+    private int unlockedLevel = 1;
+
     GameInfo() {
         container = new ArrayList<>();
         pendingGameObjects = new ArrayList<>();
@@ -95,6 +97,18 @@ public class GameInfo {
         List<GameObject> list = new ArrayList<>(container);
         list.sort(Comparator.comparingInt(o -> o.sortingIndex));
         return list;
+    }
+
+    public int getUnlockedLevel() {
+        return unlockedLevel;
+    }
+
+    public void setUnlockedLevel(int level) {
+        if (level > unlockedLevel) this.unlockedLevel = level;
+    }
+
+    public void resetUnlockedLevel() {
+        this.unlockedLevel = 1;
     }
 
 }
