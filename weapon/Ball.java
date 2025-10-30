@@ -14,6 +14,7 @@ public class Ball extends MovableObject {
     // private static final int MAX_TRAIL = 6;
     private long lastTrailStamp = 0;
     private float prevX, prevY;
+    
     //private boolean hasLeftPaddleInitially = false;
 
     public Ball(float x, float y, String imagePath, float diameter) {
@@ -94,10 +95,22 @@ public class Ball extends MovableObject {
             return Direction.None; // không va chạm trong đoạn di chuyển
 
         // xác định cạnh va chạm đầu tiên (theo trục nào chạm trước)
+        Direction collideAns = Direction.None;
         if (tEntryX > tEntryY)
-            return (d.x > 0) ? Direction.Left : Direction.Right;
+            collideAns = (d.x > 0) ? Direction.Left : Direction.Right;
         else
-            return (d.y > 0) ? Direction.Top : Direction.Down;
+            collideAns = (d.y > 0) ? Direction.Top : Direction.Down;
+
+        if (collideAns == Direction.Down) {
+            BounceOff(Direction.Top, rectBottom);
+        } else if (collideAns == Direction.Top) {
+            BounceOff(Direction.Down, rectTop);
+        } else if (collideAns == Direction.Left) {
+            BounceOff(Direction.Right, rectLeft);
+        } else if (collideAns == Direction.Right) {
+            BounceOff(Direction.Left, rectRight);
+        }
+        return collideAns;
     }
 
     @Override
@@ -130,18 +143,19 @@ public class Ball extends MovableObject {
 
         // nảy khi chạm tường trái hoặc phải
         if (x - diameter / 2f <= 0) {
-            BounceOff(Direction.Left);
+            BounceOff(Direction.Left, 0);
             SoundManager.playSound("wall");
         }
 
-        if (x + diameter >= GameInfo.CAMPAIGN_WIDTH) {
-            BounceOff(Direction.Right);
+        int rightBound = (GameInfo.getInstance().isMultiplayer) ? GameInfo.SCREEN_HEIGHT : GameInfo.CAMPAIGN_WIDTH;
+        if (x + diameter/2f >= rightBound) {
+            BounceOff(Direction.Right, rightBound);
             SoundManager.playSound("wall");
         }
 
         // nảy khi chạm trên hoặc dưới
         if (y - diameter / 2f <= 0) {
-            BounceOff(Direction.Top);
+            BounceOff(Direction.Top, 0);
             SoundManager.playSound("wall");
         }
 
@@ -156,15 +170,6 @@ public class Ball extends MovableObject {
                 Direction collideAns = intersect(obj);
                 Brick brick = (Brick) obj;
 
-                if (collideAns == Direction.Down) {
-                    BounceOff(Direction.Top);
-                } else if (collideAns == Direction.Top) {
-                    BounceOff(Direction.Down);
-                } else if (collideAns == Direction.Left) {
-                    BounceOff(Direction.Right);
-                } else if (collideAns == Direction.Right) {
-                    BounceOff(Direction.Left);
-                }
                 if (brick.getIFrame() <= 0 && collideAns != Direction.None) {
                     brick.takeDamage(1);
                     if (brick.getHp() == 0) {
@@ -198,19 +203,19 @@ public class Ball extends MovableObject {
         prevY = y;
     }
 
-    public void BounceOff(Direction dir) {
+    public void BounceOff(Direction dir, float bound) {
 
         if (dir == Direction.Top) {
-            y += 2;
+            y = bound + diameter/2 + 2;
             dy = -dy;
         } else if (dir == Direction.Down) {
-            y -= 2;
+            y = bound - diameter/2 - 2;
             dy = -dy;
         } else if (dir == Direction.Left) {
-            x += 2;
+            x = bound + diameter/2 + 2;
             dx = -dx;
         } else {
-            x -= 2;
+            x = bound - diameter/2 - 2;
             dx = -dx;
         }
     }

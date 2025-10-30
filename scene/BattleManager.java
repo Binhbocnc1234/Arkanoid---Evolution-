@@ -7,7 +7,6 @@ import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import javax.swing.*;
-
 import level.LevelManager;
 import powerup.*;
 import score.Score;
@@ -22,14 +21,21 @@ enum BattleState {
 }
 
 public class BattleManager extends JPanel {
-    BattleState state = BattleState.Fighting;
+    public BattleState state = BattleState.Fighting;
     private long loseTimestamp = -1;
     private Score score;
     private Timer timer;
-    private JPanel pauseMenu;
-    private JButton pauseButton;  // thay đổi kiểu
+    private PauseManager pauseManager;
+
+    private Image rightPanelBackground;
 
     public BattleManager(boolean isMultiplayer) {
+        // GameInfo.getInstance().isSlowmotion = true;
+        GameInfo.getInstance().isMultiplayer = isMultiplayer;
+        rightPanelBackground = new ImageIcon("assets/img/background/rightPanel.jpg").getImage();
+        if (rightPanelBackground.getWidth(null) == -1 || rightPanelBackground.getHeight(null) == -1) {
+            System.err.println("⚠️ Image not found or invalid path");
+        }
         setLayout(null); // Để có thể set vị trí chính xác cho các component
         GameInfo.getInstance().Initialize();
 
@@ -99,81 +105,13 @@ public class BattleManager extends JPanel {
 
         score = new Score();
       
-        // Pause button
-        pauseButton = new JButton();
-        pauseButton.setBounds(GameInfo.CAMPAIGN_WIDTH - 60, 5, 40, 40);
-        pauseButton.setIcon(new ImageIcon("assets/img/Pause button.png"));
-        pauseButton.setBorderPainted(false);
-        pauseButton.setContentAreaFilled(false);
-        pauseButton.setFocusPainted(false);
-        pauseButton.addActionListener(e -> {
-            SoundManager.playSound("button");
-            showPauseMenu();
-        });
-        add(pauseButton);
+    // Pause UI is handled by PauseManager (encapsulates pause menu + button)
+    pauseManager = new PauseManager(this);
 
-        SoundManager.playSoundLoop("background");
-        // Tạo pause menu
-        createPauseMenu();
+    SoundManager.playSoundLoop("background");
     }
 
-    private void createPauseMenu() {
-        pauseMenu = new JPanel(null) {
-            @Override
-            protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
-                g.setColor(new Color(30, 20, 60)); // Tím than
-                g.fillRect(0, 0, getWidth(), getHeight());
-                g.setColor(Color.WHITE);
-                g.drawRect(0, 0, getWidth()-1, getHeight()-1); // Viền trắng
-            }
-        };
-        
-        // Set size và position cho pause menu
-        int menuWidth = 300;
-        int menuHeight = 400;
-        pauseMenu.setBounds(
-            (GameInfo.CAMPAIGN_WIDTH - menuWidth)/2,
-            (GameInfo.SCREEN_HEIGHT - menuHeight)/2,
-            menuWidth,
-            menuHeight
-        );
-        pauseMenu.setVisible(false);
-
-        // Thêm label PAUSE
-        MyLabel pauseLabel = new MyLabel("PAUSE", menuWidth/2, 80, 200, 48);
-        pauseMenu.add(pauseLabel);
-
-        // Thêm nút Continue
-        MyButton continueBtn = new MyButton("Continue", menuWidth/2, 200, 200, 50);
-        continueBtn.addActionListener(e -> {
-            SoundManager.playSound("button");
-            hidePauseMenu();
-        });
-        pauseMenu.add(continueBtn);
-
-        // Thêm nút Return to Lobby
-        MyButton returnBtn = new MyButton("Return to Lobby", menuWidth/2, 280, 200, 50);
-        returnBtn.addActionListener(e -> {
-            SoundManager.playSound("button");
-            GameManager.instance.switchTo(new Lobby());
-        } );
-        pauseMenu.add(returnBtn);
-
-        add(pauseMenu);
-    }
-
-    private void showPauseMenu() {
-        state = BattleState.Pause;
-        pauseMenu.setVisible(true);
-        SoundManager.stopSound("background");
-    }
-
-    private void hidePauseMenu() {
-        state = BattleState.Fighting;
-        pauseMenu.setVisible(false);
-        SoundManager.playSoundLoop("background");
-    }
+    // Pause handling moved to PauseManager
 
     private void endBattle() {
         GameManager.instance.switchTo(new Lobby());
@@ -217,7 +155,7 @@ public class BattleManager extends JPanel {
 
             /* Check if all bricks has been destroyed, then switch level. */
             boolean allBricksDestroyed = GameInfo.getInstance().getObjects().stream()
-                .filter(obj -> obj instanceof Brick)
+                .filter(obj -> obj instanceof Brick) 
                 .map(obj -> (Brick) obj)
                 .filter(brick -> brick.getHp() < Integer.MAX_VALUE)
                 .noneMatch(obj -> obj instanceof Brick);
@@ -290,7 +228,13 @@ public class BattleManager extends JPanel {
         if (state == BattleState.Pause) {
             Graphics2D g2d = (Graphics2D) g;
             g2d.setColor(new Color(0, 0, 0, 0.5f)); // màu đen với độ trong suốt 50%
-            g2d.fillRect(0, 0, GameInfo.CAMPAIGN_WIDTH, GameInfo.SCREEN_HEIGHT);
+            g2d.fillRect(0, 0, GameInfo.SCREEN_WIDTH, GameInfo.SCREEN_HEIGHT);
         }
+        
+        if (!GameInfo.getInstance().isMultiplayer) {
+
+            g.drawImage(rightPanelBackground, GameInfo.CAMPAIGN_WIDTH, 0,
+                    GameInfo.SCREEN_WIDTH-GameInfo.CAMPAIGN_WIDTH, GameInfo.SCREEN_HEIGHT, null);
+        }                        
     }
 }

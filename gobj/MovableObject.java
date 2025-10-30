@@ -1,4 +1,6 @@
 package gobj;
+
+import info.*;
 public class MovableObject extends GameObject {
     protected float dx, dy;
 
@@ -7,8 +9,14 @@ public class MovableObject extends GameObject {
     }
 
     public void move() {
-        x += dx;
-        y += dy;
+        if (GameInfo.getInstance().isSlowmotion) {
+            x += dx / 3;
+            y += dy / 3;
+        }
+        else {
+            x += dx;
+            y += dy;
+        }
     }
 
     // Getter/Setter

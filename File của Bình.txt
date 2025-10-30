@@ -6,3 +6,10 @@ Bóng lúc này cũng sẽ thuộc 1 trong 4 trạng thái trên. Trạng thái 
 Boss chỉ nhận sát thương khi ta bắn trúng Brick có cùng nguyên tố với Boss
 Gợi ý loại Brick mới:
 VengefulBrick: Khi mất máu hoàn toàn sẽ phi về hướng paddle của người chơi, nếu trúng paddle thì paddle sẽ bị tê liệt(không thể sử dụng input)
+
+Chấm vào tuần sau hoặc tuần sau nữa
+Chấm commit trước 16h ngày 5/11
+README bao gồm
+Video demo. lồng tiếng vào game. Show toàn bộ những gì khỏe nhất trong game! Ví dụ như thuật toán collision, generic
+
+
