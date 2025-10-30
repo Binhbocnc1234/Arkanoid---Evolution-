@@ -101,12 +101,24 @@ public class LevelManager {
         loadCurrentLevel();
     }
 
+    public int getCurrentLevel() {
+        return currentLevel;
+    }
+
     /**
-     * Reset level counter back to 0.
+     * Set the current level.
+     * @param level         level num
+     */
+    public void setCurrentLevel(int level) {
+        currentLevel = level;
+    }
+
+    /**
+     * Reset level counter back to 0, and unlocked level to 1.
      * Effectively, this becomes a new playthrough.
      */
     public void reset() {
         currentLevel = 0;
-        loadCurrentLevel();
+        GameInfo.getInstance().resetUnlockedLevel();
     }
 }
