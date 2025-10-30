@@ -246,6 +246,9 @@ public class BattleManager extends JPanel {
                 .noneMatch(obj -> obj instanceof Brick);
                 
             if (allBricksDestroyed) {
+                int currLevel = LevelManager.getInstance().getCurrentLevel();
+                GameInfo.getInstance().setUnlockedLevel(currLevel + 1);
+
                 LevelManager.getInstance().switchToNextLevel();
 
                 for (GameObject obj : GameInfo.getInstance().getObjects()) {
