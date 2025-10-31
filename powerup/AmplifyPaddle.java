@@ -1,7 +1,7 @@
 package powerup;
 
 public class AmplifyPaddle extends PowerUp {
-    private static float rarity = 0.5f;
+    private static float rarity = 0.3f;
     public static final float MAX_WIDTH = 300;
     public static final float MAX_HEIGHT = 45;
 

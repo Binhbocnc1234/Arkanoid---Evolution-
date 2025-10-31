@@ -3,7 +3,7 @@ import info.GameInfo;
 import weapon.*;
 
 public class TripleBall extends PowerUp{
-    protected static float rarity = 0.5f;
+    protected static float rarity = 0.3f;
 
     public TripleBall() {
         super(0, 0, 25, 25, "Powerup/Multiply Powerup.png");
@@ -28,8 +28,12 @@ public class TripleBall extends PowerUp{
         GameInfo.getInstance().addGameObject(new Ball(ball.getX()/1.1f, ball.getY()/1.1f,
                                             "Ball.png", 25, paddle));
         */
-        GameInfo.getInstance().addGameObject(new Ball(paddle.getX(), paddle.getY(),
-                                            "Ball.png", 25));
+        Ball b = new Ball(paddle.getX() + paddle.getWidth() / 2, paddle.getY() - 20, "Ball.png", 25);
+        b.setVelocity(-10, -10);
+        GameInfo.getInstance().addGameObject(b);
+        b = new Ball(paddle.getX() - paddle.getWidth() / 2, paddle.getY() - 20, "Ball.png", 25);
+        b.setVelocity(10, -10);
+        GameInfo.getInstance().addGameObject(b);
     }
 
 }
