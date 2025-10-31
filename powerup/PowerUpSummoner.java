@@ -3,9 +3,8 @@ package powerup;
 import java.util.Random;
 
 public class PowerUpSummoner {
-    
-    //private static Class<?>[] powerUps = new Class<?>[] {TripleBall.class, AmplifyPaddle.class};
-    private static PowerUp[] powerUps = new PowerUp[] {new TripleBall(), new AmplifyPaddle()};
+    private static final PowerUp[] POWER_UPS = 
+        new PowerUp[] {new TripleBall(), new AmplifyPaddle(), new PiercingBall()};
     private static final Random gacha = new Random();
 
     /**
@@ -14,12 +13,12 @@ public class PowerUpSummoner {
      */
     public static PowerUp summonPowerUp() {
         float g = gacha.nextFloat();
-        for (PowerUp p : powerUps) {
+        for (PowerUp p : POWER_UPS) {
             g -= p.getRarity();
             if (g <= 0) {
                 return p.summon();
             }
         }
-        return powerUps[powerUps.length - 1].summon();
+        return POWER_UPS[POWER_UPS.length - 1].summon();
     }
 }
