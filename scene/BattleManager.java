@@ -12,6 +12,7 @@ import powerup.*;
 import score.Score;
 import soundmanager.*;
 import weapon.*;
+import score.HighScores;
 
 enum BattleState {
     Fighting,
@@ -31,6 +32,8 @@ public class BattleManager extends JPanel {
     private JPanel pauseMenu;
     private JButton pauseButton;  // thay đổi kiểu
     private float volumePercent = 50f;
+
+    private final int MAX_LEVEL = 10;
 
     public BattleManager(boolean isMultiplayer) {
         // GameInfo.getInstance().isSlowmotion = true;
@@ -111,12 +114,23 @@ public class BattleManager extends JPanel {
         // Áp dụng design pattern bridge
         pauseManager = new PauseManager(this);
 
-    SoundManager.playSoundLoop("background");
+        SoundManager.playSoundLoop("background");
+
+        if (GameInfo.getInstance().isMultiplayer) {
+            GameInfo.getInstance().setCurrentPlayerName(null);
+        }
     }
 
     // Pause handling moved to PauseManager
 
     private void endBattle() {
+        if (!GameInfo.getInstance().isMultiplayer && (state == BattleState.Lose || state == BattleState.Win)) {
+            String playerName = GameInfo.getInstance().getCurrentPlayerName();
+            if (playerName != null && !playerName.isEmpty()) {
+                HighScores.getInstance().addScore(playerName, score.getPlayerScore());
+                GameInfo.getInstance().setCurrentPlayerName(null);
+            }
+        }
         GameManager.instance.switchTo(new Lobby());
         timer.stop();
         SoundManager.stopSound("background");

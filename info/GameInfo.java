@@ -27,6 +27,7 @@ public class GameInfo {
     private final List<GameObject> container;
     private final List<GameObject> pendingGameObjects;
     private int unlockedLevel = 1;
+    private String currentPlayerName;
 
     GameInfo() {
         container = new ArrayList<>();
@@ -111,4 +112,11 @@ public class GameInfo {
         this.unlockedLevel = 1;
     }
 
+    public String getCurrentPlayerName() {
+        return currentPlayerName;
+    }
+
+    public void setCurrentPlayerName(String currentPlayerName) {
+        this.currentPlayerName = currentPlayerName;
+    }
 }

@@ -14,6 +14,7 @@ public class Lobby extends JPanel {
     private MyButton newGameButton;
     private MyButton continueButton;
     private MyButton multiplayerButton;
+    private MyButton highScoresButton;
     
     /**
      * Initialize the Lobby scene.
@@ -36,9 +37,18 @@ public class Lobby extends JPanel {
 
         newGameButton = new MyButton("New Game", GameInfo.SCREEN_WIDTH/2, GameInfo.SCREEN_HEIGHT/2 - 100, 200, 70);
         newGameButton.addActionListener(e -> {
-            LevelManager.getInstance().reset();
-            SoundManager.playSound("button");
-            GameManager.instance.switchTo(new BattleManager(false));
+            String getPlayerName = JOptionPane.showInputDialog(
+                this,
+                "Enter your name:",
+                "New Game",
+                JOptionPane.PLAIN_MESSAGE
+            );
+            if (getPlayerName != null && !getPlayerName.trim().isEmpty()) {
+                GameInfo.getInstance().setCurrentPlayerName(getPlayerName.trim());
+                LevelManager.getInstance().reset();
+                SoundManager.playSound("button");
+                GameManager.instance.switchTo(new BattleManager(false));
+            }
         });
         add(newGameButton);
 
@@ -56,6 +66,15 @@ public class Lobby extends JPanel {
             GameManager.instance.switchTo(new LevelSelect(true));
         });
         add(multiplayerButton);
+
+        highScoresButton = new MyButton("High Scores", GameInfo.SCREEN_WIDTH / 2, GameInfo.SCREEN_HEIGHT / 2 + 200,
+                 200, 70);
+        highScoresButton.addActionListener(e -> {
+            SoundManager.playSound("button");
+            animationTimer.stop();
+            GameManager.instance.switchTo(new LeaderBoard());
+        });
+        add(highScoresButton);
 
         setOpaque(true);
         setBackground(new Color(30, 20, 60));
