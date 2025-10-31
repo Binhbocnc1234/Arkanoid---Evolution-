@@ -37,6 +37,7 @@ public class Lobby extends JPanel {
 
         newGameButton = new MyButton("New Game", GameInfo.SCREEN_WIDTH/2, GameInfo.SCREEN_HEIGHT/2 - 100, 200, 70);
         newGameButton.addActionListener(e -> {
+            SoundManager.playSound("button");
             String getPlayerName = JOptionPane.showInputDialog(
                 this,
                 "Enter your name:",
@@ -46,7 +47,6 @@ public class Lobby extends JPanel {
             if (getPlayerName != null && !getPlayerName.trim().isEmpty()) {
                 GameInfo.getInstance().setCurrentPlayerName(getPlayerName.trim());
                 LevelManager.getInstance().reset();
-                SoundManager.playSound("button");
                 GameManager.instance.switchTo(new BattleManager(false));
             }
         });

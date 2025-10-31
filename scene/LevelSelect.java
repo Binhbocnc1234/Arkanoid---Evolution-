@@ -7,6 +7,7 @@ import javax.swing.JPanel;
 import UI.*;
 import info.GameInfo;
 import level.LevelManager;
+import soundmanager.SoundManager;
 
 
 public class LevelSelect extends JPanel{
@@ -82,10 +83,10 @@ public class LevelSelect extends JPanel{
         }
 
         returnButton = new MyButton("Return", GameInfo.SCREEN_WIDTH / 2, GameInfo.SCREEN_HEIGHT / 2, 100, 70);
-        returnButton.addActionListener(e ->
-            GameManager.instance.switchTo(new Lobby())
-        );
-
+        returnButton.addActionListener(e -> {
+            SoundManager.playSound("button");
+            GameManager.instance.switchTo(new Lobby());
+        });
         add(returnButton);
     }
 }
