@@ -18,6 +18,8 @@ public class PauseManager {
     private final JPanel parent;
     private JPanel pauseMenu;
     private JButton pauseButton;
+    private float volumePercent = 50f;
+
 
     public PauseManager(BattleManager battleManager) {
         this.battleManager = battleManager;
@@ -38,7 +40,7 @@ public class PauseManager {
         };
 
         int menuWidth = 300;
-        int menuHeight = 400;
+        int menuHeight = 480;
         pauseMenu.setBounds((GameInfo.CAMPAIGN_WIDTH - menuWidth) / 2,
                 (GameInfo.SCREEN_HEIGHT - menuHeight) / 2,
                 menuWidth,
@@ -61,7 +63,29 @@ public class PauseManager {
             GameManager.instance.switchTo(new Lobby());
         });
         pauseMenu.add(returnBtn);
+        
+        MyButton volumeButton = new MyButton("Volume", menuWidth / 2, 360, 200, 50);
+        pauseMenu.add(volumeButton);
+        
+        JSlider volumeJs = new JSlider(0, 100,(int) volumePercent);
+        volumeJs.setBounds(menuWidth / 2 - 100, 400, 200, 50);
+        volumeJs.setMajorTickSpacing(25);
+        volumeJs.setMinorTickSpacing(5);
+        volumeJs.setPaintTicks(true);
+        volumeJs.setPaintLabels(true);
+        volumeJs.setVisible(false);
+        pauseMenu.add(volumeJs);
 
+        volumeButton.addActionListener(e -> {
+            SoundManager.playSound("button");
+            volumeJs.setVisible(!volumeJs.isVisible());
+        });
+        volumeJs.addChangeListener(e -> {
+            volumePercent = volumeJs.getValue();
+            SoundManager.setSpecificVolume("background", volumePercent);
+            System.out.println("Am luong: " + volumePercent + "%");
+        });
+        
         parent.add(pauseMenu);
 
         // Create and add pause button (top-right of campaign area)
