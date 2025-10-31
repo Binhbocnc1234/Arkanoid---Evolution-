@@ -12,6 +12,7 @@ public class Ball extends MovableObject {
     private final float diameter;
     // private boolean isPowerUp = false;
     // private static final int MAX_TRAIL = 6;
+    public static boolean PIERCING = false;
     private long lastTrailStamp = 0;
     private float prevX, prevY;
     
@@ -100,15 +101,16 @@ public class Ball extends MovableObject {
             collideAns = (d.x > 0) ? Direction.Left : Direction.Right;
         else
             collideAns = (d.y > 0) ? Direction.Top : Direction.Down;
-
-        if (collideAns == Direction.Down) {
-            BounceOff(Direction.Top, rectBottom);
-        } else if (collideAns == Direction.Top) {
-            BounceOff(Direction.Down, rectTop);
-        } else if (collideAns == Direction.Left) {
-            BounceOff(Direction.Right, rectLeft);
-        } else if (collideAns == Direction.Right) {
-            BounceOff(Direction.Left, rectRight);
+        if (!PIERCING) {
+            if (collideAns == Direction.Down) {
+                BounceOff(Direction.Top, rectBottom);
+            } else if (collideAns == Direction.Top) {
+                BounceOff(Direction.Down, rectTop);
+            } else if (collideAns == Direction.Left) {
+                BounceOff(Direction.Right, rectLeft);
+            } else if (collideAns == Direction.Right) {
+                BounceOff(Direction.Left, rectRight);
+            }
         }
         return collideAns;
     }
@@ -226,6 +228,7 @@ public class Ball extends MovableObject {
     public void reset() {
         this.setPosition(GameInfo.CAMPAIGN_WIDTH / 2f, 300);
         this.setVelocity(0, 10f);
+        this.PIERCING = false;
     }
 
 }
