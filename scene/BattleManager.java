@@ -19,10 +19,11 @@ enum BattleState {
     Lose,
     Win,
     Pause,
+    Ready,
 }
 
 public class BattleManager extends JPanel {
-    public BattleState state = BattleState.Fighting;
+    public BattleState state = BattleState.Ready;
     private long loseTimestamp = -1;
     private Score score;
     private Timer timer;
@@ -60,14 +61,19 @@ public class BattleManager extends JPanel {
             //Tạo keyevent cho Paddle
             addKeyListener(new KeyAdapter() {
                 @Override public void keyPressed(KeyEvent ev) {
-                    paddle1.handleInput(ev.getKeyCode(), true);
-                    paddle2.handleInput(ev.getKeyCode(), true);
+                    if (state == BattleState.Ready && ev.getKeyCode() == KeyEvent.VK_SPACE) {
+                        state = BattleState.Fighting;
+                    } else if (state == BattleState.Fighting) {
+                        paddle1.handleInput(ev.getKeyCode(), true);
+                        paddle2.handleInput(ev.getKeyCode(), true);
+                    }
                 }
                 @Override public void keyReleased(KeyEvent ev) {
-                    paddle1.handleInput(ev.getKeyCode(), false);
-                    paddle2.handleInput(ev.getKeyCode(), false);
+                    if (state == BattleState.Fighting) {
+                        paddle1.handleInput(ev.getKeyCode(), false);
+                        paddle2.handleInput(ev.getKeyCode(), false);
+                    }
                 }
-                
             });
 
             ball = new Ball(paddle1.getX(), paddle1.getY() - paddle1.getHeight(), "Ball.png", 25f);
@@ -81,10 +87,16 @@ public class BattleManager extends JPanel {
             //Tạo keyevent cho Paddle
             addKeyListener(new KeyAdapter() {
                 @Override public void keyPressed(KeyEvent ev) {
-                    paddle.handleInput(ev.getKeyCode(), true);
+                    if (state == BattleState.Ready && ev.getKeyCode() == KeyEvent.VK_SPACE) {
+                        state = BattleState.Fighting;
+                    } else if (state == BattleState.Fighting) {
+                        paddle.handleInput(ev.getKeyCode(), true);
+                    }
                 }
                 @Override public void keyReleased(KeyEvent ev) {
-                    paddle.handleInput(ev.getKeyCode(), false);
+                    if (state == BattleState.Fighting) {
+                        paddle.handleInput(ev.getKeyCode(), false);
+                    }
                 }
                 
             });
@@ -146,7 +158,7 @@ public class BattleManager extends JPanel {
                 endBattle();
             }
         }
-        else {
+        else if (state == BattleState.Fighting) {
             // Cập nhật tất cả GameObject
             for (GameObject obj : GameInfo.getInstance().getCurrentObjects()) {
                 obj.update();
@@ -166,9 +178,8 @@ public class BattleManager extends JPanel {
                 }
             }
 
-            GameInfo.getInstance().flushGameObject();
             // Nếu GameObject được đánh dấu là đã chết thì loại nó khỏi dãy
-            GameInfo.getInstance().getObjects().removeIf(obj -> obj.isDie());
+            //GameInfo.getInstance().getObjects().removeIf(obj -> obj.isDie());
 
             /* Check if all bricks has been destroyed, then switch level. */
             boolean allBricksDestroyed = GameInfo.getInstance().getObjects().stream()
@@ -196,6 +207,7 @@ public class BattleManager extends JPanel {
                     if (obj instanceof BrickParticle particle) {
                         particle.selfDestroy();
                     }
+                    state = BattleState.Ready;
                 }
             }
 
@@ -218,9 +230,12 @@ public class BattleManager extends JPanel {
             
             GameInfo.getInstance().getObjects().removeIf(obj -> obj instanceof PowerUp && 
                     ((PowerUp) obj).isCollected);
-
             
         }
+
+        GameInfo.getInstance().getObjects().removeIf(obj -> obj.isDie());
+
+        GameInfo.getInstance().flushGameObject();
 
         setBackground(Color.BLACK);
         this.repaint();
@@ -238,6 +253,13 @@ public class BattleManager extends JPanel {
 
         g.setColor(Color.WHITE);
         g.setFont(GameInfo.getInstance().getSmallFont());
+
+        /* Rendering ready */
+        if (state == BattleState.Ready) {
+            String pressToReadyText = "PRESS SPACE TO START ";
+            int pressToReadyPos = (GameInfo.CAMPAIGN_WIDTH / 4 + g.getFontMetrics().stringWidth(pressToReadyText)) / 2;
+            g.drawString(pressToReadyText, pressToReadyPos, 400);
+        }
         
         /* Rendering score */
         String currentScoreText = String.format("SCORE: %06d", score.getPlayerScore());

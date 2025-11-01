@@ -18,7 +18,7 @@ public class GameInfo {
     public static final int CAMPAIGN_WIDTH = 600,
             SCREEN_HEIGHT = 700, SCREEN_WIDTH = 900;
     public static final int FPS = 60;
-    public static final float SLOWMOTION_RATIO = 3f;
+    public static final float SLOWMOTION_RATIO = 1f;
     public boolean isMultiplayer = false;
     public boolean isSlowmotion = false;
     private Font titleFont, smallFont;
