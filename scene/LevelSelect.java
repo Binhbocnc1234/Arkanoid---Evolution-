@@ -29,6 +29,8 @@ public class LevelSelect extends JPanel{
         setLayout(null);
         setBackground(new Color(30, 20, 60));
 
+        SoundManager.setSpecificVolume("lobbyBG", 10f);
+
         /* Adding scene label */
         levelselLabel = new MyLabel("Level Select",
                     GameInfo.SCREEN_WIDTH/2, 100, 500, 100);
@@ -76,6 +78,7 @@ public class LevelSelect extends JPanel{
 
             levelButtons[i].addActionListener(e -> {
                 LevelManager.getInstance().setCurrentLevel(level);
+                SoundManager.stopSound("lobbyBG");
                 GameManager.instance.switchTo(new BattleManager(this.isMultiplayer));
             });
 
@@ -85,6 +88,7 @@ public class LevelSelect extends JPanel{
         returnButton = new MyButton("Return", GameInfo.SCREEN_WIDTH / 2, GameInfo.SCREEN_HEIGHT / 2, 100, 70);
         returnButton.addActionListener(e -> {
             SoundManager.playSound("button");
+            SoundManager.setSpecificVolume("lobbyBG", 50f);
             GameManager.instance.switchTo(new Lobby());
         });
         add(returnButton);

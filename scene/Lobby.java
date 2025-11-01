@@ -11,6 +11,7 @@ public class Lobby extends JPanel {
     private GalaxyBackground background;
     public MyButton playButton;
     private Timer animationTimer;
+    private Image gameIcon;
     private MyButton newGameButton;
     private MyButton continueButton;
     private MyButton multiplayerButton;
@@ -20,9 +21,11 @@ public class Lobby extends JPanel {
      * Initialize the Lobby scene.
      */
     public Lobby() {
+        SoundManager.getSound("lobbyBG", "/assets/sound/lobbyBackgroundMusic.wav");
         SoundManager.getSound("button", "/assets/sound/button.wav");
 
         setLayout(null);
+        SoundManager.playSoundLoop("lobbyBG");
         
         // Initialize the galaxy background with 100 stars
         background = new GalaxyBackground(GameInfo.SCREEN_WIDTH, GameInfo.SCREEN_HEIGHT, 100);
@@ -31,9 +34,11 @@ public class Lobby extends JPanel {
         animationTimer = new Timer(16, e -> repaint()); // approximately 60 FPS
         animationTimer.start();
 
-        JLabel title = new MyLabel("Arkanoid-Evolution", GameInfo.SCREEN_WIDTH/2, GameInfo.SCREEN_HEIGHT/2 - 200, 500, 100);
-        title.setForeground(new Color(180, 160, 255));
-        add(title);
+        gameIcon = new ImageIcon("assets/img/gameLogo.png").getImage();
+
+        // JLabel title = new MyLabel("Arkanoid-Evolution", GameInfo.SCREEN_WIDTH/2, GameInfo.SCREEN_HEIGHT/2 - 200, 500, 100);
+        // title.setForeground(new Color(180, 160, 255));
+        // add(title);
 
         newGameButton = new MyButton("New Game", GameInfo.SCREEN_WIDTH/2, GameInfo.SCREEN_HEIGHT/2 - 100, 200, 70);
         newGameButton.addActionListener(e -> {
@@ -84,6 +89,8 @@ public class Lobby extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         background.update(g);
+
+        g.drawImage(gameIcon, (GameInfo.SCREEN_WIDTH - 600) / 2, 25, 600, 150, null);
     }
     
 }
