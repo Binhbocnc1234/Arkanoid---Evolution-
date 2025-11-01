@@ -2,6 +2,7 @@ package soundmanager;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
@@ -28,20 +29,26 @@ public class SoundManager {
     // tai file am thanh 
     public static void getSound(String name, String soundPath) {
         try {
-            URL url = SoundManager.class.getResource(soundPath);
-            if (url == null) {
+            // Fix: Su dung file thay vi URL, bay gio co the load file ma khong can phai tong vao folder class
+            String basePath = System.getProperty("user.dir");
+            File file = new File(basePath + soundPath);
+
+            if (!file.exists()) {
                 System.out.println("khong tim thay file");
                 return;
-            }
+            }   
+
             try {
-                AudioInputStream audioInput = AudioSystem.getAudioInputStream(url);
+                AudioInputStream audioInput = AudioSystem.getAudioInputStream(file);
                 AudioFormat format = audioInput.getFormat();
+
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 byte[] buffer = new byte[4096];
                 int read;
                 while ((read = audioInput.read(buffer)) != -1) {
                     baos.write(buffer, 0, read);
                 }
+
                 byte[] data = baos.toByteArray();
 
                 sound.put(name, new SoundData(data, format));
@@ -141,4 +148,5 @@ public class SoundManager {
             setVolume(clip, volumePercent);
         }
     }
+    
 }
