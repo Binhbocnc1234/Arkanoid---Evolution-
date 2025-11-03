@@ -100,6 +100,8 @@ public class Paddle extends MovableObject {
         this.setVelocity(0, 0);
         this.height = 20;
         this.width = (GameInfo.CAMPAIGN_WIDTH / 10) * 2;
+        moveLeft = false;
+        moveRight = false;
     }
 
 
