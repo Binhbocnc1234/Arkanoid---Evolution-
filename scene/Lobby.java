@@ -24,7 +24,9 @@ public class Lobby extends JPanel implements IDisposable {
         SoundManager.getSound("button", "/assets/sound/button.wav");
 
         setLayout(null);
+        
         SoundManager.playSoundLoop("lobbyBG");
+        
         
         // Initialize the galaxy background with 100 stars
         background = new GalaxyBackground(GameInfo.SCREEN_WIDTH, GameInfo.SCREEN_HEIGHT, 100);
@@ -52,6 +54,7 @@ public class Lobby extends JPanel implements IDisposable {
                 GameInfo.getInstance().setCurrentPlayerName(getPlayerName.trim());
                 LevelManager.getInstance().reset();
                 GameManager.instance.switchTo(new BattleManager(false));
+                SoundManager.stopSound("lobbyBG");
             }
         });
         add(newGameButton);

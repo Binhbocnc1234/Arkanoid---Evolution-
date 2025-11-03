@@ -149,7 +149,7 @@ public class Ball extends MovableObject {
             SoundManager.playSound("wall");
         }
 
-        int rightBound = (GameInfo.getInstance().isMultiplayer) ? GameInfo.SCREEN_HEIGHT : GameInfo.CAMPAIGN_WIDTH;
+        int rightBound = (GameInfo.getInstance().isMultiplayer) ? GameInfo.SCREEN_WIDTH : GameInfo.CAMPAIGN_WIDTH;
         if (x + diameter/2f >= rightBound) {
             BounceOff(Direction.Right, rightBound);
             SoundManager.playSound("wall");
@@ -226,7 +226,7 @@ public class Ball extends MovableObject {
      * Reset the Ball instance to its default position. 
      */
     public void reset() {
-        this.setPosition(GameInfo.CAMPAIGN_WIDTH / 2f, 600);
+        this.setPosition(GameInfo.CAMPAIGN_WIDTH / 2f, 620);
         this.setVelocity(0, 10f);
         PIERCING = false;
     }

@@ -81,10 +81,17 @@ public class LevelManager {
             }       // Deleting all remaining Brick instances
         }
 
+        float brickW = 0;
+        if (GameInfo.getInstance().isMultiplayer) {
+            brickW = GameInfo.SCREEN_WIDTH / 10f;
+        } else {
+            brickW = GameInfo.CAMPAIGN_WIDTH / 10f;
+        }
+
         List<GameObject> levelBricks = level.LevelLoader.loadLevel(
             levelPaths.get(currentLevel),
-            (GameInfo.CAMPAIGN_WIDTH / 10f), 25f,
-            30f, 12f
+            brickW, 25f,
+            brickW / 2, 12.5f
         );
 
         for (GameObject brick : levelBricks) {

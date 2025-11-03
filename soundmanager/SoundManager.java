@@ -91,6 +91,12 @@ public class SoundManager {
     }
 
     public static void playSoundLoop(String name) {
+        // Fix: Tranh goi ham nay nhieu lan
+        Clip existingClip = clips.get(name);
+        if (existingClip != null && existingClip.isRunning()) {
+            return;
+        }
+
         SoundData soundData = sound.get(name);
         if (soundData != null) {
             try {
