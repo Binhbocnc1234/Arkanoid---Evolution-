@@ -1,0 +1,40 @@
+package game.brick;
+
+import javax.swing.ImageIcon;
+
+import game.gobj.GameObject;
+import game.info.GameInfo;
+
+public class TNTBrick extends Brick {
+    public static final int ID = 6;
+
+    public TNTBrick(float x, float y, float w, float h) {
+        super(x, y, w, h, 1, 0f, ID, 100);
+        updateTexture();
+    }
+
+    @Override
+    public void updateTexture() {
+        if (!isDie()) {
+            this.image = new ImageIcon("/img/brick/brick_tnt.png").getImage();
+        } else {
+            this.image = null;
+        }
+    }
+
+    @Override
+    public void selfDestroy() {
+        super.selfDestroy();
+
+        for (GameObject obj : GameInfo.getInstance().getCurrentObjects()) {
+            if (obj instanceof Brick brick) {
+                boolean sameRow = (brick.getY() == this.getY());
+                boolean sameCol = (brick.getX() == this.getX());
+
+                if ((sameCol || sameRow) && (brick != this) && !brick.isDie()) {
+                    brick.takeDamage(1);
+                }
+            }
+        }
+    }
+}

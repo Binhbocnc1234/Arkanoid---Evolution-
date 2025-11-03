@@ -1,4 +1,2 @@
 @echo off
-if not exist class mkdir class
-javac -d class scene\GameManager.java
-java -cp class scene.GameManager
+cmd /k "mvn compile && mvn exec:java"

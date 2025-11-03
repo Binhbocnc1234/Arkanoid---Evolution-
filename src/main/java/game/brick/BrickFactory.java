@@ -1,0 +1,39 @@
+package game.brick;
+
+public class BrickFactory {
+    /**
+     * Create a Brick instance in accordance to the ID.
+     * @param id        Brick's id
+     * @param x         Brick's x Coord
+     * @param y         Brick's y Coord
+     * @param w         Brick's width
+     * @param h         Brick's height
+     * @return          A Brick instance
+     */
+    public static Brick createBrick(int id, float x, float y, float w, float h) {
+        switch (id) {
+            /*
+             * ID 1     Normal
+             * ID 2     Steel
+             * ID 3     Gold
+             * ID 4     Diamond
+             * ID 5     Obsidian
+             * ID 6     TNT
+             */
+            case NormalBrick.ID:
+                return new NormalBrick(x, y, w, h);
+            case SteelBrick.ID:
+                return new SteelBrick(x, y, w, h);
+            case GoldBrick.ID:
+                return new GoldBrick(x, y, w, h);
+            case DiamondBrick.ID:
+                return new DiamondBrick(x, y, w, h);
+            case ObsidianBrick.ID:
+                return new ObsidianBrick(x, y, w, h);
+            case TNTBrick.ID:
+                return new TNTBrick(x, y, w, h);
+            default: 
+                return null;
+        }
+    }
+}

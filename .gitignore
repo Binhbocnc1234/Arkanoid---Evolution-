@@ -1,6 +1,6 @@
 *.class
 class/
-assets/level/level0.txt
+/level/level0.txt
 highscores.dat
 tempCodeRunnerFile.bat
 highscores.dat
