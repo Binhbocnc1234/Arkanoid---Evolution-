@@ -1,16 +1,15 @@
 package scene;
 
-import javax.swing.*;
-import java.awt.*;
 import UI.MyButton;
 import UI.MyLabel;
-import java.util.List;
-
 import info.GameInfo;
+import java.awt.*;
+import java.util.List;
+import javax.swing.*;
 import score.HighScores;
 import soundmanager.SoundManager;
 
-public class LeaderBoard extends JPanel {
+public class LeaderBoard extends JPanel implements IDisposable {
     private GalaxyBackground background;
     private Timer animationTimer;
 
@@ -60,5 +59,13 @@ public class LeaderBoard extends JPanel {
     @Override protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         background.update(g);
+    }
+
+    @Override
+    public void dispose() {
+        if (animationTimer != null) {
+            animationTimer.stop();
+            animationTimer = null;
+        }
     }
 }

@@ -47,9 +47,9 @@ public class GameInfo {
             smallFont = new Font("Serif", Font.BOLD, 32);
         }
     }
-    public void Initialize() {
-        
+    public void clear() {
         container.clear();
+        pendingGameObjects.clear(); // Clear pending objects too
     }
 
     public static GameInfo getInstance() {

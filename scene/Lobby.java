@@ -7,7 +7,7 @@ import javax.swing.*;
 import level.LevelManager;
 import soundmanager.SoundManager;
 
-public class Lobby extends JPanel {
+public class Lobby extends JPanel implements IDisposable {
     private final GalaxyBackground background;
     private Timer animationTimer;
     private final MyButton newGameButton;
@@ -90,6 +90,15 @@ public class Lobby extends JPanel {
         background.update(g);
 
         g.drawImage(gameIcon, (GameInfo.SCREEN_WIDTH - 600) / 2, 25, 600, 150, null);
+    }
+    
+    @Override
+    public void dispose() {
+        if (animationTimer != null) {
+            animationTimer.stop();
+            animationTimer = null;
+        }
+        SoundManager.stopSound("lobbyBG");
     }
     
 }

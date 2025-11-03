@@ -23,7 +23,7 @@ enum BattleState {
     LevelComplete,
 }
 
-public class BattleManager extends JPanel {
+public class BattleManager extends JPanel implements  IDisposable {
     public BattleState state = BattleState.Ready;
     private long loseTimestamp = -1;
     private final Score score;
@@ -47,7 +47,6 @@ public class BattleManager extends JPanel {
             System.err.println("Image not found or invalid path");
         }
         setLayout(null); // Để có thể set vị trí chính xác cho các component
-        GameInfo.getInstance().Initialize();
 
         // Paddle và Ball
         Ball ball;
@@ -140,19 +139,31 @@ public class BattleManager extends JPanel {
         }
     }
 
-    // Pause handling moved to PauseManager
-
+    // endBattle không còn được sử dụng mà logic cập nhật score di chuyển vào hàm dispose
     private void endBattle() {
+        // Save score if applicable
         if (!GameInfo.getInstance().isMultiplayer && (state == BattleState.Lose || state == BattleState.Win)) {
             String playerName = GameInfo.getInstance().getCurrentPlayerName();
             if (playerName != null && !playerName.isEmpty()) {
                 HighScores.getInstance().addScore(playerName, score.getPlayerScore());
-                GameInfo.getInstance().setCurrentPlayerName(null);
+                // GameInfo.getInstance().setCurrentPlayerName(null);
             }
         }
-        GameManager.instance.switchTo(new Lobby());
+    }
+
+    @Override //Được gọi khi từ scene BattleManager chuyển sang scene mới
+    public void dispose() {
+        if (!GameInfo.getInstance().isMultiplayer && (state == BattleState.Lose || state == BattleState.Win)) {
+            String playerName = GameInfo.getInstance().getCurrentPlayerName();
+            if (playerName != null && !playerName.isEmpty()) {
+                HighScores.getInstance().addScore(playerName, score.getPlayerScore());
+                // GameInfo.getInstance().setCurrentPlayerName(null);
+            }
+        }
         timer.stop();
-        
+        GameInfo.getInstance().clear();
+        SoundManager.stopSound("background");
+        SoundManager.stopSound("levelComplete");
     }
 
     private void gameLoop() {
@@ -163,7 +174,8 @@ public class BattleManager extends JPanel {
         if (state == BattleState.Lose) {
             long now = System.nanoTime();
             if (now - loseTimestamp >= 3_000_000_000L) {
-                endBattle();
+                // Switch to lobby
+                GameManager.instance.switchTo(new Lobby());
             }
         }
         else if (state == BattleState.Fighting) {
@@ -271,7 +283,7 @@ public class BattleManager extends JPanel {
         if (!GameInfo.getInstance().isMultiplayer) {
 
             g.drawImage(rightPanelBackground, GameInfo.CAMPAIGN_WIDTH, 0,
-                    GameInfo.SCREEN_WIDTH-GameInfo.CAMPAIGN_WIDTH, GameInfo.SCREEN_HEIGHT, null);
+                    GameInfo.SCREEN_WIDTH-GameInfo.CAMPAIGN_WIDTH, GameInfo.SCREEN_HEIGHT-50, null);
         }
 
         g.drawImage(background, 0, 0, GameInfo.CAMPAIGN_WIDTH, GameInfo.SCREEN_HEIGHT, null);

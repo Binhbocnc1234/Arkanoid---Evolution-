@@ -4,7 +4,6 @@ import javax.swing.*;
 
 public class GameManager extends JFrame {
     public static GameManager instance;
-
     public GameManager() {
         instance = this;
         setTitle("Arkanoid Evolution");
@@ -16,6 +15,9 @@ public class GameManager extends JFrame {
     }
 
     public void switchTo(JPanel panel) {
+        JPanel oldPanel = (JPanel) getContentPane();
+        if (oldPanel instanceof IDisposable disposable)
+            disposable.dispose();
         setContentPane(panel);
         revalidate();
         repaint();
