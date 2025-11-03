@@ -70,9 +70,17 @@ public class Paddle extends MovableObject {
         if (x - width / 2f < 0) {
             x = width / 2f;
         }
-        if (x + width / 2f > GameInfo.CAMPAIGN_WIDTH) {
-            x = GameInfo.CAMPAIGN_WIDTH - width / 2;
+
+        if (GameInfo.getInstance().isMultiplayer) {
+            if (x + width / 2f > GameInfo.SCREEN_WIDTH) {
+                x = GameInfo.SCREEN_WIDTH - width / 2;
+            }
+        } else {
+            if (x + width / 2f > GameInfo.CAMPAIGN_WIDTH) {
+                x = GameInfo.CAMPAIGN_WIDTH - width / 2;
+            }
         }
+        
         if (isRecoiling) {
             float recoilY = startY + RECOIL_DISTANCE;
             if (isRecoilDown) {
