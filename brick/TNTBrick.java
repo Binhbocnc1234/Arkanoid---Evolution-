@@ -33,6 +33,7 @@ public class TNTBrick extends Brick {
 
                 if ((sameCol || sameRow) && (brick != this) && !brick.isDestroyed()) {
                     brick.takeDamage(1);
+                    GameInfo.getInstance().addGameObject(new BrickExplosion(brick.getX(), brick.getY()));
                 } 
             }
         }
