@@ -46,6 +46,13 @@ public class BrickParticle extends MovableObject {
     }
 
     @Override
+    public void selfDestroy() {
+        super.selfDestroy();
+        isDead = true;
+    }
+
+
+    @Override
     public void render(Graphics g) {
         if (isDead) return;
 
