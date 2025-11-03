@@ -102,11 +102,8 @@ public class PauseManager {
         parent.add(pauseButton);
     }
 
-    public JButton getPauseButton() {
-        return pauseButton;
-    }
 
-    public void show() {
+    private void show() {
         if (pauseMenu != null) {
             battleManager.state = BattleState.Pause;
             pauseMenu.setVisible(true);
@@ -114,7 +111,7 @@ public class PauseManager {
         }
     }
 
-    public void hide() {
+    private void hide() {
         if (pauseMenu != null) {
             battleManager.state = BattleState.Fighting;
             pauseMenu.setVisible(false);
@@ -122,7 +119,4 @@ public class PauseManager {
         }
     }
 
-    public boolean isVisible() {
-        return pauseMenu != null && pauseMenu.isVisible();
-    }
 }

@@ -205,7 +205,7 @@ public class Ball extends MovableObject {
         prevY = y;
     }
 
-    public void BounceOff(Direction dir, float bound) {
+    private void BounceOff(Direction dir, float bound) {
 
         if (dir == Direction.Top) {
             y = bound + diameter/2 + 2;

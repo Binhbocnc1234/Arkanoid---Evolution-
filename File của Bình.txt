@@ -11,5 +11,15 @@ Chấm vào tuần sau hoặc tuần sau nữa
 Chấm commit trước 16h ngày 5/11
 README bao gồm
 Video demo. lồng tiếng vào game. Show toàn bộ những gì khỏe nhất trong game! Ví dụ như thuật toán collision, generic
+Miêu tả về trò chơi
 
+Bản thiết kế: kế thừa, da hình, interface
+ 
+Bản tóm tắt: Thành viên đội trưởng ở đâù. Các thành viên sắp xếp theo thứ tự đóng góp và công việc của mọi người
+
+Xử lý vấn đề kĩ thuật trước khi thực hiện thuyêts trình   
+
+Cơ chế tính điểm:
+-Thang điểm tối đa: 40
+-Thành viên sẽ tự thoả thuận để chia điểm
 
