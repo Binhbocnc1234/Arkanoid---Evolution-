@@ -1,7 +1,9 @@
 package soundmanager;
 
+import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
@@ -28,20 +30,24 @@ public class SoundManager {
     // tai file am thanh 
     public static void getSound(String name, String soundPath) {
         try {
-            URL url = SoundManager.class.getResource(soundPath);
-            if (url == null) {
+            InputStream is = SoundManager.class.getResourceAsStream(soundPath);
+
+            if (is == null) {
                 System.out.println("khong tim thay file");
                 return;
-            }
+            }   
+
             try {
-                AudioInputStream audioInput = AudioSystem.getAudioInputStream(url);
+                AudioInputStream audioInput = AudioSystem.getAudioInputStream(new BufferedInputStream(is));
                 AudioFormat format = audioInput.getFormat();
+
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 byte[] buffer = new byte[4096];
                 int read;
                 while ((read = audioInput.read(buffer)) != -1) {
                     baos.write(buffer, 0, read);
                 }
+
                 byte[] data = baos.toByteArray();
 
                 sound.put(name, new SoundData(data, format));
@@ -141,4 +147,5 @@ public class SoundManager {
             setVolume(clip, volumePercent);
         }
     }
+    
 }

@@ -20,6 +20,7 @@ enum BattleState {
     Win,
     Pause,
     Ready,
+    LevelComplete,
 }
 
 public class BattleManager extends JPanel {
@@ -30,6 +31,7 @@ public class BattleManager extends JPanel {
     private PauseManager pauseManager;
 
     private Image rightPanelBackground;
+    private Image background;
     private JPanel pauseMenu;
     private JButton pauseButton;  // thay đổi kiểu
     private float volumePercent = 50f;
@@ -40,8 +42,9 @@ public class BattleManager extends JPanel {
         // GameInfo.getInstance().isSlowmotion = true;
         GameInfo.getInstance().isMultiplayer = isMultiplayer;
         rightPanelBackground = new ImageIcon("assets/img/background/rightPanel.png").getImage();
+        background = new ImageIcon("assets/img/background/background.jpg").getImage();
         if (rightPanelBackground.getWidth(null) == -1 || rightPanelBackground.getHeight(null) == -1) {
-            System.err.println("⚠️ Image not found or invalid path");
+            System.err.println("Image not found or invalid path");
         }
         setLayout(null); // Để có thể set vị trí chính xác cho các component
         GameInfo.getInstance().Initialize();
@@ -117,6 +120,9 @@ public class BattleManager extends JPanel {
         SoundManager.getSound("background", "/assets/sound/backgroundMusic.wav");
         SoundManager.getSound("powerUpCollected", "/assets/sound/powerUpCollected.wav");
         SoundManager.getSound("button", "/assets/sound/button.wav");
+        SoundManager.getSound("levelComplete", "/assets/sound/levelComplete.wav");
+        SoundManager.getSound("gameOver", "/assets/sound/gameOver.wav");
+
         // Khởi động vòng lặp game
         timer = new Timer(1000/GameInfo.FPS, e -> gameLoop());
         timer.start();
@@ -127,6 +133,7 @@ public class BattleManager extends JPanel {
         pauseManager = new PauseManager(this);
 
         SoundManager.playSoundLoop("background");
+        SoundManager.setSpecificVolume("background", 20f);
 
         if (GameInfo.getInstance().isMultiplayer) {
             GameInfo.getInstance().setCurrentPlayerName(null);
@@ -145,13 +152,14 @@ public class BattleManager extends JPanel {
         }
         GameManager.instance.switchTo(new Lobby());
         timer.stop();
-        SoundManager.stopSound("background");
+        
     }
 
     private void gameLoop() {
-        if (state == BattleState.Pause) {
+        if (state == BattleState.Pause || state == BattleState.LevelComplete) {
             return;
         }
+
         if (state == BattleState.Lose) {
             long now = System.nanoTime();
             if (now - loseTimestamp >= 3_000_000_000L) {
@@ -159,6 +167,7 @@ public class BattleManager extends JPanel {
             }
         }
         else if (state == BattleState.Fighting) {
+            SoundManager.setSpecificVolume("background", 50f);
             // Cập nhật tất cả GameObject
             for (GameObject obj : GameInfo.getInstance().getCurrentObjects()) {
                 obj.update();
@@ -189,26 +198,34 @@ public class BattleManager extends JPanel {
                 .noneMatch(obj -> obj instanceof Brick);
                 
             if (allBricksDestroyed) {
+                SoundManager.setSpecificVolume("background", 20f);
+                SoundManager.playSound("levelComplete");
+
                 int currLevel = LevelManager.getInstance().getCurrentLevel();
                 GameInfo.getInstance().setUnlockedLevel(currLevel + 1);
 
-                LevelManager.getInstance().switchToNextLevel();
-
+                    // reseting playfield
                 for (GameObject obj : GameInfo.getInstance().getObjects()) {
-                    if (obj instanceof Paddle paddle) {
-                        paddle.reset();
-                    }
-                    if (obj instanceof Ball ball) {
-                        ball.reset();
-                    }
-                    if (obj instanceof PowerUp powerUp) {
-                        powerUp.selfDestroy();
-                    }
-                    if (obj instanceof BrickParticle particle) {
-                        particle.selfDestroy();
-                    }
-                    state = BattleState.Ready;
+                    if (obj instanceof Paddle paddle) paddle.reset();
+                    if (obj instanceof Ball ball) ball.reset();
+
+                    if (obj instanceof PowerUp powerUp) powerUp.selfDestroy();
+                    if (obj instanceof BallTrail ballTrail) ballTrail.selfDestroy();
+                    if (obj instanceof BrickParticle brickParticle) brickParticle.selfDestroy();
                 }
+
+                state = BattleState.LevelComplete;
+
+                // wait 2 seconds, then switch level
+                Timer delayTimer = new Timer(2000, e -> {
+                    LevelManager.getInstance().switchToNextLevel();
+                    state = BattleState.Ready;
+                   
+                    ((Timer) e.getSource()).stop();
+                });
+
+                delayTimer.setRepeats(false);
+                delayTimer.start();
             }
 
             /* Kiểm tra nếu Ball bị destroyed toàn bộ thì dẫn đến thua cuộc*/
@@ -222,6 +239,10 @@ public class BattleManager extends JPanel {
             if (haveBall == false) {
                 System.out.print("Bạn đã thua, vài giây nữa sẽ quay trở lại màn hình chính");
                 state = BattleState.Lose;
+
+                SoundManager.stopSound("background");
+                SoundManager.playSound("gameOver");
+
                 loseTimestamp = System.nanoTime();
                 add(new MyLabel("You lose",
                         GameInfo.CAMPAIGN_WIDTH / 2, GameInfo.SCREEN_HEIGHT / 2,
@@ -246,6 +267,15 @@ public class BattleManager extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         
+        // Rendering BG (phai render theo thu tu...)
+        if (!GameInfo.getInstance().isMultiplayer) {
+
+            g.drawImage(rightPanelBackground, GameInfo.CAMPAIGN_WIDTH, 0,
+                    GameInfo.SCREEN_WIDTH-GameInfo.CAMPAIGN_WIDTH, GameInfo.SCREEN_HEIGHT, null);
+        }
+
+        g.drawImage(background, 0, 0, GameInfo.CAMPAIGN_WIDTH, GameInfo.SCREEN_HEIGHT, null);
+
         // Vẽ các GameObject
         for (GameObject obj : GameInfo.getInstance().getCurrentObjects()) {
             obj.render(g);
@@ -254,29 +284,40 @@ public class BattleManager extends JPanel {
         g.setColor(Color.WHITE);
         g.setFont(GameInfo.getInstance().getSmallFont());
 
-        /* Rendering ready */
-        if (state == BattleState.Ready) {
-            String pressToReadyText = "PRESS SPACE TO START ";
-            int pressToReadyPos = (GameInfo.CAMPAIGN_WIDTH / 4 + g.getFontMetrics().stringWidth(pressToReadyText)) / 2;
-            g.drawString(pressToReadyText, pressToReadyPos, 400);
-        }
-        
-        // Nếu đang pause, vẽ một lớp overlay tối
-        if (state == BattleState.Pause) {
-            Graphics2D g2d = (Graphics2D) g;
-            g2d.setColor(new Color(0, 0, 0, 0.5f)); // màu đen với độ trong suốt 50%
-            g2d.fillRect(0, 0, GameInfo.SCREEN_WIDTH, GameInfo.SCREEN_HEIGHT);
-        }
-        
-        if (!GameInfo.getInstance().isMultiplayer) {
+        // Rendering game states
+        // chinh ve switch case cho gon
+        switch (state) {
+            case Ready:
+                String pressToReadyText = "PRESS SPACE TO START";
+                int pressToReadyPos = (GameInfo.CAMPAIGN_WIDTH - g.getFontMetrics().stringWidth(pressToReadyText)) / 2;
+                g.drawString(pressToReadyText, pressToReadyPos, 400);
 
-            g.drawImage(rightPanelBackground, GameInfo.CAMPAIGN_WIDTH, 0,
-                    GameInfo.SCREEN_WIDTH - GameInfo.CAMPAIGN_WIDTH, GameInfo.SCREEN_HEIGHT - 50, null);
-        }
+                break;
 
-        /* Rendering score */
+            case LevelComplete:
+                g.setFont(GameInfo.getInstance().getTitleFont());
+
+                String levelCompleteText = "Level Completed!";
+                int levelCompletePos = (GameInfo.CAMPAIGN_WIDTH - g.getFontMetrics().stringWidth(levelCompleteText)) / 2;
+                g.drawString(levelCompleteText, levelCompletePos, GameInfo.SCREEN_HEIGHT / 2);
+
+                g.setFont(GameInfo.getInstance().getSmallFont());
+
+                break;
+
+            case Pause:
+                // Nếu đang pause, vẽ một lớp overlay tối
+                Graphics2D g2d = (Graphics2D) g;
+                g2d.setColor(new Color(0, 0, 0, 0.5f)); // màu đen với độ trong suốt 50%
+                g2d.fillRect(0, 0, GameInfo.SCREEN_WIDTH, GameInfo.SCREEN_HEIGHT);
+
+            default:
+                break;
+        }   
+
+        // Rendering score
         String currentScoreText = String.format("SCORE: %06d", score.getPlayerScore());
         int currentScorePos = (GameInfo.SCREEN_WIDTH * 4 / 3 + g.getFontMetrics().stringWidth(currentScoreText)) / 2;
-        g.drawString(currentScoreText, currentScorePos, 300);                        
+        g.drawString(currentScoreText, currentScorePos, 300);
     }
 }

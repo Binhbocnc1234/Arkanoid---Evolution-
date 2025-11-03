@@ -9,6 +9,7 @@ import java.util.Comparator;
 import brick.Brick;
 import gobj.*;
 import info.GameInfo;
+import weapon.Ball;
 
 public class LevelManager {
 
@@ -89,6 +90,8 @@ public class LevelManager {
         for (GameObject brick : levelBricks) {
             GameInfo.getInstance().addGameObject(brick);
         }
+
+        Ball.PIERCING = false;      // Safeguard: Revert all Ball's state upon exiting the level.
     }
 
     /**

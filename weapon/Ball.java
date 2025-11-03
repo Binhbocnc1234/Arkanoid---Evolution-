@@ -177,7 +177,7 @@ public class Ball extends MovableObject {
                     if (brick.getHp() == 0) {
                         SoundManager.playSound("brick");
                     }
-                    brick.setIFrame(10); // Added iframe
+                    brick.setIFrame(5);
                     break;
                 }
             }
@@ -226,9 +226,9 @@ public class Ball extends MovableObject {
      * Reset the Ball instance to its default position. 
      */
     public void reset() {
-        this.setPosition(GameInfo.CAMPAIGN_WIDTH / 2f, 300);
+        this.setPosition(GameInfo.CAMPAIGN_WIDTH / 2f, 600);
         this.setVelocity(0, 10f);
-        this.PIERCING = false;
+        PIERCING = false;
     }
 
 }
