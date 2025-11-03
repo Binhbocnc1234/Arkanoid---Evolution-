@@ -3,7 +3,7 @@ package gobj;
 import info.*;
 public class MovableObject extends GameObject {
     protected float dx, dy;
-
+    
     public MovableObject(float x, float y, float width, float height, String imagePath) {
         super(x, y, width, height, imagePath);
     }

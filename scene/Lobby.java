@@ -8,13 +8,12 @@ import level.LevelManager;
 import soundmanager.SoundManager;
 
 public class Lobby extends JPanel {
-    private GalaxyBackground background;
-    public MyButton playButton;
+    private final GalaxyBackground background;
     private Timer animationTimer;
-    private MyButton newGameButton;
-    private MyButton continueButton;
-    private MyButton multiplayerButton;
-    private MyButton highScoresButton;
+    private final MyButton newGameButton;
+    private final MyButton continueButton;
+    private final MyButton multiplayerButton;
+    private final MyButton highScoresButton;
     
     /**
      * Initialize the Lobby scene.

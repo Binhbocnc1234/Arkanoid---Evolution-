@@ -9,10 +9,10 @@ import java.awt.event.KeyEvent;
 import javax.swing.*;
 import level.LevelManager;
 import powerup.*;
+import score.HighScores;
 import score.Score;
 import soundmanager.*;
 import weapon.*;
-import score.HighScores;
 
 enum BattleState {
     Fighting,
@@ -25,8 +25,8 @@ enum BattleState {
 public class BattleManager extends JPanel {
     public BattleState state = BattleState.Ready;
     private long loseTimestamp = -1;
-    private Score score;
-    private Timer timer;
+    private final Score score;
+    private final Timer timer;
     private PauseManager pauseManager;
 
     private Image rightPanelBackground;
@@ -39,7 +39,7 @@ public class BattleManager extends JPanel {
     public BattleManager(boolean isMultiplayer) {
         // GameInfo.getInstance().isSlowmotion = true;
         GameInfo.getInstance().isMultiplayer = isMultiplayer;
-        rightPanelBackground = new ImageIcon("assets/img/background/rightPanel.jpg").getImage();
+        rightPanelBackground = new ImageIcon("assets/img/background/rightPanel.png").getImage();
         if (rightPanelBackground.getWidth(null) == -1 || rightPanelBackground.getHeight(null) == -1) {
             System.err.println("⚠️ Image not found or invalid path");
         }
@@ -102,7 +102,7 @@ public class BattleManager extends JPanel {
             });
             // thêm Ball vào game
             ball = new Ball(paddle.getX(), paddle.getY() - paddle.getHeight(), "Ball.png", 25f);
-            GameInfo.getInstance().getObjects().add(ball);
+            GameInfo.getInstance().addGameObject(ball);
             //PowerUp
             PowerUp.setPaddle(paddle);
         }
@@ -261,11 +261,6 @@ public class BattleManager extends JPanel {
             g.drawString(pressToReadyText, pressToReadyPos, 400);
         }
         
-        /* Rendering score */
-        String currentScoreText = String.format("SCORE: %06d", score.getPlayerScore());
-        int currentScorePos = (GameInfo.SCREEN_WIDTH * 4 / 3 + g.getFontMetrics().stringWidth(currentScoreText)) / 2;
-        g.drawString(currentScoreText, currentScorePos, 300);
-        
         // Nếu đang pause, vẽ một lớp overlay tối
         if (state == BattleState.Pause) {
             Graphics2D g2d = (Graphics2D) g;
@@ -276,7 +271,12 @@ public class BattleManager extends JPanel {
         if (!GameInfo.getInstance().isMultiplayer) {
 
             g.drawImage(rightPanelBackground, GameInfo.CAMPAIGN_WIDTH, 0,
-                    GameInfo.SCREEN_WIDTH-GameInfo.CAMPAIGN_WIDTH, GameInfo.SCREEN_HEIGHT, null);
-        }                        
+                    GameInfo.SCREEN_WIDTH - GameInfo.CAMPAIGN_WIDTH, GameInfo.SCREEN_HEIGHT - 50, null);
+        }
+
+        /* Rendering score */
+        String currentScoreText = String.format("SCORE: %06d", score.getPlayerScore());
+        int currentScorePos = (GameInfo.SCREEN_WIDTH * 4 / 3 + g.getFontMetrics().stringWidth(currentScoreText)) / 2;
+        g.drawString(currentScoreText, currentScorePos, 300);                        
     }
 }

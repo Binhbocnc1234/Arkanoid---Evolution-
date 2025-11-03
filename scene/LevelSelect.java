@@ -1,20 +1,18 @@
 package scene;
 
-import java.awt.Color;
-
-import javax.swing.JPanel;
-
 import UI.*;
 import info.GameInfo;
+import java.awt.Color;
+import javax.swing.JPanel;
 import level.LevelManager;
 import soundmanager.SoundManager;
 
 
 public class LevelSelect extends JPanel{
     private final int MAX_LEVEL = 10;
-    public MyButton[] levelButtons;
-    public MyButton returnButton;
-    private MyLabel levelselLabel;
+    private final MyButton[] levelButtons;
+    private final MyButton returnButton;
+    private final MyLabel levelselLabel;
     private boolean isMultiplayer;
 
     /**

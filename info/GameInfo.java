@@ -100,6 +100,7 @@ public class GameInfo {
         return list;
     }
 
+    /* Sử dụng để lấy số lượng level hiển thị lên LevelSelect và lưu tiến trình */
     public int getUnlockedLevel() {
         return unlockedLevel;
     }
