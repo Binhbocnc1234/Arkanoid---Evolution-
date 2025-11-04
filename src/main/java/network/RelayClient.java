@@ -1,8 +1,8 @@
 package network;
 
+import java.io.IOException;
 import java.nio.ByteBuffer;
 
-import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
@@ -19,10 +19,9 @@ public class RelayClient {
     private RelayListener relayListener;
 
     public void start(String host) throws Exception {
-        Kryo kryo = client.getKryo();
-        kryo.register(byte[].class);
-        client.start();
-
+        // Register byte[] class with Kryo for serialization
+        client.getKryo().register(byte[].class);
+        
         listener = new Listener() {
             @Override
             public void received(Connection c, Object o) {
@@ -55,8 +54,45 @@ public class RelayClient {
         };
         client.addListener(listener);
 
-        client.connect(10000, host, 54555, 54777); // blocking but safe
-        System.out.println("Connected to relay!");
+        // Parse host:tcpPort from the TCP tunnel address
+        String[] hostParts = host.split(":");
+        String hostname = hostParts[0];
+        int tcpPort = Integer.parseInt(hostParts[1]);
+        
+        // Start the client with update thread
+        client.start();
+        
+        // Start a thread to run client.update() during connection
+        Thread updateThread = new Thread(() -> {
+            try {
+                while (!client.isConnected()) {
+                    try {
+                        client.update(100);
+                    } catch (IOException e) {
+                        System.err.println("Error during client update: " + e.getMessage());
+                        break;
+                    }
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        break;
+                    }
+                }
+            } catch (Exception e) {
+                System.err.println("Update thread error: " + e.getMessage());
+            }
+        }, "client-updater");
+        updateThread.setDaemon(true);
+        updateThread.start();
+
+        // Try to connect (this will block until connected or timeout)
+        try {
+            client.connect(5000, hostname, tcpPort);
+            System.out.println("Connected to relay in TCP-only mode!");
+        } finally {
+            // Stop the update thread whether we connected or not
+            updateThread.interrupt();
+        }
     }
 
     public void sendPosition(float x, float y) {

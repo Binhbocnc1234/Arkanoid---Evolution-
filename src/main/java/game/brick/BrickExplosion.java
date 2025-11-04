@@ -1,9 +1,9 @@
-package brick;
+package game.brick;
 
 import java.awt.Graphics;
 
-import gobj.GameObject;
-import info.GameInfo;
+import game.gobj.GameObject;
+import game.info.GameInfo;
 
 public class BrickExplosion extends GameObject {
     private float sizeW;

@@ -25,7 +25,7 @@ public class MultiplayerScene extends JPanel implements IDisposable {
 	private int assignedId = 0; // 0 = not assigned / rejected, 1 or 2
 	private boolean peerConnected = false;
 
-	private final String relayHost = "1.55.188.101"; // default host
+	private final String relayHost = "0.tcp.ap.ngrok.io:19696"; // ngrok TCP tunnel for TCP port 54555
 
 	public MultiplayerScene() {
 		setLayout(null);
@@ -34,10 +34,10 @@ public class MultiplayerScene extends JPanel implements IDisposable {
 		title = new MyLabel("Multiplayer", GameInfo.SCREEN_WIDTH/2, 80, 500, 48);
 		add(title);
 
-		p1Status = new MyLabel("Player 1: waiting", GameInfo.CAMPAIGN_WIDTH/2, 180, 400, 24);
+		p1Status = new MyLabel("Player 1: waiting", GameInfo.CAMPAIGN_WIDTH/2, 180, 400, 48);
 		add(p1Status);
 
-		p2Status = new MyLabel("Player 2: waiting", GameInfo.CAMPAIGN_WIDTH/2, 240, 400, 24);
+		p2Status = new MyLabel("Player 2: waiting", GameInfo.CAMPAIGN_WIDTH/2, 240, 400, 48);
 		add(p2Status);
 
 		playBtn = new MyButton("Play", GameInfo.CAMPAIGN_WIDTH/2, 360, 200, 70);
@@ -76,6 +76,8 @@ public class MultiplayerScene extends JPanel implements IDisposable {
 
 			@Override
 			public void onStart() {
+				// Initialize multiplayer context before starting game
+				MultiplayerContext.init(assignedId, client);
 				// server asked to start match
 				GameManager.instance.switchTo(new BattleManager(true));
 			}
@@ -92,16 +94,6 @@ public class MultiplayerScene extends JPanel implements IDisposable {
         }
         
         client.sendJoin();   // safe to call right after
-		// // Connect in background thread
-		// new Thread(() -> {
-		// 	try {
-		// 		client.start(relayHost);
-		// 		// send a lightweight JOIN so server can react if needed (server already assigns on connect)
-		// 		client.sendJoin();
-		// 	} catch (Exception ex) {
-		// 		System.err.println("Failed to connect to relay: " + ex.getMessage());
-		// 	}
-		// }, "relay-connector").start();
 	}
 
 	private void updateStatuses() {

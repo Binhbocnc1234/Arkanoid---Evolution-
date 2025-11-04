@@ -1,4 +1,5 @@
 E:\My program\Java\BTL\Arkanoid---Evolution-\src\main\java\game\brick\Brick.java
+E:\My program\Java\BTL\Arkanoid---Evolution-\src\main\java\game\brick\BrickExplosion.java
 E:\My program\Java\BTL\Arkanoid---Evolution-\src\main\java\game\brick\BrickFactory.java
 E:\My program\Java\BTL\Arkanoid---Evolution-\src\main\java\game\brick\BrickParticle.java
 E:\My program\Java\BTL\Arkanoid---Evolution-\src\main\java\game\brick\DiamondBrick.java
@@ -28,6 +29,7 @@ E:\My program\Java\BTL\Arkanoid---Evolution-\src\main\java\game\scene\IDisposabl
 E:\My program\Java\BTL\Arkanoid---Evolution-\src\main\java\game\scene\LeaderBoard.java
 E:\My program\Java\BTL\Arkanoid---Evolution-\src\main\java\game\scene\LevelSelect.java
 E:\My program\Java\BTL\Arkanoid---Evolution-\src\main\java\game\scene\Lobby.java
+E:\My program\Java\BTL\Arkanoid---Evolution-\src\main\java\game\scene\MultiplayerContext.java
 E:\My program\Java\BTL\Arkanoid---Evolution-\src\main\java\game\scene\MultiplayerScene.java
 E:\My program\Java\BTL\Arkanoid---Evolution-\src\main\java\game\scene\PauseManager.java
 E:\My program\Java\BTL\Arkanoid---Evolution-\src\main\java\game\score\HighScores.java

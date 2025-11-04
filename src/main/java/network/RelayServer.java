@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
 
-import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
@@ -14,10 +13,12 @@ public class RelayServer {
     private Connection playerA, playerB;
 
     public void start() throws Exception {
-        Kryo kryo = server.getKryo();
-        kryo.register(byte[].class);
+        // Register byte[] class with Kryo for serialization
+        server.getKryo().register(byte[].class);
+        
         server.start();
-        server.bind(54555, 54777);
+        // TCP-only mode for ngrok compatibility
+        server.bind(54555);
 
         server.addListener(new Listener() {
             @Override

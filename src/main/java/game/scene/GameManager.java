@@ -15,7 +15,7 @@ public class GameManager extends JFrame {
         setSize(GameInfo.SCREEN_WIDTH, GameInfo.SCREEN_HEIGHT);
         setLocationRelativeTo(null);
         setVisible(true);
-        GameManager.instance.switchTo(new Lobby());
+        GameManager.instance.switchTo(new Lobby());  
     }
 
     public void switchTo(JPanel panel) {

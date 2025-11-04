@@ -1,9 +1,10 @@
 package game.brick;
 
-import game.gobj.*;
 import java.awt.AlphaComposite;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+
+import game.gobj.MovableObject;
 
 public class BrickParticle extends MovableObject {
     private float size;
@@ -37,13 +38,6 @@ public class BrickParticle extends MovableObject {
             selfDestroy();
         }
     }
-
-    @Override
-    public void selfDestroy() {
-        super.selfDestroy();
-        isDead = true;
-    }
-
 
     @Override
     public void render(Graphics g) {
