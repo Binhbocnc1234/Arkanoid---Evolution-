@@ -7,6 +7,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
@@ -43,6 +44,11 @@ public class BattleManager extends JPanel implements  IDisposable {
 
     private Image rightPanelBackground;
     private Image background;
+    private JPanel pauseMenu;
+    private JButton pauseButton;  // thay đổi kiểu
+    private float volumePercent = 50f;
+
+    private final int MAX_LEVEL = 10;
 
     public BattleManager(boolean isMultiplayer) {
         // GameInfo.getInstance().isSlowmotion = true;
@@ -159,7 +165,7 @@ public class BattleManager extends JPanel implements  IDisposable {
         pauseManager = new PauseManager(this);
 
         SoundManager.playSoundLoop("background");
-        SoundManager.setSpecificVolume("background", 20f);
+        //SoundManager.setSpecificVolume("background", 20f);
 
         if (GameInfo.getInstance().isMultiplayer) {
             GameInfo.getInstance().setCurrentPlayerName(null);
@@ -206,7 +212,7 @@ public class BattleManager extends JPanel implements  IDisposable {
             }
         }
         else if (state == BattleState.Fighting) {
-            SoundManager.setSpecificVolume("background", 50f);
+            //SoundManager.setSpecificVolume("background", 50f);
             // Cập nhật tất cả GameObject
             for (GameObject obj : GameInfo.getInstance().getCurrentObjects()) {
                 obj.update();
@@ -237,7 +243,7 @@ public class BattleManager extends JPanel implements  IDisposable {
                 .noneMatch(obj -> obj instanceof Brick);
                 
             if (allBricksDestroyed) {
-                SoundManager.setSpecificVolume("background", 20f);
+                //SoundManager.setSpecificVolume("background", 20f);
                 SoundManager.playSound("levelComplete");
 
                 int currLevel = LevelManager.getInstance().getCurrentLevel();
