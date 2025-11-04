@@ -78,7 +78,7 @@ public class LevelManager {
         }
 
         List<GameObject> levelBricks = LevelLoader.loadLevel(
-            levelPaths.get(currentLevel),
+            levelPaths.get(currentLevel - 1),
             brickW, 25f,
             brickW / 2, 12.5f
         );
@@ -117,7 +117,7 @@ public class LevelManager {
      * Effectively, this becomes a new playthrough.
      */
     public void reset() {
-        currentLevel = 0;
+        currentLevel = 1;
         GameInfo.getInstance().resetUnlockedLevel();
     }
 }
