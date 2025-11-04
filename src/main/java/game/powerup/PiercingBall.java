@@ -24,6 +24,8 @@ public class PiercingBall extends PowerUp {
 
     @Override
     public void ApplyPowerup() {
-        Ball.PIERCING = true;
+        if(isCollected() != null) {
+            Ball.PIERCING = true;
+        }
     }
 }
