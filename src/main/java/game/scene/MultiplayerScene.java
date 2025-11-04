@@ -25,7 +25,7 @@ public class MultiplayerScene extends JPanel implements IDisposable {
 	private int assignedId = 0; // 0 = not assigned / rejected, 1 or 2
 	private boolean peerConnected = false;
 
-	private final String relayHost = "0.tcp.ap.ngrok.io:19696"; // ngrok TCP tunnel for TCP port 54555
+	private final String relayHost = "0.tcp.ap.ngrok.io:15126"; // ngrok TCP tunnel for TCP port 54555
 
 	public MultiplayerScene() {
 		setLayout(null);
