@@ -1,5 +1,7 @@
 package game.powerup;
 
+import game.weapon.Paddle;
+
 public class AmplifyPaddle extends PowerUp {
     private static float rarity = 0.3f;
     public static final float MAX_WIDTH = 300;
@@ -24,12 +26,15 @@ public class AmplifyPaddle extends PowerUp {
 
     @Override
     public void ApplyPowerup() {
-        float amplifiedWidth = paddle.getWidth() + 20;
-        float amplifiedHeight = paddle.getHeight() + 5f;
+        Paddle paddle = isCollected();
+        if (paddle != null) {
+            float amplifiedWidth = paddle.getWidth() + 20;
+            float amplifiedHeight = paddle.getHeight() + 5f;
 
-        if (amplifiedWidth > MAX_WIDTH) amplifiedWidth = MAX_WIDTH;
-        if (amplifiedHeight > MAX_HEIGHT) amplifiedHeight = MAX_HEIGHT;
+            if (amplifiedWidth > MAX_WIDTH) amplifiedWidth = MAX_WIDTH;
+            if (amplifiedHeight > MAX_HEIGHT) amplifiedHeight = MAX_HEIGHT;
 
-        paddle.setSize(amplifiedWidth, amplifiedHeight);
+            paddle.setSize(amplifiedWidth, amplifiedHeight);
+        }
     }
 }

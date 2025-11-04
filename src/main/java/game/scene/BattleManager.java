@@ -139,7 +139,6 @@ public class BattleManager extends JPanel implements  IDisposable {
             ball = new Ball(paddle.getX(), paddle.getY() - paddle.getHeight(), "Ball.png", 25f);
             GameInfo.getInstance().addGameObject(ball);
             //PowerUp
-            PowerUp.setPaddle(paddle);
         }
 
         /* Initiate the first level to avoid immediately switching to next level */
@@ -226,7 +225,7 @@ public class BattleManager extends JPanel implements  IDisposable {
                     }
                 }
                 if (obj instanceof PowerUp powerUp) {
-                    if (powerUp.isCollected()) {
+                    if (powerUp.isCollected) {
                         score.updatePlayerScore(150);
                     }
                 }
