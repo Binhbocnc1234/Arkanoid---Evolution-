@@ -16,7 +16,7 @@ public class TNTBrick extends Brick {
     @Override
     public void updateTexture() {
         if (!isDie()) {
-            this.image = new ImageIcon("/img/brick/brick_tnt.png").getImage();
+            this.image = new ImageIcon(getClass().getResource("/img/brick/brick_tnt.png")).getImage();
         } else {
             this.image = null;
         }
@@ -31,7 +31,7 @@ public class TNTBrick extends Brick {
                 boolean sameRow = (brick.getY() == this.getY());
                 boolean sameCol = (brick.getX() == this.getX());
 
-                if ((sameCol || sameRow) && (brick != this) && !brick.isDie()) {
+                if ((sameCol || sameRow) && (brick != this) && !brick.isDie() && brick.getBrickId() != 5) {
                     brick.takeDamage(1);
                     GameInfo.getInstance().addGameObject(new BrickExplosion(brick.getX(), brick.getY()));
                 } 

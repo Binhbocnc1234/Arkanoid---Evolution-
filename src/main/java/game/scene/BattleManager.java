@@ -7,7 +7,6 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
@@ -44,11 +43,6 @@ public class BattleManager extends JPanel implements  IDisposable {
 
     private Image rightPanelBackground;
     private Image background;
-    private JPanel pauseMenu;
-    private JButton pauseButton;  // thay đổi kiểu
-    private float volumePercent = 50f;
-
-    private final int MAX_LEVEL = 10;
 
     public BattleManager(boolean isMultiplayer) {
         // GameInfo.getInstance().isSlowmotion = true;
