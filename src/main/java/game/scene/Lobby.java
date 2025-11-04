@@ -90,6 +90,17 @@ public class Lobby extends JPanel implements IDisposable {
         });
         add(highScoresButton);
 
+            // Mapping keybind: F12 to unlock all levels.
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("F12"), "unlockAllLevels");
+        getActionMap().put("unlockAllLevels", new AbstractAction() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent e) {
+                GameInfo.getInstance().setUnlockedLevel(10);
+                System.out.println("DEBUG: UNLOCKED ALL LEVELS");
+            }       
+        });
+
+
         setOpaque(true);
         setBackground(new Color(30, 20, 60));
     }

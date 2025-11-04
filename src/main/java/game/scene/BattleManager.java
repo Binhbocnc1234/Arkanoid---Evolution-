@@ -225,7 +225,9 @@ public class BattleManager extends JPanel implements  IDisposable {
                 SoundManager.playSound("levelComplete");
 
                 int currLevel = LevelManager.getInstance().getCurrentLevel();
-                GameInfo.getInstance().setUnlockedLevel(currLevel + 1);
+                if (currLevel > GameInfo.getInstance().getUnlockedLevel()) {
+                    GameInfo.getInstance().setUnlockedLevel(currLevel + 1);
+                }
 
                 // reseting playfield
                 for (GameObject obj : GameInfo.getInstance().getObjects()) {
@@ -235,6 +237,7 @@ public class BattleManager extends JPanel implements  IDisposable {
                     if (obj instanceof PowerUp powerUp) powerUp.selfDestroy();
                     if (obj instanceof BallTrail ballTrail) ballTrail.selfDestroy();
                     if (obj instanceof BrickParticle brickParticle) brickParticle.selfDestroy();
+                    if (obj instanceof BrickExplosion brickExplosion) brickExplosion.selfDestroy();
                 }
 
                 state = BattleState.LevelComplete;
