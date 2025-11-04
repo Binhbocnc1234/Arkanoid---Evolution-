@@ -97,10 +97,17 @@ public class MultiplayerScene extends JPanel implements IDisposable {
 	}
 
 	private void updateStatuses() {
-		if (assignedId == 1) {
+		if (assignedId == 0) {
+			// Room is full - show message and disable Play
+			p1Status.setText("There has some errors. Maybe room is full!");
+			p2Status.setText("Please try again later");
+			playBtn.setEnabled(false);
+			return;
+		}
+		else if (assignedId == 1) {
 			p1Status.setText("Player 1: you (connected)");
-		} else {
-			p1Status.setText("Player 1: waiting");
+		} else { // hiển thị tex phụ thuộc vào 
+			p1Status.setText(peerConnected ? "Player 1: connected" : "Player 1: waiting");
 		}
 		if (assignedId == 2) {
 			p2Status.setText("Player 2: you (connected)");
