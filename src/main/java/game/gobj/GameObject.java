@@ -66,27 +66,7 @@ public class GameObject {
     public boolean isDie() {
         return isDead;
     }
-
-    // public Direction isCollide(GameObject other) {
-    //     float leftA = x - width / 2;
-    //     float rightA = x + width / 2;
-    //     float topA = y - height / 2;
-    //     float bottomA = y + height / 2;
-
-    //     float leftB = other.x - other.width / 2;
-    //     float rightB = other.x + other.width / 2;
-    //     float topB = other.y - other.height / 2;
-    //     float bottomB = other.y + other.height / 2;
-    //     // Kiểm tra giao nhau
-    //     if (rightA > leftB){
-    //         return Direction.Right;
-    //     }
-    //     else if (leftA > rightB){
-
-    //     }
-    //     return !(rightA < leftB || leftA > rightB || bottomA < topB || topA > bottomB);
-    // }
-
+    
     // Getter/Setter
     public float getX() {
         return x;

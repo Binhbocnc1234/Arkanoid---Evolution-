@@ -1,7 +1,12 @@
 package game.scene; 
-import java.awt.*;
-import java.util.*;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.util.ArrayList;
+import java.util.Random;
 
+/* class xử lý về mặt đồ họa, tạo background vũ
+    trụ chứa rất nhiều ngôi sao với kích thước khác nhau*/
 public class GalaxyBackground {
     private static class Star {
         float x, y, size, speed;
@@ -27,6 +32,7 @@ public class GalaxyBackground {
         }
     }
 
+    /* Cập nhật để các Star di chuyển */
     public void update(Graphics g) {
         // update position
         for (Star s : stars) {

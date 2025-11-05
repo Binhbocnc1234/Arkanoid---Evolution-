@@ -15,9 +15,10 @@ public class GameManager extends JFrame {
         setSize(GameInfo.SCREEN_WIDTH, GameInfo.SCREEN_HEIGHT);
         setLocationRelativeTo(null);
         setVisible(true);
-        GameManager.instance.switchTo(new Lobby());  
+        GameManager.instance.switchTo(new Lobby());
     }
 
+    /* Chuyển sang scene mới và bỏ scene cũ */
     public void switchTo(JPanel panel) {
         JPanel oldPanel = (JPanel) getContentPane();
         if (oldPanel instanceof IDisposable disposable)
@@ -30,6 +31,7 @@ public class GameManager extends JFrame {
         SwingUtilities.invokeLater(() -> panel.requestFocusInWindow());
     }
 
+    /*Điểm bắt đầu của game */
     public static void main(String[] args) {
         // Nó đảm bảo toàn bộ code GUI (JFrame, JPanel, nút, v.v.) chạy trong "Event Dispatch Thread"
         SwingUtilities.invokeLater(() -> new GameManager());

@@ -67,20 +67,13 @@ public class Paddle extends MovableObject {
     public void update() {
         move(); // cộng dx, dy vào x,y
         // giới hạn paddle trong màn hình
-        if (x - width / 2f < 0) {
-            x = width / 2f;
+        if (x - width / 2f < leftBound) {
+            x = leftBound + width / 2f;
         }
-
-        if (GameInfo.getInstance().isMultiplayer) {
-            if (x + width / 2f > GameInfo.SCREEN_WIDTH) {
-                x = GameInfo.SCREEN_WIDTH - width / 2;
-            }
-        } else {
-            if (x + width / 2f > GameInfo.CAMPAIGN_WIDTH) {
-                x = GameInfo.CAMPAIGN_WIDTH - width / 2;
-            }
+        if (x + width / 2f > rightBound) {
+            x = rightBound - width / 2;
         }
-        
+    
         if (isRecoiling) {
             float recoilY = startY + RECOIL_DISTANCE;
             if (isRecoilDown) {

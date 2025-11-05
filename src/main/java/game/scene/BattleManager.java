@@ -13,7 +13,6 @@ import javax.swing.Timer;
 
 import game.UI.MyLabel;
 import game.brick.Brick;
-import game.brick.BrickExplosion;
 import game.brick.BrickParticle;
 import game.gobj.GameObject;
 import game.info.GameInfo;
@@ -63,56 +62,35 @@ public class BattleManager extends JPanel implements  IDisposable {
         // Paddle và Ball
         Ball ball;
         if (isMultiplayer) {
-            // Online multiplayer
-            MultiplayerContext ctx = MultiplayerContext.getInstance();
-            Paddle localPaddle = new Paddle(0,0,0,0,12f,"paddle.png");
-            Paddle remotePaddle = new Paddle(0,0,0,0,12f,"paddle.png");
-            
-            // Setup paddles based on player ID
-            if (ctx.isPlayer1()) {
-                localPaddle.setUp(0, GameInfo.CAMPAIGN_WIDTH, GameInfo.SCREEN_HEIGHT);
-                remotePaddle.setUp(0, GameInfo.CAMPAIGN_WIDTH, 50); // Remote paddle at top
-            } else {
-                localPaddle.setUp(0, GameInfo.CAMPAIGN_WIDTH, GameInfo.SCREEN_HEIGHT);
-                remotePaddle.setUp(0, GameInfo.CAMPAIGN_WIDTH, 50); // Remote paddle at top
-            }
-            
-            localPaddle.setKey(KeyEvent.VK_A, KeyEvent.VK_D);
-            GameInfo.getInstance().addGameObject(localPaddle);
-            GameInfo.getInstance().addGameObject(remotePaddle);
+            Paddle paddle1 = new Paddle(0,0,0,0,12f,"paddle.png");
+            paddle1.setUp(0, GameInfo.SCREEN_WIDTH / 2, GameInfo.SCREEN_HEIGHT);
+            paddle1.setKey(KeyEvent.VK_A, KeyEvent.VK_D);
+            GameInfo.getInstance().addGameObject(paddle1);
 
-            // Only local paddle responds to input
+            Paddle paddle2 = new Paddle(0,0,0,0,12f,"paddle.png");
+            paddle2.setUp(GameInfo.SCREEN_WIDTH / 2, GameInfo.SCREEN_WIDTH, GameInfo.SCREEN_HEIGHT);
+            paddle2.setKey(KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT);
+            GameInfo.getInstance().addGameObject(paddle2);
+            //Tạo keyevent cho Paddle
             addKeyListener(new KeyAdapter() {
                 @Override public void keyPressed(KeyEvent ev) {
-                    // Only player 1 can start the game
                     if (state == BattleState.Ready && ev.getKeyCode() == KeyEvent.VK_SPACE) {
-                        if (ctx.isPlayer1()) {
-                            state = BattleState.Fighting;
-                            // Notify peer that game is starting
-                            ctx.getClient().sendStart();
-                        }
+                        state = BattleState.Fighting;
                     } else if (state == BattleState.Fighting) {
-                        localPaddle.handleInput(ev.getKeyCode(), true);
-                        // Send position update to peer
-                        ctx.getClient().sendPosition(localPaddle.getX(), localPaddle.getY());
+                        paddle1.handleInput(ev.getKeyCode(), true);
+                        paddle2.handleInput(ev.getKeyCode(), true);
                     }
                 }
                 @Override public void keyReleased(KeyEvent ev) {
                     if (state == BattleState.Fighting) {
-                        localPaddle.handleInput(ev.getKeyCode(), false);
-                        // Send position update to peer
-                        ctx.getClient().sendPosition(localPaddle.getX(), localPaddle.getY());
+                        paddle1.handleInput(ev.getKeyCode(), false);
+                        paddle2.handleInput(ev.getKeyCode(), false);
                     }
                 }
             });
 
-            // Ball starts at player 1's paddle
-            if (ctx.isPlayer1()) {
-                ball = new Ball(localPaddle.getX(), localPaddle.getY() - localPaddle.getHeight(), "Ball.png", 25f);
-            } else {
-                ball = new Ball(remotePaddle.getX(), remotePaddle.getY() + remotePaddle.getHeight(), "Ball.png", 25f);
-            }
-            GameInfo.getInstance().addGameObject(ball);
+            ball = new Ball(paddle1.getX(), paddle1.getY() - paddle1.getHeight(), "Ball.png", 25f);
+            GameInfo.getInstance().getObjects().add(ball);
         }
         else {
             Paddle paddle = new Paddle(0,0,0,0,12f,"paddle.png");
@@ -138,7 +116,6 @@ public class BattleManager extends JPanel implements  IDisposable {
             // thêm Ball vào game
             ball = new Ball(paddle.getX(), paddle.getY() - paddle.getHeight(), "Ball.png", 25f);
             GameInfo.getInstance().addGameObject(ball);
-            //PowerUp
         }
 
         /* Initiate the first level to avoid immediately switching to next level */
@@ -164,7 +141,7 @@ public class BattleManager extends JPanel implements  IDisposable {
         pauseManager = new PauseManager(this);
 
         SoundManager.playSoundLoop("background");
-        //SoundManager.setSpecificVolume("background", 20f);
+        SoundManager.setSpecificVolume("background", 20f);
 
         if (GameInfo.getInstance().isMultiplayer) {
             GameInfo.getInstance().setCurrentPlayerName(null);
@@ -211,7 +188,7 @@ public class BattleManager extends JPanel implements  IDisposable {
             }
         }
         else if (state == BattleState.Fighting) {
-            //SoundManager.setSpecificVolume("background", 50f);
+            SoundManager.setSpecificVolume("background", 50f);
             // Cập nhật tất cả GameObject
             for (GameObject obj : GameInfo.getInstance().getCurrentObjects()) {
                 obj.update();
@@ -242,13 +219,11 @@ public class BattleManager extends JPanel implements  IDisposable {
                 .noneMatch(obj -> obj instanceof Brick);
                 
             if (allBricksDestroyed) {
-                //SoundManager.setSpecificVolume("background", 20f);
+                SoundManager.setSpecificVolume("background", 20f);
                 SoundManager.playSound("levelComplete");
 
                 int currLevel = LevelManager.getInstance().getCurrentLevel();
-                if (currLevel > GameInfo.getInstance().getUnlockedLevel()) {
-                    GameInfo.getInstance().setUnlockedLevel(currLevel + 1);
-                }
+                GameInfo.getInstance().setUnlockedLevel(currLevel + 1);
 
                 // reseting playfield
                 for (GameObject obj : GameInfo.getInstance().getObjects()) {
@@ -258,7 +233,6 @@ public class BattleManager extends JPanel implements  IDisposable {
                     if (obj instanceof PowerUp powerUp) powerUp.selfDestroy();
                     if (obj instanceof BallTrail ballTrail) ballTrail.selfDestroy();
                     if (obj instanceof BrickParticle brickParticle) brickParticle.selfDestroy();
-                    if (obj instanceof BrickExplosion brickExplosion) brickExplosion.selfDestroy();
                 }
 
                 state = BattleState.LevelComplete;
@@ -334,18 +308,10 @@ public class BattleManager extends JPanel implements  IDisposable {
         // chinh ve switch case cho gon
         switch (state) {
             case Ready:
-                if (GameInfo.getInstance().isMultiplayer) {
-                    MultiplayerContext ctx = MultiplayerContext.getInstance();
-                    String readyText = ctx.isPlayer1() ? 
-                        "PRESS SPACE TO START" : 
-                        "WAITING FOR PLAYER 1 TO START";
-                    int readyPos = (GameInfo.CAMPAIGN_WIDTH - g.getFontMetrics().stringWidth(readyText)) / 2;
-                    g.drawString(readyText, readyPos, 400);
-                } else {
-                    String pressToReadyText = "PRESS SPACE TO START";
-                    int pressToReadyPos = (GameInfo.CAMPAIGN_WIDTH - g.getFontMetrics().stringWidth(pressToReadyText)) / 2;
-                    g.drawString(pressToReadyText, pressToReadyPos, 400);
-                }
+                String pressToReadyText = "PRESS SPACE TO START";
+                int pressToReadyPos = (GameInfo.CAMPAIGN_WIDTH - g.getFontMetrics().stringWidth(pressToReadyText)) / 2;
+                g.drawString(pressToReadyText, pressToReadyPos, 400);
+
                 break;
 
             case LevelComplete:

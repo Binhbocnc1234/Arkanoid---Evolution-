@@ -1,12 +1,15 @@
 package game.weapon;
-import game.brick.*;
-import game.framework.*;
-import game.gobj.*;
-import game.info.*;
 import java.awt.AlphaComposite;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import game.soundmanager.*;
+
+import game.brick.Brick;
+import game.framework.Direction;
+import game.framework.Vector2;
+import game.gobj.GameObject;
+import game.gobj.MovableObject;
+import game.info.GameInfo;
+import game.soundmanager.SoundManager;
 
 public class Ball extends MovableObject {
     private final float diameter;
@@ -67,21 +70,25 @@ public class Ball extends MovableObject {
 
         // kiểm tra thời điểm t khi đoạn thẳng cắt AABB mở rộng
         float tEntryX, tExitX, tEntryY, tExitY;
-        if (Math.abs(d.x) < 1e-6f) {
+        if (Math.abs(d.x) < 1e-6f) { //trươngf hợp đặc biệt khi d.x bằng 0 tức bóng song song với Ox
             tEntryX = Float.NEGATIVE_INFINITY;
             tExitX = Float.POSITIVE_INFINITY;
         } else {
             float invDx = 1.0f / d.x;
-            float tx1 = (rectLeft - p0.x) * invDx;
+            // tx1 là thời gian cần thiết để va chạm với rectLeft
+            float tx1 = (rectLeft - p0.x) * invDx; // cần tìm t để p0.x + d.x * t = rectLeft
+            // tx1 là thời gian cần thiết để va chạm với rectRight
             float tx2 = (rectRight - p0.x) * invDx;
+            
             tEntryX = Math.min(tx1, tx2);
             tExitX = Math.max(tx1, tx2);
         }
 
-        if (Math.abs(d.y) < 1e-6f) {
+        if (Math.abs(d.y) < 1e-6f) { //trươngf hợp đặc biệt khi d.x bằng 0 tức bóng song song với Oy
             tEntryY = Float.NEGATIVE_INFINITY;
             tExitY = Float.POSITIVE_INFINITY;
-        } else {
+        } 
+        else {
             float invDy = 1.0f / d.y;
             float ty1 = (rectTop - p0.y) * invDy;
             float ty2 = (rectBottom - p0.y) * invDy;

@@ -1,13 +1,14 @@
 package game.gobj;
 
-import game.info.*;
+import game.info.GameInfo;
+/* GameObject nhưng có thể di chuyển  */
 public class MovableObject extends GameObject {
     protected float dx, dy;
     
     public MovableObject(float x, float y, float width, float height, String imagePath) {
         super(x, y, width, height, imagePath);
     }
-
+    /* Không trả về gì cả, nó di chuyển gameobject một đoạn (dx, dy) */
     public void move() {
         if (GameInfo.getInstance().isSlowmotion) {
             x += dx / 3;

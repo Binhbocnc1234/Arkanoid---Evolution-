@@ -45,12 +45,20 @@ public class Lobby extends JPanel implements IDisposable {
         animationTimer = new Timer(16, e -> repaint()); // approximately 60 FPS
         animationTimer.start();
 
-    gameIcon = new ImageIcon(getClass().getResource("/img/gameLogo.png")).getImage();
+        gameIcon = new ImageIcon(getClass().getResource("/img/gameLogo.png")).getImage();
 
         // JLabel title = new MyLabel("Arkanoid-Evolution", GameInfo.SCREEN_WIDTH/2, GameInfo.SCREEN_HEIGHT/2 - 200, 500, 100);
         // title.setForeground(new Color(180, 160, 255));
         // add(title);
-
+        continueButton = new MyButton("Continue", GameInfo.SCREEN_WIDTH/2, GameInfo.SCREEN_HEIGHT/2, 200, 70);
+        continueButton.addActionListener(e -> {
+            SoundManager.playSound("button");
+            GameManager.instance.switchTo(new LevelSelect(false));
+        });
+        if (GameInfo.getInstance().getCurrentPlayerName() == null) {
+            continueButton.setEnabled(false);
+        }
+        
         newGameButton = new MyButton("New Game", GameInfo.SCREEN_WIDTH/2, GameInfo.SCREEN_HEIGHT/2 - 100, 200, 70);
         newGameButton.addActionListener(e -> {
             SoundManager.playSound("button");
@@ -61,6 +69,7 @@ public class Lobby extends JPanel implements IDisposable {
                 JOptionPane.PLAIN_MESSAGE
             );
             if (getPlayerName != null && !getPlayerName.trim().isEmpty()) {
+                continueButton.setEnabled(true);
                 GameInfo.getInstance().setCurrentPlayerName(getPlayerName.trim());
                 LevelManager.getInstance().reset();
                 GameManager.instance.switchTo(new BattleManager(false));
@@ -69,18 +78,43 @@ public class Lobby extends JPanel implements IDisposable {
         });
         add(newGameButton);
 
-        continueButton = new MyButton("Continue", GameInfo.SCREEN_WIDTH/2, GameInfo.SCREEN_HEIGHT/2, 200, 70);
-        continueButton.addActionListener(e -> {
-            SoundManager.playSound("button");
-            GameManager.instance.switchTo(new LevelSelect(false));
-        });
+        
         add(continueButton);
 
         multiplayerButton = new MyButton("Multiplayer", GameInfo.SCREEN_WIDTH / 2, GameInfo.SCREEN_HEIGHT / 2 + 100,
                 200, 70);
         multiplayerButton.addActionListener(e -> {
-            SoundManager.playSound("button");
-            GameManager.instance.switchTo(new MultiplayerScene());
+            GameManager.instance.switchTo(new BattleManager(true));
+            // SoundManager.playSound("button");
+            // // Prompt user for port number
+            // String portInput = JOptionPane.showInputDialog(
+            //     this,
+            //     "Enter port number:",
+            //     "Multiplayer Connection",
+            //     JOptionPane.PLAIN_MESSAGE
+            // );
+            // if (portInput != null && !portInput.trim().isEmpty()) {
+            //     try {
+            //         int port = Integer.parseInt(portInput.trim());
+            //         if (port > 0 && port <= 65535) {
+            //             GameManager.instance.switchTo(new MultiplayerScene(port));
+            //         } else {
+            //             JOptionPane.showMessageDialog(
+            //                 this,
+            //                 "Invalid port number. Port must be between 1 and 65535.",
+            //                 "Invalid Port",
+            //                 JOptionPane.ERROR_MESSAGE
+            //             );
+            //         }
+            //     } catch (NumberFormatException ex) {
+            //         JOptionPane.showMessageDialog(
+            //             this,
+            //             "Invalid port number. Please enter a valid number.",
+            //             "Invalid Port",
+            //             JOptionPane.ERROR_MESSAGE
+            //         );
+            //     }
+            // }
         });
         add(multiplayerButton);
 

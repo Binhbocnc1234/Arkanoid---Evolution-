@@ -78,7 +78,7 @@ public class LevelManager {
         }
 
         List<GameObject> levelBricks = LevelLoader.loadLevel(
-            levelPaths.get(currentLevel - 1),
+            levelPaths.get(currentLevel),
             brickW, 25f,
             brickW / 2, 12.5f
         );
