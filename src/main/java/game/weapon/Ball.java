@@ -48,7 +48,7 @@ public class Ball extends MovableObject {
      * @param gameObj vật thể cần kiểm tra
      * Trả về Direction.Top nếu va chạm với cạnh trên...
      */
-    private Direction intersect(GameObject obj) {
+    Direction intersect(GameObject obj) {
         if (!isIntersect(obj)) {
             return Direction.None;
         }
@@ -236,6 +236,14 @@ public class Ball extends MovableObject {
         this.setPosition(GameInfo.CAMPAIGN_WIDTH / 2f, 620);
         this.setVelocity(0, 10f);
         PIERCING = false;
+    }
+
+    public void setPrevX(float x) {
+        this.prevX = x;
+    }
+
+    public void setPrevY(float y) {
+        this.prevY = y;
     }
 
 }

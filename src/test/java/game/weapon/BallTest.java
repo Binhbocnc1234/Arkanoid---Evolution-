@@ -1,13 +1,11 @@
-package weapon;
+package game.weapon;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.ArrayList;
-
-import framework.Direction;
-import info.GameInfo;
-import brick.*;
+import game.framework.Direction;
+import game.info.GameInfo;
+import game.brick.*;
 
 public class BallTest {
     //Ball b = new Ball(50, 50, "", 25);

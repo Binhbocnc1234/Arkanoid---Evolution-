@@ -1,9 +1,9 @@
-package brick;
+package game.brick;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class NormalBrickTest {
+public class BrickTest {
     @Test
     public void takeDamageTest() {
         Brick b = BrickFactory.createBrick(2, 0, 0, 0, 0);
