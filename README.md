@@ -65,7 +65,7 @@ Beside that, there are also some Powerups to assist you through the levels. They
 <img width="1095" height="811" alt="image" src="https://files.catbox.moe/qvgqmq.webp" />
 
 ## LocalMultiplayer
-Cảm thấy hơi buồn chán khi chơi một mình? Không sao, chế độ 2 người chơi đã ra mắt, mỗi người sẽ điều khiển 1 paddle khác nhau. người chơi thứ nhất sử dụng phím A và D, người chơi thứ 2 sử dụng phím mũi tên. 
+Feeling a little bored playing alone? No problem, 2 player mode is now available, each person will control a different paddle. The first player uses the A and D keys, the second player uses the arrow keys.
 
 ## Other features
 - Catchy tunes and sound effects! You can adjust volume when pause menu is appearing
@@ -83,6 +83,7 @@ Simply run the .exe file.
 - Menu BGM: [No Event Theme (From Dynamix)](https://www.youtube.com/watch?v=99u18_Im3gU)
 - Game BGM: [SCTL - Cervelle Connexion](https://www.youtube.com/watch?v=vuM5S_QtcEc)
 - Sound effects were taken from various sources online.
+
 
 
 
