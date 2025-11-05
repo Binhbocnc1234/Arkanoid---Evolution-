@@ -12,17 +12,21 @@ Game Project for OOP class INT2202_9.
 
 ## Contributors
 - <b>Nguyễn Thanh Bình: Project Leader</b>
+
 Manage basic game functions and structure.
 Manage game logics (Collision, moving objects,...)
 
 - Tô Đức Anh
+  
 Powerups and powerup management system.
   
 - Trần Tuấn Cường
+  
 Bricks and brick management system.
 Level system.
 
 - Trần Đức Diễn
+
 Ball and paddle system.
 Sound management system.
 
@@ -69,6 +73,7 @@ Simply run the .exe file.
 - Menu BGM: [No Event Theme (From Dynamix)](https://www.youtube.com/watch?v=99u18_Im3gU)
 - Game BGM: [SCTL - Cervelle Connexion](https://www.youtube.com/watch?v=vuM5S_QtcEc)
 - Sound effects were taken from various sources online.
+
 
 
 
