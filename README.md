@@ -59,10 +59,15 @@ Beside that, there are also some Powerups to assist you through the levels. They
 - Spilt: Summon 2 more balls.
 - Piercing: Balls now can go through bricks and ignore collision.
 
+## Level select
+10 levels for you to enjoy! Initially you are at level 1, to unlock level 2 you need to break all the bricks, and so on. Each level will have a different brick arrangement
+<img width="1095" height="811" alt="image" src="https://files.catbox.moe/qvgqmq.webp" />
+
+## LocalMultiplayer
+Cảm thấy hơi buồn chán khi chơi một mình? Không sao, chế độ 2 người chơi đã ra mắt, mỗi người sẽ điều khiển 1 paddle khác nhau. người chơi thứ nhất sử dụng phím A và D, người chơi thứ 2 sử dụng phím mũi tên. 
+
 ## Other features
-- Catchy tunes and sound effects!
-- 10 levels for you to enjoy!
-- Local Multiplayer!
+- Catchy tunes and sound effects! You can adjust volume when pause menu is appearing
 
 ## Prerequisites
 This game requires Java Runtime Environment to run. You can download it [here](https://www.java.com/en/download/manual.jsp).
@@ -77,6 +82,7 @@ Simply run the .exe file.
 - Menu BGM: [No Event Theme (From Dynamix)](https://www.youtube.com/watch?v=99u18_Im3gU)
 - Game BGM: [SCTL - Cervelle Connexion](https://www.youtube.com/watch?v=vuM5S_QtcEc)
 - Sound effects were taken from various sources online.
+
 
 
 
