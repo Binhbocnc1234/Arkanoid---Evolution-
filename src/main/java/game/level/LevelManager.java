@@ -109,7 +109,7 @@ public class LevelManager {
      * @param level         level num
      */
     public void setCurrentLevel(int level) {
-        currentLevel = level;
+        currentLevel = level - 1;
     }
 
     /**
@@ -117,7 +117,7 @@ public class LevelManager {
      * Effectively, this becomes a new playthrough.
      */
     public void reset() {
-        currentLevel = 1;
+        currentLevel = 0;
         GameInfo.getInstance().resetUnlockedLevel();
     }
 }

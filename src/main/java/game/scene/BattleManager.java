@@ -180,13 +180,14 @@ public class BattleManager extends JPanel implements  IDisposable {
             return;
         }
 
-        if (state == BattleState.Lose) {
+        if (state == BattleState.Lose || state == BattleState.Win) {
             long now = System.nanoTime();
             if (now - loseTimestamp >= 3_000_000_000L) {
                 // Switch to lobby
                 GameManager.instance.switchTo(new Lobby());
             }
         }
+
         else if (state == BattleState.Fighting) {
             SoundManager.setSpecificVolume("background", 50f);
             // Cập nhật tất cả GameObject
@@ -247,6 +248,10 @@ public class BattleManager extends JPanel implements  IDisposable {
 
                 delayTimer.setRepeats(false);
                 delayTimer.start();
+            }
+
+            if (LevelManager.getInstance().getCurrentLevel() >= 10) {
+                state = BattleState.Win;
             }
 
             /* Kiểm tra nếu Ball bị destroyed toàn bộ thì dẫn đến thua cuộc*/
