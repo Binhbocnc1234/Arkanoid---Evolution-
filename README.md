@@ -77,7 +77,7 @@ Feeling a little bored playing alone? No problem, 2 player mode is now available
 This game requires Java Runtime Environment to run. You can download it [here](https://www.java.com/en/download/manual.jsp).
 
 ## Download & Launch
-Simply run the .exe file.
+Simply run the .jar file, or build and run.
 
 # Acknowledges & Credits
 ### This game was built with [Apache Maven](https://maven.apache.org/).
@@ -86,6 +86,7 @@ Simply run the .exe file.
 - Menu BGM: [No Event Theme (From Dynamix)](https://www.youtube.com/watch?v=99u18_Im3gU)
 - Game BGM: [SCTL - Cervelle Connexion](https://www.youtube.com/watch?v=vuM5S_QtcEc)
 - Sound effects were taken from various sources online.
+
 
 
 
