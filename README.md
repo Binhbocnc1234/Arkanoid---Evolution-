@@ -5,14 +5,15 @@ A simple brick-breaking game, where your goal is to break all the bricks with ju
 Game Project for OOP class INT2202_9.
 
 ## Game Demo
+https://youtu.be/WezhIkPEwsg
 
 ## Screenshots
 <img width="1094" height="816" alt="image" src="https://files.catbox.moe/gxqmnf.webp" />
 <img width="1088" height="805" alt="image" src="https://files.catbox.moe/hyhywa.webp" />
-<img width="1095" height="811" alt="image" src="https://files.catbox.moe/qvgqmq.webp" />
 
 ## UML Diagram
 <img width="2092" height="1512" alt="Arkanoid drawio" src="https://files.catbox.moe/y2cgw0.png" />
+https://app.diagrams.net/#G1znOCjc9x6hAgiLjNYmYmy8sOicMaGXE-#%7B%22pageId%22%3A%22CjH1w59uPpAKWMkMjewL%22%7D
 
 ## Contributors
 - <b>Nguyễn Thanh Bình: Project Leader</b>
@@ -82,6 +83,7 @@ Simply run the .exe file.
 - Menu BGM: [No Event Theme (From Dynamix)](https://www.youtube.com/watch?v=99u18_Im3gU)
 - Game BGM: [SCTL - Cervelle Connexion](https://www.youtube.com/watch?v=vuM5S_QtcEc)
 - Sound effects were taken from various sources online.
+
 
 
 
