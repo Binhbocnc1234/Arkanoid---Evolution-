@@ -185,7 +185,9 @@ public class Ball extends MovableObject {
                         SoundManager.playSound("brick");
                     }
                     brick.setIFrame(5);
-                    break;
+                    if (!PIERCING) {
+                        break;
+                    }
                 }
             }
             else if (obj instanceof Paddle) {
